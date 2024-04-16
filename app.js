@@ -3,9 +3,19 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const mongoose = require("mongoose");
+const connection = require("./public/javascripts/connections/mongo.js");
 
 const indexRouter = require('./routes/index');
 const usersRouter = require("./routes/users.js");
+
+mongoose.set("strictQuery", false);
+const mongoDB = process.env.MONGODB_URI || connection;
+
+main().catch((err) => console.log(err));
+async function main() {
+  await mongoose.connect(mongoDB);
+}
 
 const app = express();
 
