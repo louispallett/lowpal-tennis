@@ -1,6 +1,10 @@
 # TEMP
+public/assets/
 style.css
 package-lock.json
+
+# Connections
+public/javascripts/connections
 
 # Logs
 logs
