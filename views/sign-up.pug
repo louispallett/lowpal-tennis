@@ -12,12 +12,33 @@ block content
         div
             label(for="" class="block text-sm font-medium leading-6 text-grey-900") Gender
             div(class="relative")
-                select(required class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded leading-tight focus:ring-2 focus:ring-inset focus:ring-indigo-600")
+                select#gender(name="gender" required class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded leading-tight focus:ring-2 focus:ring-inset focus:ring-indigo-600")
                     option(value="") - - Gender - -
                     option(value="male") Male
                     option(value="female") Female
                 div(class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700")
                     img(class="fill-black h-4 w-4" src="/assets/images/select-arrow.svg")
+        div#tournaments-wrapper(class="hidden")
+            p Tournaments 
+            hr(class="my-2")
+            div(class="flex justify-between")
+                div(class="flex items-center mb-4")
+                    input#mens-singles(type="checkbox" value="" class="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600")
+                    label(for="mens-singles" name="mens-singles" class="block text-base font-medium leading-6 text-grey-900 ms-2") Men's Singles
+                div(class="flex items-center mb-4")
+                    input#womens-singles(type="checkbox" value="" class="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600")
+                    label(for="womens-singles" name="womens-singles" class="block text-base font-medium leading-6 text-grey-900 ms-2") Women's Singles
+            div(class="flex justify-between")
+                div(class="flex items-center mb-4")
+                    input#mens-doubles(type="checkbox" value="" class="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600")
+                    label(for="mens-doubles" name="mens-doubles" class="block text-base font-medium leading-6 text-grey-900 ms-2") Men's Doubles
+                div(class="flex items-center mb-4")
+                    input#womens-doubles(type="checkbox" value="" class="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600")
+                    label(for="womens-doubles" name="womens-doubles" class="block text-base font-medium leading-6 text-grey-900 ms-2") Women's Doubles
+            div(class="flex justify-center")
+                div(class="flex items-center mb-4")
+                    input#mixed-doubles(type="checkbox" value="" class="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600")
+                    label(for="mixed-doubles" name="mixed-doubles" class="block text-base font-medium leading-6 text-grey-900 ms-2") Mixed Doubles
         div
             label(for="email" class="block text-sm font-medium leading-6 text-gray-900") Email address
             input#email(name="email" type="email" autocomplete="email" required class="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6")
@@ -32,3 +53,33 @@ block content
             button(type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600") Sign up
     p(class="mt-10 text-center text-sm text-gray-500") Already a member? 
         a(href="/users/sign-in" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500") Sign in
+    
+    script(type="text/javascript").
+        const genderSelect = document.getElementById("gender");
+        const tournamentsWrapper = document.getElementById("tournaments-wrapper")
+        const menSinglesCheckbox = document.getElementById("mens-singles");
+        const womenSinglesCheckbox = document.getElementById("womens-singles");
+        const mensDoublesCheckbox = document.getElementById("mens-doubles");
+        const womenDoublesCheckbox = document.getElementById("womens-doubles");
+
+        genderSelect.addEventListener("change", function() {
+            if (this.value === "male") {
+                tournamentsWrapper.className = "";
+                menSinglesCheckbox.disabled = false;
+                womenSinglesCheckbox.disabled = true;
+                mensDoublesCheckbox.disabled = false;
+                womenDoublesCheckbox.disabled = true;
+            } else if (this.value === "female") {
+                tournamentsWrapper.className = "";
+                menSinglesCheckbox.disabled = true;
+                womenSinglesCheckbox.disabled = false;
+                mensDoublesCheckbox.disabled = true ;
+                womenDoublesCheckbox.disabled = false;
+            } else {
+                tournamentsWrapper.className = "hidden";
+            }
+        });
+
+        // Initialize checkbox states
+        menSinglesCheckbox.disabled = true;
+        womenSinglesCheckbox.disabled = true;

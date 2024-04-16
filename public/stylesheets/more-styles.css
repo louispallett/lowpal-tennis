@@ -21,6 +21,15 @@ select {
     cursor: pointer;
 }
 
+input,
+select {
+    animation: fade 800ms ease forwards;
+}
+
+input[type="checkbox"] {
+    cursor: pointer;
+}
+
 #logo {
     animation: rotate 2s linear infinite;
 }
@@ -31,5 +40,16 @@ select {
     }
     100% {
         transform: rotate(360deg);
+    }
+}
+
+@keyframes fade {
+    0% {
+      transform: translateX(40px);
+      opacity: .4;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
     }
 }
