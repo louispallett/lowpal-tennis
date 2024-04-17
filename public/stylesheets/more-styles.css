@@ -34,6 +34,10 @@ input[type="checkbox"] {
     animation: rotate 2s linear infinite;
 }
 
+#tournaments-wrapper > div > div > label:hover {
+    cursor: pointer;
+}
+
 @keyframes rotate {
     0% {
         transform: rotate(0);
