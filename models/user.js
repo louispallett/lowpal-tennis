@@ -7,6 +7,7 @@ const UserSchema = new Schema({
     gender: { type: String, required: true },
     email: { type: String, required: true },
     tournament: [{ type: Schema.Types.ObjectId, ref: "Tournament" }],
+    seeded: [{ type: Boolean }],
 });
 
 UserSchema.virtual("url").get(function() {
