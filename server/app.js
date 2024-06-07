@@ -6,6 +6,8 @@ const path = require("path");
 const passport = require("passport");
 const session = require("express-session");
 
+const usersRouter = require("./routes/usersRouter");
+
 require('dotenv').config();
 
 mongoose.set("strictQuery", false);
@@ -34,11 +36,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-/* TODO: Define routes here 
-    app.use(
-        // ....
-    )
-*/
+app.use("/api/users", usersRouter);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
