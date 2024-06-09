@@ -6,6 +6,7 @@ const path = require("path");
 const passport = require("passport");
 const session = require("express-session");
 
+const indexRouter = require("./routes/indexRouter.js");
 const usersRouter = require("./routes/usersRouter");
 
 require('dotenv').config();
@@ -31,11 +32,12 @@ app.use(session({
     saveUninitialized: true
 }));
 
-// require("./config/passport.js");
+require("./config/passport.js");
 
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use("/api", indexRouter);
 app.use("/api/users", usersRouter);
 
 const PORT = process.env.PORT || 5000;
