@@ -1,16 +1,25 @@
-const index = require("../routes/indexRouter");
-
 const request = require("supertest");
-const express = require("express");
-const app = express();
+const mongoose = require("mongoose");
 
-app.use(express.urlencoded({ extended: false }));
-app.use("/api", index);
+const app = require("../app");
 
-test("index route works", done => {
+beforeAll(done => {
+  done();
+});
+
+describe("Test index route", () => {
+  
+  test("index route works", done => {
     request(app)
       .get("/api/about")
       .expect("Content-Type", /json/)
       .expect({ message: "This is the about section" })
       .expect(200, done);
   });
+  
+  })
+
+afterAll(done => {
+  mongoose.connection.close()
+  done()
+});
