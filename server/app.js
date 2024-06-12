@@ -1,6 +1,5 @@
 const cookieParser = require("cookie-parser");
 const express = require("express");
-const mongoose = require("mongoose");
 const logger = require('morgan');
 const path = require("path");
 const passport = require("passport");
@@ -11,13 +10,7 @@ const usersRouter = require("./routes/usersRouter");
 
 require('dotenv').config();
 
-mongoose.set("strictQuery", false);
-const mongoDB = process.env.MONGODB_URI;
-
-main().catch((err) => console.log(err));
-async function main() {
-    await mongoose.connect(mongoDB);
-}
+require("./database/mongoConfig.js");
 
 const app = express();
 
@@ -40,5 +33,4 @@ app.use(passport.session());
 app.use("/api", indexRouter);
 app.use("/api/users", usersRouter);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+module.exports = app;
