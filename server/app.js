@@ -5,7 +5,9 @@ const path = require("path");
 const passport = require("passport");
 const session = require("express-session");
 
-const indexRouter = require("./routes/indexRouter.js");
+const bracketRouter = require("./routes/bracketRouter.js");
+const dashboardRouter = require("./routes/dashboardRouter.js");
+const matchRouter = require("./routes/matchRouter.js");
 const usersRouter = require("./routes/usersRouter");
 
 require('dotenv').config();
@@ -30,7 +32,9 @@ require("./config/passport.js");
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/api", indexRouter);
-app.use("/api/users", usersRouter);
+app.use("/bracket", bracketRouter);
+app.use("/dashboard/:userId", dashboardRouter);
+app.use("/users", usersRouter);
+app.use("/match", matchRouter);
 
 module.exports = app;

@@ -9,4 +9,4 @@ const Category = new Schema({
 
 // Category.set('toJSON', { virtuals: true });
 
-module.exports = module.module("Category", Category);
+module.exports = mongoose.model("Category", Category);

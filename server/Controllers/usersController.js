@@ -1,6 +1,5 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
-const express = require("express");
 const jwt = require("jsonwebtoken")
 const passport = require("../config/passport");
 const { body, validationResult } = require("express-validator");
@@ -28,8 +27,8 @@ exports.signIn = [
                 res.status(400).json({ error: info.message });
             } else {
                 req.login(user, next); // Note that this assigns req.user to user. It is also a req, so we need a response in this line (otherwise we receive an error)
-                jwt.sign({ user: user }, process.env.USER_KEY, { expiresIn: "10h" }, (err, token) => {
-                    res.status(200).json({ token, userId: user._id }); // We send this to the front end and save it in local storage
+                jwt.sign({ user }, process.env.USER_KEY, { expiresIn: "10h" }, (err, token) => {
+                    res.json({ token, userId: user._id }); // We send this to the front end and save it in local storage
                 });
             }
         })(req, res, next);
@@ -37,7 +36,6 @@ exports.signIn = [
 ];
 
 exports.signUp = [
-    // TODO: Add sign up and backend validation of all information. This is slightly more complex than previous sign-ups...
     body("firstName")
         .trim()
         .escape(),
@@ -82,7 +80,7 @@ exports.signUp = [
                     mobile: req.body.mobile,
                     male: req.body.gender == "male" ? true : false,
                     // As this is a required field, we don't need to check for it's type before converting it into an array
-                    categories: [req.body.categories],
+                    categories: req.body.categories,
                     seeded: req.body.seeded,
                     password: hashedPassword,
                 });

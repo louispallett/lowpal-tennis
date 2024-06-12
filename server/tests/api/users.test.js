@@ -1,8 +1,8 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
-const User = require("../models/user");
 
-const app = require("../app");
+const User = require("../../models/user");
+const app = require("../../app");
 
 beforeAll(done => {
     done();
@@ -21,12 +21,12 @@ describe("User sign-up: /users/sign-up", () => {
     
     describe("User attempts to sign up correctly", () => {
         test("Should respond with a 200 status code", async () => {
-            const response = await request(app).post("/api/users/sign-up").send({
+            const response = await request(app).post("/users/sign-up").send({
                 firstName: "John",
                 lastName: "Doe",
                 email: "John.Doe@exampleEmail.com",
                 gender: "male",
-                categories: ["Mens Doubles", "Mixed Doubles"],
+                categories: ["666b147c381eca0da3b657e0", "666b147c381eca0da3b657e2"],
                 mobile: "07419795631",
                 seeded: false,
                 password: "123"
@@ -37,12 +37,12 @@ describe("User sign-up: /users/sign-up", () => {
 
     describe("Form submitted with validation errors", () => {
         test("Should respond with JSON if there are validation errors", async () => {
-            const response = await request(app).post("/api/users/sign-up").send({
+            const response = await request(app).post("/users/sign-up").send({
                 firstName: "John",
                 lastName: "Doe",
                 email: "John.Doe@exampleEmail",
                 gender: "male",
-                categories: ["Mens Doubles", "Mixed Doubles"],
+                categories: ["666b147c381eca0da3b657e0", "666b147c381eca0da3b657e2"],
                 mobile: "07419795631",
                 seeded: false,
                 password: "123"
@@ -55,12 +55,12 @@ describe("User sign-up: /users/sign-up", () => {
         }); 
 
         test("Should respond with validation errors (invalid mobile number)", async () => {
-            const response = await request(app).post("/api/users/sign-up").send({
+            const response = await request(app).post("/users/sign-up").send({
                 firstName: "John",
                 lastName: "Doe",
                 email: "John.Doe@exampleEmail.com",
                 gender: "male",
-                categories: ["Mens Doubles", "Mixed Doubles"],
+                categories: ["666b147c381eca0da3b657e0", "666b147c381eca0da3b657e2"],
                 mobile: "75761203dd7",
                 seeded: false,
                 password: "123"
@@ -77,11 +77,11 @@ describe("User sign-up: /users/sign-up", () => {
     // if any information is missing we respond appropriately.
     describe("Basic information missing", () => {
         test("Should respond with validation errors", async () => {
-            const response = await request(app).post("/api/users/sign-up").send({
+            const response = await request(app).post("/users/sign-up").send({
                 firstName: "John",
                 lastName: "Doe",
                 gender: "male",
-                categories: ["Mens Doubles", "Mixed Doubles"],
+                categories: ["666b147c381eca0da3b657e0", "666b147c381eca0da3b657e2"],
                 mobile: "07419795631",
                 seeded: false,
                 password: "123"
@@ -102,11 +102,12 @@ describe("User sign-in: /users/sign-in", () => {
     });
 
     beforeAll(async () => {
-        await request(app).post("/api/users/sign-up").send({
+        await request(app).post("/users/sign-up").send({
             firstName: "John",
             lastName: "Doe",
             email: "John.Doe@exampleEmail.com",
-            categories: ["Mens Doubles", "Mixed Doubles"],
+            gender: "male",
+            categories: ["666b147c381eca0da3b657e0", "666b147c381eca0da3b657e2"],
             mobile: "07419795631",
             seeded: false,
             password: "123"
@@ -114,7 +115,7 @@ describe("User sign-in: /users/sign-in", () => {
     });
 
     test("User attempts to sign in correctly", async () => {
-        const response = await request(app).post("/api/users/sign-in").send({
+        const response = await request(app).post("/users/sign-in").send({
             email: "john.Doe@exampleemail.com",
             password: "123",
         });
@@ -125,7 +126,7 @@ describe("User sign-in: /users/sign-in", () => {
     });
 
     test("User email not found", async () => {
-        const response = await request(app).post("/api/users/sign-in").send({
+        const response = await request(app).post("/users/sign-in").send({
             email: "john.Dole@exampleemail.com",
             password: "123",
         });
@@ -135,7 +136,7 @@ describe("User sign-in: /users/sign-in", () => {
     });
 
     test("Password incorrect", async () => {
-        const response = await request(app).post("/api/users/sign-in").send({
+        const response = await request(app).post("/users/sign-in").send({
             email: "john.Doe@exampleemail.com",
             password: "1234",
         });
