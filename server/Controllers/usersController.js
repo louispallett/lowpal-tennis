@@ -4,7 +4,10 @@ const jwt = require("jsonwebtoken")
 const passport = require("../config/passport");
 const { body, validationResult } = require("express-validator");
 
+const transporter = require("../config/nodemailerConfig");
 const User = require("../models/user");
+
+// require('dotenv').config();
 
 exports.signIn = [
     body("email", "Email needs to be a valid email")
@@ -84,7 +87,8 @@ exports.signUp = [
                     seeded: req.body.seeded,
                     password: hashedPassword,
                 });
-                await user.save();
+                await user.save(req.body.email.toLowerCase());
+                sendConfirmationEmail(user);
                 res.sendStatus(200);
             });
         } catch (err) {
@@ -92,6 +96,27 @@ exports.signUp = [
         }
     })
 ];
+
+const sendConfirmationEmail = (user) => {
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: user.email,
+        subject: "2024 Saltford In-House Tennis Tournament",
+        text: `Hi ${user.firstName}, 
+                \n\nThanks you for signing up to the 2024 Saltford In-House Tournament. This email confirms that your sign up in the following categories:
+                \n\nADD CATEGORY NAMES HERE
+                \n\nSelection for teams will occur in the coming weeks. Until then, please feel free to reply to this email with any questions you have.
+                \n\nBest wishes,\nLouis`
+    }
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error)
+        } else {
+            console.log("Email sent: " + info.response);
+        }
+    })
+}
 
 exports.verify = asyncHandler(async (req, res, next) => {
     try {
