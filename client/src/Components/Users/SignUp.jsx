@@ -7,6 +7,12 @@ import { useNavigate } from "react-router-dom";
 import { Spinner } from "../tailwind_components/tailwind-ex-elements";
 import arrow from "/assets/images/select-arrow.svg";
 
+/* 
+TODO: Add gender and seeded to the register
+TODO: Add another input for phoneNumber (we may want to add a library to the backend to check whether this is valid)
+TODO: Add dark mode to the class css
+*/
+
 export default function SignUp() {
     const form = useForm();
     const navigate = useNavigate();
@@ -28,13 +34,13 @@ export default function SignUp() {
 
     const [gender, setGender] = useState('');
     const [tournamentsVisible, setTournamentsVisible] = useState(false);
-    const [checkBoxes, setCheckBoxes] = useState({
-        mensSingles: false,
-        womensSingles: false,
-        mensDoubles: false,
-        womensDoubles: false,
-        mixedDoubles: false
-    });
+    // const [checkBoxes, setCheckBoxes] = useState({
+    //     mensSingles: false,
+    //     womensSingles: false,
+    //     mensDoubles: false,
+    //     womensDoubles: false,
+    //     mixedDoubles: false
+    // });
   
     const handleGenderChange = (event) => {
         const selectedGender = event.target.value;
@@ -45,7 +51,7 @@ export default function SignUp() {
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
-                <div className="flex gap-2.5">
+                <div className="grid grid-cols-2 gap-2.5">
                     <div>
                         <div>
                             <label htmlFor="firstName" className="text-sm leading-6 font-bold">First Name</label>
@@ -58,7 +64,7 @@ export default function SignUp() {
                             })}
                                 className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" />
                         </div>
-                        <span className="text-sm font-bold text-red-700">
+                        <span className="text-xs font-bold text-red-700">
                             <p>{errors.firstName?.message}</p>
                         </span>
                     </div>
@@ -74,7 +80,7 @@ export default function SignUp() {
                             })}
                                 className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" />
                         </div>
-                        <span className="text-sm font-bold text-red-700">
+                        <span className="text-xs font-bold text-red-700">
                             <p>{errors.lastName?.message}</p>
                         </span>
                     </div>
@@ -90,7 +96,7 @@ export default function SignUp() {
                     })}
                         className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" />
                 </div>
-                <span className="text-sm font-bold text-red-700">
+                <span className="text-xs font-bold text-red-700">
                     <p>{errors.email?.message}</p>
                 </span>
                 <div>
@@ -110,7 +116,7 @@ export default function SignUp() {
                             <img src={arrow} alt="" className="fill-black h-4 w-4" />
                         </div>
                     </div>
-                    {/* <span className="text-sm font-bold text-red-700">
+                    {/* <span className="text-xs font-bold text-red-700">
                         <p>{errors.gender?.message}</p>
                     </span> */}
                 </div>
@@ -150,29 +156,56 @@ export default function SignUp() {
                     </div>
                     <p>Seeded</p>
                     <hr className="my-2" />
-                    <p className="text-sm px-2.5 py-1.5 rounded-md bg-indigo-300"><b>Note</b>: Seeded players are those who have played for the 1st team during league matches <b>or</b> would be picked to do so (as they decided not to play). If you are unsure whether you are a seeded player, please contact your team captain.</p>
+                    <p className="text-sm px-2.5 py-1.5 rounded-md bg-indigo-300">
+                        <p><b>Note</b>: Seeded players are those who have played for the 1st team during league matches <b>or</b> would be picked to do so (as they decided not to play).</p>
+                        <p>This information will be checked, however, so it's not an issue if you answer incorrectly!</p>
+                    </p>
                     <div className="flex justify-start mt-2.5">
                         <div className="flex items-center mb-4">
                             <input type="checkbox" id="seeded" value="seeded" className="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600" />
-                            <label htmlFor="seeded" name="seeded" className="font-bold leading-6 text-grey-900 ms-2" >Seeded Player</label>
+                            <label htmlFor="seeded" name="seeded" className="font-bold leading-6 text-grey-900 ms-2" >I am a Seeded Player</label>
 
                         </div>
                     </div>
                 </div>
-                <div>
-                    <label htmlFor="password" className="text-sm leading-6 font-bold">Password</label>
-                    <input type="password" id="password" autoComplete="current-password" required 
-                        {...register("password", {
-                            required: "Password is required",
-                            minLength: {
-                                value: 8,
-                                message: "Password must be at least eight (8) characters long"
-                            },
-                        })} 
-                        className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"/>
-                    <span className="text-sm font-bold text-red-700">
-                        <p>{errors.password?.message}</p>
-                    </span>
+                <div className="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label htmlFor="password" className="text-sm leading-6 font-bold">Password</label>
+                        <input type="password" id="password" autoComplete="current-password" required
+                            {...register("password", {
+                                required: "Password is required",
+                                minLength: {
+                                    value: 8,
+                                    message: "Password must be at least eight (8) characters long"
+                                },
+                                pattern: {
+                                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                                    message: "Must contain: uppercase, lowercase, number, and special character"
+                                },
+                            })}
+                            className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"/>
+                        <span className="text-xs font-bold text-red-700">
+                            <p>{errors.password?.message}</p>
+                        </span>
+                    </div>
+                    <div>
+                        <label htmlFor="confPassword" className="text-sm leading-6 font-bold">Confirm Password</label>
+                        <input type="password" id="confPassword" required
+                            {...register("confPassword", {
+                                required: "Please confirm your password",
+                                validate: {
+                                    passwordMatch: (fieldValue) => {
+                                        return (
+                                            fieldValue == watch("password") || "Passwords do not match"
+                                        )
+                                    }
+                                }
+                            })}
+                            className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"/>
+                        <span className="text-xs font-bold text-red-700">
+                            <p>{errors.confPassword?.message}</p>
+                        </span>
+                    </div>
                 </div>
                 <div>
                     { isPending ? (
@@ -182,13 +215,13 @@ export default function SignUp() {
                         ) : (
                             <button type="submit" 
                                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                            >Sign In</button>
+                            >Sign Up</button>
                     )}
                 </div>
             </form>
             {/* Development: */}
             <DevTool control={control}/> 
-            <p className="mt-10 text-center text-sm"> Not a member? <Link to="/users/sign-in" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign In</Link></p>
+            <p className="mt-10 text-center text-sm"> Already a member? <Link to="/users/sign-in" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign In</Link></p>
         </>
     )
 }
