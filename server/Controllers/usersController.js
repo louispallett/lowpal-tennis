@@ -6,6 +6,8 @@ const { body, validationResult } = require("express-validator");
 
 const transporter = require("../config/nodemailerConfig");
 const User = require("../models/user");
+const Category = require("../models/category");
+const user = require("../models/user");
 
 // require('dotenv').config();
 
@@ -87,8 +89,9 @@ exports.signUp = [
                     seeded: req.body.seeded,
                     password: hashedPassword,
                 });
-                await user.save(req.body.email.toLowerCase());
-                sendConfirmationEmail(user);
+                await user.save();
+                await addUserToCategories(user.email, user.categories)
+                // sendConfirmationEmail(user); // Removed during development
                 res.sendStatus(200);
             });
         } catch (err) {
@@ -116,6 +119,20 @@ const sendConfirmationEmail = (user) => {
             console.log("Email sent: " + info.response);
         }
     })
+}
+
+//  FIXME:
+const addUserToCategories = async (userEmail, userCategories) => {
+    try {
+        const user = await User.findOne({ email: userEmail }).exec();
+        const userId = user._id;
+        for (let userCategory in userCategories) {
+            const category = await Category.findById(userCategory);
+            await Category.updateOne({ _id: category, players: category.players.push(userId)});
+        }
+    } catch(err) {
+        console.log(err);
+    }
 }
 
 exports.verify = asyncHandler(async (req, res, next) => {

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const Category = new Schema({
         name: { type: String, required: true },
-        // We may want to add matches here? Or not?
+        players: [{ type: Schema.Types.ObjectId, ref: "User" }],
     }
 )
 
