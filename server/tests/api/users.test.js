@@ -2,10 +2,21 @@ const request = require("supertest");
 const mongoose = require("mongoose");
 
 const User = require("../../models/user");
+const Category = require("../../models/category");
 const app = require("../../app");
+
+let insertedCategories;
 
 beforeAll(done => {
     done();
+});
+
+beforeAll(async () => {
+    insertedCategories = await Category.insertMany([{ name: "Mens Singles" }, { name: "Womens Singles" }, { name: "Mens Doubles" }, { name: "Womens Doubles" }, { name: "Mixed Doubles" }])
+});
+
+afterAll(async () => {
+    await Category.deleteMany({});
 });
 
 afterAll(done => {
@@ -26,7 +37,7 @@ describe("User sign-up: /users/sign-up", () => {
                 lastName: "Doe",
                 email: "John.Doe@exampleEmail.com",
                 gender: "male",
-                categories: ["666b147c381eca0da3b657e0", "666b147c381eca0da3b657e2"],
+                categories: [insertedCategories[0], insertedCategories[4]],
                 mobile: "07419795631",
                 seeded: false,
                 password: "123"
@@ -42,7 +53,7 @@ describe("User sign-up: /users/sign-up", () => {
                 lastName: "Doe",
                 email: "John.Doe@exampleEmail",
                 gender: "male",
-                categories: ["666b147c381eca0da3b657e0", "666b147c381eca0da3b657e2"],
+                categories: [insertedCategories[0], insertedCategories[4]],
                 mobile: "07419795631",
                 seeded: false,
                 password: "123"
@@ -60,7 +71,7 @@ describe("User sign-up: /users/sign-up", () => {
                 lastName: "Doe",
                 email: "John.Doe@exampleEmail.com",
                 gender: "male",
-                categories: ["666b147c381eca0da3b657e0", "666b147c381eca0da3b657e2"],
+                categories: [insertedCategories[0], insertedCategories[4]],
                 mobile: "75761203dd7",
                 seeded: false,
                 password: "123"
@@ -81,7 +92,7 @@ describe("User sign-up: /users/sign-up", () => {
                 firstName: "John",
                 lastName: "Doe",
                 gender: "male",
-                categories: ["666b147c381eca0da3b657e0", "666b147c381eca0da3b657e2"],
+                categories: [insertedCategories[0], insertedCategories[4]],
                 mobile: "07419795631",
                 seeded: false,
                 password: "123"
@@ -107,7 +118,7 @@ describe("User sign-in: /users/sign-in", () => {
             lastName: "Doe",
             email: "John.Doe@exampleEmail.com",
             gender: "male",
-            categories: ["666b147c381eca0da3b657e0", "666b147c381eca0da3b657e2"],
+            categories: [insertedCategories[0], insertedCategories[4]],
             mobile: "07419795631",
             seeded: false,
             password: "123"

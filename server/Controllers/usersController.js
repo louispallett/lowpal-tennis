@@ -89,8 +89,8 @@ exports.signUp = [
                     seeded: req.body.seeded,
                     password: hashedPassword,
                 });
-                await user.save();
-                await addUserToCategories(user.email, user.categories)
+                const new_user = await user.save();
+                await addUserToCategories(new_user._id, new_user.categories)
                 // sendConfirmationEmail(user); // Removed during development
                 res.sendStatus(200);
             });
@@ -121,17 +121,17 @@ const sendConfirmationEmail = (user) => {
     })
 }
 
-//  FIXME:
-const addUserToCategories = async (userEmail, userCategories) => {
+const addUserToCategories = async (userId, userCategories) => {
     try {
-        const user = await User.findOne({ email: userEmail }).exec();
-        const userId = user._id;
-        for (let userCategory in userCategories) {
-            const category = await Category.findById(userCategory);
-            await Category.updateOne({ _id: category, players: category.players.push(userId)});
+        for (const userCategory of userCategories) {
+            await Category.findByIdAndUpdate(
+                userCategory,
+                { $push: { players: userId } },
+                { new: true, useFindAndModify: false } // Ensures we get the updated document back and avoid deprecation warnings
+            );
         }
-    } catch(err) {
-        console.log(err);
+    } catch (error) {
+        console.log(error);
     }
 }
 
