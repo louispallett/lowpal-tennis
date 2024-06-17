@@ -14,8 +14,9 @@ const User = new Schema({
     }
 );
 
-User.virtual("name").get(function() {
-    return(`${this.firstName} ${this.lastName}`);
+// Returns initial followed by surname - i.e. "J. Doe"
+User.virtual("name_formatted").get(function() {
+    return(`${this.firstName[0]} ${this.lastName}`);
 });
 
 User.set('toJSON', { virtuals: true });

@@ -1,7 +1,8 @@
 const asyncHandler = require("express-async-handler");
 
-const verifyUser = require("../config/verifyUser");
+const createTeams = require("../public/scripts/createTeam");
 const Match = require("../models/match");
+const verifyUser = require("../config/verifyUser");
 
 exports.get_match = asyncHandler(async (req, res, next) => {
     try {
@@ -14,6 +15,19 @@ exports.get_match = asyncHandler(async (req, res, next) => {
         res.sendStatus(403);
     }
 });
+
+exports.create_teams = asyncHandler(async (req, res, next) => {
+    const categoryId = req.body.category;
+    if (!categoryId) {
+        res.sendStatus(400);
+    }
+    try {
+        const newTeams = await createTeams(categoryId);
+        res.status(200).json({ newTeams });
+    } catch (err) {
+        console.log(err);
+    }
+})
 
 exports.create_new_match = asyncHandler(async (req, res, next) => {
 

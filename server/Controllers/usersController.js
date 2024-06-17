@@ -7,7 +7,6 @@ const { body, validationResult } = require("express-validator");
 const transporter = require("../config/nodemailerConfig");
 const User = require("../models/user");
 const Category = require("../models/category");
-const user = require("../models/user");
 
 // require('dotenv').config();
 
@@ -43,12 +42,12 @@ exports.signIn = [
 exports.signUp = [
     body("firstName")
         .trim()
-        .escape(),
-        // .length({ min: 1, max: 50 }),
+        .escape()
+        .isLength({ min: 1, max: 50 }),
     body("lastName")
         .trim()
-        .escape(),
-        // .length({ min: 1, max: 50 }).withMessage("Last name cannot be more than 50 characters"),
+        .escape()
+        .isLength({ min: 1, max: 50 }).withMessage("Last name cannot be more than 50 characters"),
     body("email")
         .trim()
         .isEmail().withMessage("Email needs to be a valid email")

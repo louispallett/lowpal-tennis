@@ -33,39 +33,65 @@ Create match objects by category
     Map out and create matches (this may have to be done manually for the moment)
 
 
-Note that we should be able to add participants as an array for doubles categories - like so:
-    "participants": [
-        # First team
-        [{
-            "id": "c016cb2a-fdd9-4c40-a81f-0cc6bdf4b9cc", // Unique identifier of any kind
-            "resultText": "WON", // Any string works
-            "isWinner": false,
-            "status": null, // 'PLAYED' | 'NO_SHOW' | 'WALK_OVER' | 'NO_PARTY' | null
-            "name": "giacomo123"
-        },
-        {
-            "id": "9ea9ce1a-4794-4553-856c-9a3620c0531b",
-            "resultText": null,
-            "isWinner": true,
-            "status": null, // 'PLAYED' | 'NO_SHOW' | 'WALK_OVER' | 'NO_PARTY'
-            "name": "Ant"
-        }],
-        # Second team
-        [{
-            "id": "c016cb2a-fdd9-4c40-a81f-0cc6bdf4b9cc", // Unique identifier of any kind
-            "resultText": "WON", // Any string works
-            "isWinner": false,
-            "status": null, // 'PLAYED' | 'NO_SHOW' | 'WALK_OVER' | 'NO_PARTY' | null
-            "name": "giacomo123"
-        },
-        {
-            "id": "9ea9ce1a-4794-4553-856c-9a3620c0531b",
-            "resultText": null,
-            "isWinner": true,
-            "status": null, // 'PLAYED' | 'NO_SHOW' | 'WALK_OVER' | 'NO_PARTY'
-            "name": "Ant"
-        }]
-    ]
-
-So, instead of 
 */
+
+const Category = require("../../models/category");
+const Team = require("../../models/team");
+
+const createTeams = async (categoryId) => {
+    try {
+        const category = await Category.findById(categoryId).populate({ path: "players", select: "seeded" }).exec();
+        if (!category) throw new Error("Category not found");
+
+        const seeded = category.players.filter(player => player.seeded);
+        const notSeeded = category.players.filter(player => !player.seeded);
+
+        const teams = matchDoublesPairs(seeded, notSeeded);
+        
+        for (let i = 0; i < teams.length; i++) {
+            const new_team = new Team({
+                players: [teams[i][0], teams[i][1]],
+                category: categoryId
+            });
+            await new_team.save();
+        }
+
+        const newTeams = Team.find({ category: categoryId });
+        return newTeams;
+
+    } catch (err) {
+        console.error("Error creating teams: ", err);
+        throw err;
+    }
+}
+
+// This function assumes seeded.length < notSeeded.length
+const matchDoublesPairs = (seeded, notSeeded) => {
+
+    // I.e. total number of players is not even
+    if ((seeded.length + notSeeded.length) % 2 != 0) {
+        return new Error("Number of players must be even");
+    }
+
+    // Note that seeded and notSeeded must be arrays
+    seeded = seeded.sort(() => Math.random() - 0.5);
+    notSeeded = notSeeded.sort(() => Math.random() - 0.5);
+    let teams = [];
+
+    while(seeded.length > 0 && notSeeded.length > 0) {
+        const playerA = seeded.shift();
+        const playerB = notSeeded.shift();
+        teams.push([playerA, playerB])
+    }
+
+    // Remaining nonSeeded matched
+    while(notSeeded.length > 1) {
+        const playerA = notSeeded.shift();
+        const playerB = notSeeded.shift();
+        teams.push([playerA, playerB])
+    }
+
+    return teams;
+}
+
+module.exports = createTeams;
