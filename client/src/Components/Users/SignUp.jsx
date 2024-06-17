@@ -1,4 +1,5 @@
 import axios from "axios";
+import countryCodes from "country-codes-list";
 import { DevTool } from "@hookform/devtools";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -19,12 +20,14 @@ export default function SignUp() {
     const { errors } = formState;
     const [isPending, setIsPending] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const countryCodesArray = Object.entries(countryCodes.customList('countryCode', '+{countryCallingCode}'));
 
     const onSubmit = async (data) => {
         setIsPending(true);
         data.gender = gender;
+        data.mobile = `${data.phoneCode} ${data.mobile}`
         if (data.seeded) data.seeded = true;
-        axios.post("/api/sign-up", data)
+        axios.post("/api/users/sign-up", data)
             .then(() => {
                 setIsPending(false);
                 setIsSubmitted(true);
@@ -87,20 +90,47 @@ export default function SignUp() {
                                 </span>
                             </div>
                         </div>
-                        <div>
-                            <label htmlFor="email" className="text-sm leading-6 font-bold dark:text-white">Email</label>
-                            <input autoComplete="email" required id="email" {...register("email", {
-                                required: "Email is required",
-                                maxLength: {
-                                    value: 100,
-                                    message: "Email cannot be longer than a hundred (100) characters long!"
-                                },
-                            })}
-                                className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700" />
+                        <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2.5">
+                            <div>
+                                <div>
+                                    <label htmlFor="email" className="text-sm leading-6 font-bold dark:text-white">Email</label>
+                                    <input autoComplete="email" type="email" required id="email" {...register("email", {
+                                        required: "Email is required",
+                                        maxLength: {
+                                            value: 100,
+                                            message: "Email cannot be longer than a hundred (100) characters long!"
+                                        },
+                                    })}
+                                        className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700" />
+                                </div>
+                                <span className="text-xs font-bold text-red-700 dark:text-red-400">
+                                    <p>{errors.email?.message}</p>
+                                </span>
+                            </div>
+                            <div>
+                                <div>
+                                    <label htmlFor="mobile" className="text-sm leading-6 font-bold dark:text-white">Mobile</label>
+                                    <div className="flex gap-1.5">
+                                        <select name="countryCode" id="countryCode" defaultValue="+44"
+                                        {...register("phoneCode")}
+                                        className="rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700">
+                                            {countryCodesArray.map(([code, label]) => (
+                                                <option key={code} value={label}>
+                                                    {label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <input required id="mobile" type="tel" {...register("mobile", {
+                                            required: "Mobile is required",
+                                        })}
+                                            className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700" />
+                                    </div>
+                                </div>
+                                <span className="text-xs font-bold text-red-700 dark:text-red-400">
+                                    <p>{errors.email?.message}</p>
+                                </span>
+                            </div>
                         </div>
-                        <span className="text-xs font-bold text-red-700 dark:text-red-400">
-                            <p>{errors.email?.message}</p>
-                        </span>
                         <div>
                             <label htmlFor="gender" id="gender" onChange={handleGenderChange} className="font-bold text-sm leading-6 dark:text-white">Gender</label>
                             <div className="relative">
@@ -123,46 +153,46 @@ export default function SignUp() {
                             <hr className="my-2" />
                             <div className="flex justify-between">
                                 <div className="flex items-center mb-4">
-                                    <input type="checkbox" id="666ec79b8caf061d95ceb85c" value="666ec79b8caf061d95ceb85c" disabled={gender == "female"}
+                                    <input type="checkbox" id="666f36e408bbfeb7beb9cb9b" value="666f36e408bbfeb7beb9cb9b" disabled={gender == "female"}
                                         className="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-                                        {...register("tournament")} />
-                                    <label htmlFor="666ec79b8caf061d95ceb85c" name="666ec79b8caf061d95ceb85c" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Men's Singles</label>
+                                        {...register("categories")} />
+                                    <label htmlFor="666f36e408bbfeb7beb9cb9b" name="666f36e408bbfeb7beb9cb9b" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Men's Singles</label>
                                 </div>
                                 <div className="flex items-center mb-4">
-                                    <input type="checkbox" id="666ec79b8caf061d95ceb85d" value="666ec79b8caf061d95ceb85d" disabled={gender == "male"}
+                                    <input type="checkbox" id="666f36e408bbfeb7beb9cb9c" value="666f36e408bbfeb7beb9cb9c" disabled={gender == "male"}
                                         className="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-                                        {...register("tournament")} />
-                                    <label htmlFor="666ec79b8caf061d95ceb85d" name="666ec79b8caf061d95ceb85d" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Women's Singles</label>
+                                        {...register("categories")} />
+                                    <label htmlFor="666f36e408bbfeb7beb9cb9c" name="666f36e408bbfeb7beb9cb9c" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Women's Singles</label>
                                 </div>
                             </div>
                             <div className="flex justify-between">
                                 <div className="flex items-center mb-4">
-                                    <input type="checkbox" id="666ec79b8caf061d95ceb85e" value="666ec79b8caf061d95ceb85e" disabled={gender == "female"}
+                                    <input type="checkbox" id="666f36e408bbfeb7beb9cb9d" value="666f36e408bbfeb7beb9cb9d" disabled={gender == "female"}
                                         className="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-                                        {...register("tournament")} />
-                                    <label htmlFor="666ec79b8caf061d95ceb85e" name="666ec79b8caf061d95ceb85e" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Men's Doubles</label>
+                                        {...register("categories")} />
+                                    <label htmlFor="666f36e408bbfeb7beb9cb9d" name="666f36e408bbfeb7beb9cb9d" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Men's Doubles</label>
                                 </div>
                                 <div className="flex items-center mb-4">
-                                    <input type="checkbox" id="666ec79b8caf061d95ceb85f" value="666ec79b8caf061d95ceb85f" disabled={gender == "male"}
+                                    <input type="checkbox" id="666f36e408bbfeb7beb9cb9e" value="666f36e408bbfeb7beb9cb9e" disabled={gender == "male"}
                                         className="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-                                        {...register("tournament")} />
-                                    <label htmlFor="666ec79b8caf061d95ceb85f" name="666ec79b8caf061d95ceb85f" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Women's Doubles</label>
+                                        {...register("categories")} />
+                                    <label htmlFor="666f36e408bbfeb7beb9cb9e" name="666f36e408bbfeb7beb9cb9e" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Women's Doubles</label>
                                 </div>
                             </div>
                             <div className="flex justify-center">
                                 <div className="flex item-center mb-4">
-                                    <input type="checkbox" id="666ec79b8caf061d95ceb860" value="666ec79b8caf061d95ceb860" disabled={false}
+                                    <input type="checkbox" id="666f36e408bbfeb7beb9cb9f" value="666f36e408bbfeb7beb9cb9f" disabled={false}
                                         className="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-                                        {...register("tournament")} />
-                                    <label htmlFor="666ec79b8caf061d95ceb860" name="666ec79b8caf061d95ceb860" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Mixed Doubles</label>
+                                        {...register("categories")} />
+                                    <label htmlFor="666f36e408bbfeb7beb9cb9f" name="666f36e408bbfeb7beb9cb9f" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Mixed Doubles</label>
                                 </div>
                             </div>
                             <p className="dark:text-white">Seeded</p>
                             <hr className="my-2" />
-                            <p className="text-sm px-2.5 py-1.5 rounded-md bg-indigo-300">
+                            <div className="text-sm px-2.5 py-1.5 rounded-md bg-indigo-300">
                                 <p><b>Note</b>: Seeded players are those who have played for the 1st team during league matches <b>or</b> would be picked to do so (as they decided not to play).</p>
                                 <p>This information will be checked, however, so it's not an issue if you answer incorrectly!</p>
-                            </p>
+                            </div>
                             <div className="flex justify-start mt-2.5">
                                 <div className="flex items-center mb-4">
                                     <input type="checkbox" id="seeded" value="seeded" className="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600"

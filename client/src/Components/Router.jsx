@@ -15,7 +15,7 @@ export default function Router() {
                 return;
             };
             try {
-                const response = await fetch("/api/verify", { 
+                const response = await fetch("/api/users/verify", { 
                     mode: "cors", 
                     headers: { "Authorization": `${token}`} 
                 })
@@ -29,7 +29,7 @@ export default function Router() {
             }
         }
         checkUser();
-    });
+    }, []);
 
     const router = createBrowserRouter([
         {

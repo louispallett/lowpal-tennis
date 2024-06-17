@@ -39,7 +39,7 @@ export default function SignIn() {
                     <p className="font-bold text-red-400">{loginError}</p>
                 )}
                 <div>
-                    <label htmlFor="email" className="block text-sm leading-6">Email</label>
+                    <label htmlFor="email" className="block text-sm leading-6 dark:text-slate-100">Email</label>
                     <input autoComplete="email" required id="email" {...register("email", {
                         required: "Email is required",
                         maxLength: {
@@ -47,13 +47,13 @@ export default function SignIn() {
                             message: "Email cannot be longer than twenty (30) characters long!"
                         },
                     })}
-                        className="block w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" />
+                        className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700" />
                 </div>
                 <span className="text-sm font-bold text-red-400">
                     <p>{errors.email?.message}</p>
                 </span>
                 <div>
-                    <label htmlFor="password" className="block text-sm font-medium leading-6 sm:min-w-80">Password</label>
+                    <label htmlFor="password" className="block text-sm font-medium leading-6 sm:min-w-80 dark:text-slate-100">Password</label>
                     <input type="password" id="password" autoComplete="current-password" required 
                         {...register("password", {
                             required: "Password is required",
@@ -62,7 +62,7 @@ export default function SignIn() {
                                 message: "Password must be at least eight (8) characters long"
                             },
                         })} 
-                        className="block w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"/>
+                        className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"/>
                     <span className="text-sm font-bold text-red-400">
                         <p>{errors.password?.message}</p>
                     </span>
@@ -81,7 +81,7 @@ export default function SignIn() {
             </form>
             {/* Development: */}
             <DevTool control={control}/> 
-            <p className="mt-10 text-center text-sm"> Not a member? <Link to="/users/sign-up" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign Up</Link></p>
+            <p className="mt-10 text-center text-sm dark:text-white"> Not a member? <Link to="/users/sign-up" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">Sign Up</Link></p>
         </>
     )
 }

@@ -56,14 +56,14 @@ exports.signUp = [
     body("mobile")
         .trim()
         .custom(value => value.replace(/\s*/g, "")
-        .match(/^0([1-6][0-9]{8,10}|7[0-9]{9})$/)).withMessage("Please enter a valid phone number"),
+        .match(/([1-6][0-9]{8,10}|7[0-9]{9})$/)).withMessage("Please enter a valid phone number"),
     body("password")
         .trim(),
 
     asyncHandler(async (req, res, next) => {
         const userExists = await User.findOne({ email: req.body.email.toLowerCase() }, "email").exec();
         if (userExists) {
-            res.json({ errors: "Email already used for another account" });
+            res.status(400).json({ errors: "Email already used for another account" });
             return;
         }
 
@@ -91,7 +91,7 @@ exports.signUp = [
                 });
                 const new_user = await user.save();
                 await addUserToCategories(new_user._id, new_user.categories)
-                // sendConfirmationEmail(user); // Removed during development
+                // sendConfirmationEmail(user); 
                 res.sendStatus(200);
             });
         } catch (err) {
