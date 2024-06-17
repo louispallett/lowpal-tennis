@@ -24,7 +24,7 @@ afterAll(done => {
     done();
 });
 
-describe("User sign-up: /users/sign-up", () => {
+describe("User sign-up: /api/users/sign-up", () => {
 
     afterEach(async () => {
         await User.deleteMany({});
@@ -32,7 +32,7 @@ describe("User sign-up: /users/sign-up", () => {
     
     describe("User attempts to sign up correctly", () => {
         test("Should respond with a 200 status code", async () => {
-            const response = await request(app).post("/users/sign-up").send({
+            const response = await request(app).post("/api/users/sign-up").send({
                 firstName: "John",
                 lastName: "Doe",
                 email: "John.Doe@exampleEmail.com",
@@ -48,7 +48,7 @@ describe("User sign-up: /users/sign-up", () => {
 
     describe("Form submitted with validation errors", () => {
         test("Should respond with JSON if there are validation errors", async () => {
-            const response = await request(app).post("/users/sign-up").send({
+            const response = await request(app).post("/api/users/sign-up").send({
                 firstName: "John",
                 lastName: "Doe",
                 email: "John.Doe@exampleEmail",
@@ -66,7 +66,7 @@ describe("User sign-up: /users/sign-up", () => {
         }); 
 
         test("Should respond with validation errors (invalid mobile number)", async () => {
-            const response = await request(app).post("/users/sign-up").send({
+            const response = await request(app).post("/api/users/sign-up").send({
                 firstName: "John",
                 lastName: "Doe",
                 email: "John.Doe@exampleEmail.com",
@@ -88,7 +88,7 @@ describe("User sign-up: /users/sign-up", () => {
     // if any information is missing we respond appropriately.
     describe("Basic information missing", () => {
         test("Should respond with validation errors", async () => {
-            const response = await request(app).post("/users/sign-up").send({
+            const response = await request(app).post("/api/users/sign-up").send({
                 firstName: "John",
                 lastName: "Doe",
                 gender: "male",
@@ -106,14 +106,14 @@ describe("User sign-up: /users/sign-up", () => {
     });
 });
 
-describe("User sign-in: /users/sign-in", () => {
+describe("User sign-in: /api/users/sign-in", () => {
 
     afterAll(async () => {
         await User.deleteMany({});
     });
 
     beforeAll(async () => {
-        await request(app).post("/users/sign-up").send({
+        await request(app).post("/api/users/sign-up").send({
             firstName: "John",
             lastName: "Doe",
             email: "John.Doe@exampleEmail.com",
@@ -126,7 +126,7 @@ describe("User sign-in: /users/sign-in", () => {
     });
 
     test("User attempts to sign in correctly", async () => {
-        const response = await request(app).post("/users/sign-in").send({
+        const response = await request(app).post("/api/users/sign-in").send({
             email: "john.Doe@exampleemail.com",
             password: "123",
         });
@@ -137,7 +137,7 @@ describe("User sign-in: /users/sign-in", () => {
     });
 
     test("User email not found", async () => {
-        const response = await request(app).post("/users/sign-in").send({
+        const response = await request(app).post("/api/users/sign-in").send({
             email: "john.Dole@exampleemail.com",
             password: "123",
         });
@@ -147,7 +147,7 @@ describe("User sign-in: /users/sign-in", () => {
     });
 
     test("Password incorrect", async () => {
-        const response = await request(app).post("/users/sign-in").send({
+        const response = await request(app).post("/api/users/sign-in").send({
             email: "john.Doe@exampleemail.com",
             password: "1234",
         });

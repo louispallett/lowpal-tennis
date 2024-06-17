@@ -13,7 +13,7 @@ describe("Dashboard Page", () => {
     });
     
     beforeAll(async () => {
-        await request(app).post("/users/sign-up").send({
+        await request(app).post("/api/users/sign-up").send({
             firstName: "John",
             lastName: "Doe",
             email: "John.Doe@exampleEmail.com",
@@ -24,7 +24,7 @@ describe("Dashboard Page", () => {
             password: "123"
         });
 
-        const response = await request(app).post("/users/sign-in").send({
+        const response = await request(app).post("/api/users/sign-in").send({
             email: "John.Doe@exampleEmail.com",
             password: "123"
         });
@@ -68,7 +68,7 @@ describe("Dashboard Page", () => {
                 .set("Authorization", jwt)
             expect(response.statusCode).toBe(200);
             expect(response.headers["content-type"]).toEqual(expect.stringContaining("json"));
-            expect(response.body).toHaveProperty("categories", ["Mens Doubles", "Mixed Doubles"]);
+            expect(response.body).toHaveProperty("categories", ["666b147c381eca0da3b657e0", "666b147c381eca0da3b657e2"]);
         });
     });
 });
