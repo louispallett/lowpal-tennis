@@ -88,9 +88,11 @@ exports.signUp = [
                     seeded: req.body.seeded,
                     password: hashedPassword,
                 });
-                const new_user = await user.save();
-                await addUserToCategories(new_user._id, new_user.categories)
-                // sendConfirmationEmail(user); 
+                const newUser = await user.save();
+                await addUserToCategories(newUser._id, newUser.categories)
+                const newUserCategories = await User.findById(newUser._id).populate({ path: "categories", select: "name -_id" });
+                const categoryNames = newUserCategories.categories.map(category => category.name).join('\n');                
+                // sendConfirmationEmail(user, categoryNames); 
                 res.sendStatus(200);
             });
         } catch (err) {
@@ -99,14 +101,14 @@ exports.signUp = [
     })
 ];
 
-const sendConfirmationEmail = (user) => {
+const sendConfirmationEmail = (user, categoryNames) => {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: user.email,
         subject: "2024 Saltford In-House Tennis Tournament",
         text: `Hi ${user.firstName}, 
                 \n\nThanks you for signing up to the 2024 Saltford In-House Tournament. This email confirms that your sign up in the following categories:
-                \n\nADD CATEGORY NAMES HERE
+                \n\n${categoryNames}
                 \n\nSelection for teams will occur in the coming weeks. Until then, please feel free to reply to this email with any questions you have.
                 \n\nBest wishes,\nLouis`
     }
