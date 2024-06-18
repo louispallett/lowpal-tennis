@@ -13,11 +13,12 @@ const participant = new Schema({
 });
 
 const Match = new Schema({
+    category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
     nextMatchId: { type: Schema.Types.ObjectId, ref: "Match", default: null },
     tournamentRoundText: { type: String, required: true },
     state: { type: String, required: true }, // 'NO_SHOW' | 'WALK_OVER' | 'NO_PARTY' | 'DONE' | 'SCORE_DONE' Only needed to decide walkovers and if teamNames are TBD (to be decided)
     // We need this to distinguish between the two types of matches. The enumeration value is so that only either 'singles' or 'doubles' can be given for this element!
-    matchType: { type: String, enum: ["singles", "doubles"], required: true },
+    // matchType: { type: String, enum: ["singles", "doubles"], required: true },
     participants: [participant]
 });
 

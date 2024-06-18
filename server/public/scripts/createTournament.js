@@ -23,18 +23,31 @@ This leaves us with a perfect power of two, so we can just repeat the process, l
 These are our matches, and they are returned to the server (and we need to handle how to use them there!)
 */
 
-const createRound = (teams) => {
-    const n = teams.length;
-    if (n < 2) return null;
-    const byes = createByes(n);
-    if (byes > 0) {
-        const firstRoundPlayers = generateFirstRoundPlayers(byes, teams);
-        const roundMatches = generateRoundMatches(firstRoundPlayers);
-        return roundMatches;
-    }
-    const roundMatches = generateRoundMatches(teams);
-    return roundMatches;
-} 
+// const createRound = (teams) => {
+//     const n = teams.length;
+//     if (n < 2) return null;
+//     const byes = createByes(n);
+//     if (byes > 0) {
+//         const firstRoundPlayers = generateFirstRoundPlayers(byes, teams);
+//         const roundMatches = generateRoundMatches(firstRoundPlayers);
+//         return roundMatches;
+//     }
+//     const roundMatches = generateRoundMatches(teams);
+//     return roundMatches;
+// } 
+
+// const generateRoundMatches = (roundPlayers) => {
+//     const matches = [];
+//     for (let i = 0; i < roundPlayers.length / 2; i++) {
+//         const player1 = roundPlayers[i];
+//         const player2 = roundPlayers[roundPlayers.length - 1 - i];
+//         matches.push([player1, player2]);
+//     }
+//     return matches;
+// }
+
+const Match = require("../../models/match");
+const Team = require("../../models/team");
 
 const createByes = (n) => {
     const nextPowerOfTwo = getNextPowerOfTwo(n);
@@ -58,14 +71,66 @@ const generateFirstRoundPlayers = (byes, teams) => {
     return firstRoundPlayers;
 }
 
-const generateRoundMatches = (roundPlayers) => {
-    const matches = [];
-    for (let i = 0; i < roundPlayers.length / 2; i++) {
-        const player1 = roundPlayers[i];
-        const player2 = roundPlayers[roundPlayers.length - 1 - i];
-        matches.push([player1, player2]);
-    }
-    return matches;
+const createMatch = async(category, tournamentRoundText, participants, nextMatchId = null) => {
+    const match = new Match({
+        category,
+        tournamentRoundText,
+        state: "SCHEDULED", // This is the default value since all matches are new and NOT played
+        participants: participants.map(participant => ({
+            player: participant.playerId || null,
+            team: participant.teamId || null,
+            isWinner: false,
+            name: participant.name
+        })),
+        nextMatchId
+    });
+    return match.save();
 }
 
-module.exports = createRound;
+const generateMatchesForTournament = async (category, teams) => {
+    // We are determining the perfect power of two with Math.log2() - so if we were to have 128 teams, we would have 7 here
+    // because 2^(7) is 128. We need to ceil it because one over that number (129) would result in 8 rounds because we'd have 127 buy ins
+    // and one first round match 
+    const totalRounds = Math.ceil(Math.log2(teams.length));
+    console.log(totalRounds);
+    const matchesByRound = [];
+
+    // First, we create our final match - this is important as we need the _id of this to be the pointers for the preceding round.
+    const finalMatch = await createMatch(category, totalRounds, []);
+    matchesByRound.push(finalMatch);
+    // console.log(matchesByRound);
+
+    // Next, we need to generate the rounds for the reminaing rounds, working backwards
+    for (let round = 1; round <= totalRounds; round++) {
+        const currentRoundMatches = [];
+        // We're working backwards here - so the first index would be 0 - i.e. the final match
+        const nextRoundMatches = matchesByRound[round - 1]._id;
+        console.log(nextRoundMatches);
+        for (let i = 0; i < Math.pow(2, totalRounds - round); i++) {
+            const nextMatchId = nextRoundMatches[Math.floor(i / 2)]._id;
+            const match = await createMatch(category, totalRounds - round, [], nextMatchId);
+            currentRoundMatches.push(match);
+        }
+        // Push each element of currentRoundMatches in order to matchesByRound
+        matchesByRound.push(...currentRoundMatches);
+    }
+
+    const firstRoundMatches = matchesByRound[totalRounds];
+    const byes = createByes(teams.length);
+    const firstRoundPlayers = generateFirstRoundPlayers(byes, teams);
+
+    for (let i = 0; i < firstRoundMatches.length; i++) {
+        const match = firstRoundMatches[i];
+        if (i < byes) {
+            match.participants.push({ playerId: null, teamId: firstRoundPlayers[i]._id, name: firstRoundPlayers[i].name });
+        } else {
+            match.participants.push(
+                { playerId: firstRoundPlayers[i * 2 - byes]._id, teamId: null, name: firstRoundPlayers[i * 2 - byes].name },
+                { playerId: firstRoundPlayers[i * 2 + 1 - byes]._id, teamId: null, name: firstRoundPlayers[i * 2 + 1 - byes].name }
+            );
+        }
+        await match.save();
+    }
+}
+
+module.exports = generateMatchesForTournament;

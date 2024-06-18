@@ -1,7 +1,9 @@
 const asyncHandler = require("express-async-handler");
 
 const createTeams = require("../public/scripts/createTeam");
+const generateMatchesForTournament = require("../public/scripts/createTournament");
 const Match = require("../models/match");
+const Category = require("../models/category");
 const verifyUser = require("../config/verifyUser");
 
 exports.get_match = asyncHandler(async (req, res, next) => {
@@ -29,8 +31,14 @@ exports.create_teams = asyncHandler(async (req, res, next) => {
     }
 })
 
-exports.create_new_match = asyncHandler(async (req, res, next) => {
-
+exports.create_matches = asyncHandler(async (req, res, next) => {
+    if (!req.body.category) res.status(400).json({ message: "Category missing" });
+    if (!req.body.matchType) res.status(400).json({ message: "Match Type missing" });
+    
+    const category = await Category.findById(req.body.category).exec();
+    const teams = category.players;
+    // res.json({ teams });
+    await generateMatchesForTournament(req.body.category, teams);
 });
 
 exports.post_match_results = asyncHandler((req, res, next) => {
