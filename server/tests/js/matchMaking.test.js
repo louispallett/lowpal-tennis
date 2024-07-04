@@ -171,11 +171,11 @@ describe("Works with a 2^(3) case with single qualifying matches (between 17 to 
         });
         test("Participants for round matches are correct", () => {
             expect(result.at(-2)[0].participants).toContain(1);
-            expect(result.at(-2)[0].participants).toContain(15);
             expect(result.at(-2)[7].participants).toContain(2);
-            expect(result.at(-2)[7].participants).toContain(16);
             expect(result.at(-2)[3].participants).toContain(3);
-            expect(result.at(-2)[4].participants).toContain(8);
+            expect(result.at(-2)[4].participants).toContain(4);
+            expect(result.at(-2)[0].participants).toContain(19);
+            expect(result.at(-2)[7].participants).toContain(18);
         });
     });
 });
@@ -237,5 +237,45 @@ describe("Works with a 2^(3) case with double qualifying matches (between 25 to 
             expect(result.at(-2)[0].participants).toContain(1);
             expect(result.at(-2)[7].participants).toContain(2);
         });
-    })
+    });
+});
+
+describe("Works with a perfect power of 2", () => {
+    const teams = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+    const category = "00aegfealoih3ql89oyr3p9q" // Just a random test Id
+    const result = generateMatchesForTournament(category, teams);
+    describe("Match tests", () => {
+        test("Number of MATCHES is correct", () => {
+            expect(result.flat()).toHaveLength(teams.length - 1);
+        });
+        test("Number of ROUNDS is correct", () => {
+            expect(result).toHaveLength(4);
+        });
+        test("Each round has the correct number of matches", () => {
+            expect(result[0]).toHaveLength(1);
+            expect(result[1]).toHaveLength(2);
+            expect(result[2]).toHaveLength(4);
+            expect(result[3]).toHaveLength(8);
+        });
+        test("Matches have correct nextMatchIds (spot checks)", () => {
+            expect(result[3][0].nextMatchId).toBe(result[2][0]._id);
+            expect(result[3][7].nextMatchId).toBe(result[2][3]._id);
+            expect(result[3][2].nextMatchId).toBe(result[2][1]._id);
+        });
+    });
+
+    describe("Participant tests", () => {
+        test("Length of participants is correct for qualifying matches", () => {
+            for (let i = 0; i < result.at(-1).length; i++) {
+                expect(result.at(-1)[i].participants).toHaveLength(2);
+            }
+        });
+        test("Participants for qualifying matches are correct (spot check)", () => {
+            expect(result.at(-1)[0].participants).toContain(1);
+            expect(result.at(-1)[7].participants).toContain(2);
+            expect(result.at(-1)[3].participants).toContain(3);
+            expect(result.at(-1)[4].participants).toContain(4);
+            expect(result.at(-1)[7].participants).toContain(16);
+        });
+    });
 });

@@ -1,136 +1,223 @@
 /* 
-This function is based on the assumption that the 'teams' parameter going into it is ranked on skill. 
-1           being highest skilled
-length - 1  being least skilled
-Teams should be an array of teams.
+=====================================
+Creating Tournaments
+=====================================
 
-NOTE: createRound just returns the next round players. So, if you have just 2 matches for the first round, it will return those four players.
-
-BUT because it then returns to a perfect power of 2 (2, 4, 8, 16, 32, etc.), it will calculate byes as 0, so all players play in that round.
-
-So, we're keeping it simple - if we have a 19 players, 13 receive a buy in and 6 play in the first round. So it returns those players as a double array:
-
-    [[14, 19], [15, 18], [16, 17]]
-
-We can then use these, add them to the first round, and then wait for the winners - once the winners have been announced we'll add them to the remaining players:
-
-    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 18, 17]
-
-This leaves us with a perfect power of two, so we can just repeat the process, leaving us with our next round:
-
-    [[1, 17], [2, 18], [3, 14], ... [8, 9]]
-
-These are our matches, and they are returned to the server (and we need to handle how to use them there!)
+This file, via the generateMatchesForTournament function, takes 
 */
 
-// const createRound = (teams) => {
-//     const n = teams.length;
-//     if (n < 2) return null;
-//     const byes = createByes(n);
-//     if (byes > 0) {
-//         const firstRoundPlayers = generateFirstRoundPlayers(byes, teams);
-//         const roundMatches = generateRoundMatches(firstRoundPlayers);
-//         return roundMatches;
-//     }
-//     const roundMatches = generateRoundMatches(teams);
-//     return roundMatches;
-// } 
+const { v4: uuidv4 } = require('uuid');
 
-// const generateRoundMatches = (roundPlayers) => {
-//     const matches = [];
-//     for (let i = 0; i < roundPlayers.length / 2; i++) {
-//         const player1 = roundPlayers[i];
-//         const player2 = roundPlayers[roundPlayers.length - 1 - i];
-//         matches.push([player1, player2]);
-//     }
-//     return matches;
-// }
-
-const Match = require("../../models/match");
-const Team = require("../../models/team");
-
-const createByes = (n) => {
+const calculateByes = (n) => {
     const nextPowerOfTwo = getNextPowerOfTwo(n);
-    const byes = nextPowerOfTwo - n;
-    return byes;
-} 
+    const result = nextPowerOfTwo - n;
+    return result;
+}
 
 const getNextPowerOfTwo = (n) => {
     let power = 1;
     while (power < n) {
-        power *= 2;
+        power *=2;
     }
     return power;
-} 
-
-const generateFirstRoundPlayers = (byes, teams) => {
-    const firstRoundPlayers = [];
-    for (let i = byes; i < teams.length; i++) {
-        firstRoundPlayers.push(teams[i]);
-    }
-    return firstRoundPlayers;
 }
 
-const createMatch = async(category, tournamentRoundText, participants, nextMatchId = null) => {
-    const match = new Match({
+const createMatch = (category, tournamentRoundText, nextMatchId = null) => {
+    const match = {
+        _id: uuidv4(),
         category,
         tournamentRoundText,
         state: "SCHEDULED", // This is the default value since all matches are new and NOT played
-        participants: participants.map(participant => ({
-            player: participant.playerId || null,
-            team: participant.teamId || null,
-            isWinner: false,
-            name: participant.name
-        })),
-        nextMatchId
-    });
-    return match.save();
+        participants: [],
+        nextMatchId,
+    };
+    return match;
 }
 
-const generateMatchesForTournament = async (category, teams) => {
-    // We are determining the perfect power of two with Math.log2() - so if we were to have 128 teams, we would have 7 here
-    // because 2^(7) is 128. We need to ceil it because one over that number (129) would result in 8 rounds because we'd have 127 buy ins
-    // and one first round match 
-    const totalRounds = Math.ceil(Math.log2(teams.length));
-    console.log(totalRounds);
+const generateMatchesForTournament = (category, teams) => {
+    
+    const numOfPlayers = teams.length;
+    const totalRounds = Math.ceil(Math.log2(numOfPlayers));
     const matchesByRound = [];
+    const numOfQualPlayers = numOfPlayers - calculateByes(numOfPlayers);    
+   
+    const finalMatch = createMatch(category, totalRounds);
+    matchesByRound.push([finalMatch]);    
 
-    // First, we create our final match - this is important as we need the _id of this to be the pointers for the preceding round.
-    const finalMatch = await createMatch(category, totalRounds, []);
-    matchesByRound.push(finalMatch);
-    // console.log(matchesByRound);
-
-    // Next, we need to generate the rounds for the reminaing rounds, working backwards
-    for (let round = 1; round <= totalRounds; round++) {
+    let round = 1;
+   
+    // Loop condition based on byes - we want it to run it to the end if Math.log2(numOfPlayers) is an int, but only to the penultimate round if
+    // it is a float (and then we add qualifying rounds after)
+    while (round < (numOfQualPlayers == numOfPlayers ? totalRounds : totalRounds - 1)) {
         const currentRoundMatches = [];
-        // We're working backwards here - so the first index would be 0 - i.e. the final match
-        const nextRoundMatches = matchesByRound[round - 1]._id;
-        console.log(nextRoundMatches);
-        for (let i = 0; i < Math.pow(2, totalRounds - round); i++) {
-            const nextMatchId = nextRoundMatches[Math.floor(i / 2)]._id;
-            const match = await createMatch(category, totalRounds - round, [], nextMatchId);
+        for (let i = 0; i < matchesByRound.at(-1).length * 2; i++) {
+            const nextMatchId = matchesByRound[round - 1][Math.floor(i / 2)]._id;
+            const match = createMatch(category, totalRounds - round, nextMatchId);
             currentRoundMatches.push(match);
         }
-        // Push each element of currentRoundMatches in order to matchesByRound
-        matchesByRound.push(...currentRoundMatches);
+        matchesByRound.push(currentRoundMatches);
+        round++;
+    }
+    
+    if (numOfQualPlayers != numOfPlayers) { 
+        const currentRoundMatches = [];
+        let i = 0;
+        while (currentRoundMatches.length < numOfQualPlayers / 2) {
+            const nextRoundMatches = matchesByRound.at(-1);
+            /* This conditional allows us to work from the middle of the array outwards, starting with index 2 (mid + 1). If i, 
+            is even, it works on the right side of the array. If i is odd, it works on the left. nextRoundMatches must always be 
+            a 2^(x), so it's length is always even. 
+            We use Math.floor and Math.ceil here to control the index for the next round _id - this is because on the third or fourth iteration,
+            when i = 2 || 3, we don't want to skip over a value.
+            However, we also want to ensure that we reset i if the */
+            let nextMatch;
+            if (i % 2 == 0) { // i is even
+                nextMatch = nextRoundMatches[(nextRoundMatches.length / 2) + Math.floor(i / 2)];
+            } else { // i is odd
+                nextMatch = nextRoundMatches[(nextRoundMatches.length / 2) - Math.ceil(i / 2)];
+            }
+            const match = createMatch(category, 1, nextMatch._id);
+
+            /* Assign the returned _id to the nextMatchId.previousMatchId (backwards pointer). We are using the nullish operator here (??=) - but there are two operations happening here - the nullish operator and the push method.
+            The nullish operator checks if the condition to the left of the operator (??=) is null. If it is, it creates it and assigns it the value to the right of the operator. If it isn't null, then it just returns the element, so ]
+            "(nextMatch.previousMatchId ??= [])" just becomes "nextMatch.previousId".
+            Then, match._id is pushed to the previousMatchId element (which WAS either null and is now [] or was not null and contained a value)*/
+            (nextMatch.previousMatchId ??= []).push(match._id);
+            
+            currentRoundMatches.push(match)
+            i++;
+            if (i == nextRoundMatches.length) i = 0;
+        }
+        matchesByRound.push(currentRoundMatches);
     }
 
-    const firstRoundMatches = matchesByRound[totalRounds];
-    const byes = createByes(teams.length);
-    const firstRoundPlayers = generateFirstRoundPlayers(byes, teams);
+    let result;
 
-    for (let i = 0; i < firstRoundMatches.length; i++) {
-        const match = firstRoundMatches[i];
-        if (i < byes) {
-            match.participants.push({ playerId: null, teamId: firstRoundPlayers[i]._id, name: firstRoundPlayers[i].name });
-        } else {
-            match.participants.push(
-                { playerId: firstRoundPlayers[i * 2 - byes]._id, teamId: null, name: firstRoundPlayers[i * 2 - byes].name },
-                { playerId: firstRoundPlayers[i * 2 + 1 - byes]._id, teamId: null, name: firstRoundPlayers[i * 2 + 1 - byes].name }
-            );
+    let _teams; // We will use this also to add our round 1 matches
+    if (numOfQualPlayers != numOfPlayers) {
+        const qualMatches = matchesByRound.at(-1);
+        const round1Matches = matchesByRound.at(-2);
+        let index = round1Matches.length;
+        // Condition - if the number of qualifying matches > round 1 matches - i.e. some round 1 matches have double qualifying matches
+        if (qualMatches.length > round1Matches.length) index = round1Matches.length - (qualMatches.length - round1Matches.length);
+        let i = 0;
+        _teams = [...teams]; // As arrays are not primitive values, they copy the memory address when passed as a value to a variable, hence we use the spread operator to copy the values over (not the memory!) - this was covered in CS50 with C.
+        // We start our index in the array somewhere, we then 
+        while (_teams.length > (teams.length - numOfQualPlayers)) {
+            if (_teams.length === 0) throw new Error("Memory error: Teams assignment returned 0.");
+            // We use the spread operator here to deconstruct it. This means we can 
+            qualMatches[i].participants.push(..._teams.splice(index, 1));
+            i++;
+            // Loop back around for second players
+            if (i > qualMatches.length - 1) i = 0;
         }
-        await match.save();
+    } else {
+        // In this instance we are dealing with a perfect 2^x tournament
+        const firstRoundMatches = matchesByRound.splice(matchesByRound.length - 1, 1)[0];
+        _teams = [...teams];
+        const leftRound1Matches = firstRoundMatches.splice(0, firstRoundMatches.length / 2);
+        const rightRound1Matches = firstRoundMatches.splice(0);
+
+        let leftIndex = 0;
+        for (let i = 0; i < _teams.length; i+=2) {
+            while ((leftIndex % 2 == 0 && leftRound1Matches[Math.floor(leftIndex / 2)].previousMatchId) || (leftIndex % 2 != 0 && leftRound1Matches[leftRound1Matches.length - Math.ceil(leftIndex / 2)].previousMatchId)) {
+                if (Math.floor(leftIndex / 2) > leftRound1Matches.length - 1 || leftRound1Matches.length - Math.ceil(leftIndex / 2) < 0) break;
+                if ((leftIndex % 2 == 0 && leftRound1Matches[Math.floor(leftIndex / 2)].participants > 1) || (leftIndex % 2 != 0 && leftRound1Matches[leftRound1Matches.length - Math.ceil(leftIndex / 2)].participants > 1)) {
+                    leftIndex++;
+                } else {
+                    break;
+                }
+            }
+            if (leftIndex % 2 == 0) {
+                leftRound1Matches[Math.floor(leftIndex / 2)].participants.push(_teams[i]);
+            } else {
+                leftRound1Matches[leftRound1Matches.length - Math.ceil(leftIndex / 2)].participants.push(_teams[i]);
+            }
+            leftIndex++;
+        }
+        let rightIndex = 0;
+        for (let i = 1; i < _teams.length; i+=2) {
+            while ((rightIndex % 2 == 0 && rightRound1Matches[rightRound1Matches.length - Math.ceil(rightIndex / 2) - 1].previousMatchId) || (rightIndex % 2 != 0 && rightRound1Matches[Math.floor(rightIndex / 2)].previousMatchId)) {
+                if (Math.floor(rightIndex / 2) > rightRound1Matches.length - 1 || rightRound1Matches.length - Math.ceil(rightIndex / 2) < 0) break;
+                if ((rightIndex % 2 == 0 && rightRound1Matches[rightRound1Matches.length - Math.ceil(rightIndex / 2) - 1].participants > 1) || (rightIndex % 2 != 0 && rightRound1Matches[Math.floor(rightIndex / 2)].participants > 1)) {
+                    rightIndex++;
+                } else {
+                    break;
+                }
+            }
+            if (rightIndex % 2 == 0) {
+                rightRound1Matches[rightRound1Matches.length - Math.ceil(rightIndex / 2) - 1].participants.push(_teams[i]);
+            } else {
+                rightRound1Matches[Math.floor(rightIndex / 2)].participants.push(_teams[i]);
+            }
+            rightIndex++;
+        }
+        result = [...leftRound1Matches, ...rightRound1Matches];
+        matchesByRound.splice(matchesByRound.length, 0, result);
+        return matchesByRound; 
+    }
+
+    const doublesLimit = (getNextPowerOfTwo(teams.length) / 2) + ((getNextPowerOfTwo(teams.length) / 2) / 2);
+    const round1Matches = matchesByRound.splice(matchesByRound.length - 2, 1)[0];
+    
+    // Condition - if teams.length > doublesLimit, this means we have doubles matches, so we can simply loop from inside out
+    if (teams.length > doublesLimit) {
+        let index = 0;
+        for (let i = 0; i < _teams.length; i++) {
+            if (index % 2 == 0) {
+                round1Matches[Math.floor(index / 2)].participants.push(_teams[i]);
+            } else {
+                round1Matches[round1Matches.length - Math.ceil(index / 2)].participants.push(_teams[i]);
+            }
+            index++;
+        }
+        matchesByRound.splice(matchesByRound.length - 1, 0, round1Matches);
+        return matchesByRound;
+    } else {
+        const leftRound1Matches = round1Matches.splice(0, round1Matches.length / 2);
+        const rightRound1Matches = round1Matches.splice(0);
+
+        let leftIndex = 0;
+        for (let i = 0; i < _teams.length; i+=2) {
+            while ((leftIndex % 2 == 0 && leftRound1Matches[Math.floor(leftIndex / 2)].previousMatchId) || (leftIndex % 2 != 0 && leftRound1Matches[leftRound1Matches.length - Math.ceil(leftIndex / 2)].previousMatchId)) {
+                if (Math.floor(leftIndex / 2) > leftRound1Matches.length - 1 || leftRound1Matches.length - Math.ceil(leftIndex / 2) < 0) break;
+                if ((leftIndex % 2 == 0 && leftRound1Matches[Math.floor(leftIndex / 2)].participants > 1) || (leftIndex % 2 != 0 && leftRound1Matches[leftRound1Matches.length - Math.ceil(leftIndex / 2)].participants > 1)) {
+                    leftIndex++;
+                } else {
+                    break;
+                }
+            }
+            if (leftIndex % 2 == 0) {
+                leftRound1Matches[Math.floor(leftIndex / 2)].participants.push(_teams[i]);
+            } else {
+                leftRound1Matches[leftRound1Matches.length - Math.ceil(leftIndex / 2)].participants.push(_teams[i]);
+            }
+            leftIndex++;
+        }
+        let rightIndex = 0;
+        for (let i = 1; i < _teams.length; i+=2) {
+            while ((rightIndex % 2 == 0 && rightRound1Matches[rightRound1Matches.length - Math.ceil(rightIndex / 2) - 1].previousMatchId) || (rightIndex % 2 != 0 && rightRound1Matches[Math.floor(rightIndex / 2)].previousMatchId)) {
+                if (Math.floor(rightIndex / 2) > rightRound1Matches.length - 1 || rightRound1Matches.length - Math.ceil(rightIndex / 2) < 0) break;
+                if ((rightIndex % 2 == 0 && rightRound1Matches[rightRound1Matches.length - Math.ceil(rightIndex / 2) - 1].participants > 1) || (rightIndex % 2 != 0 && rightRound1Matches[Math.floor(rightIndex / 2)].participants > 1)) {
+                    rightIndex++;
+                } else {
+                    break;
+                }
+            }
+            if (rightIndex % 2 == 0) {
+                rightRound1Matches[rightRound1Matches.length - Math.ceil(rightIndex / 2) - 1].participants.push(_teams[i]);
+            } else {
+                rightRound1Matches[Math.floor(rightIndex / 2)].participants.push(_teams[i]);
+            }
+            rightIndex++;
+        }
+        result = [...leftRound1Matches, ...rightRound1Matches];
+        matchesByRound.splice(matchesByRound.length - 1, 0, result);
+        return matchesByRound; 
     }
 }
 
-module.exports = generateMatchesForTournament;
+const players = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+console.log(generateMatchesForTournament("mens singles", players));
+
+module.exports = generateMatchesForTournament
