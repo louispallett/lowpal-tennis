@@ -7,7 +7,7 @@ const participant = new Schema({
     player: { type: Schema.Types.ObjectId, ref: "User" },
     team: { type: Schema.Types.ObjectId, ref: "Team" },
     resultText: { type: String, default: null },
-    isWinner: { type: Boolean, required: true },
+    isWinner: { type: Boolean, default: false },
     status: { type: String, default: null }, // 'PLAYED' | 'NO_SHOW' | 'WALK_OVER' | 'NO_PARTY'
     name: { type: String } // This will be defined as player.names_formatted OR team.names_formatted
 });

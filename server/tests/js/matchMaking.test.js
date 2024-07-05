@@ -121,8 +121,6 @@ describe("Works with a 2^(3) case with single qualifying matches (between 17 to 
     const teams = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
     const category = "00qaho3qthiapu93ajas" // Just a random test Id
     const result = generateMatchesForTournament(category, teams);
-    console.log(result);
-
 
     describe("Match tests", () => {
         test("Number of qualifying matches is correct", () => {

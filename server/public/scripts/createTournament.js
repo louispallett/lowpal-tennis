@@ -6,7 +6,9 @@ Creating Tournaments
 This file, via the generateMatchesForTournament function, takes a teams array (assumed to be in order of skill) and produces a multidimensional array of match objects by round, with their participants included.
 */
 
-const { v4: uuidv4 } = require('uuid');
+// const { v4: uuidv4 } = require('uuid');
+// const crypto = require('crypto');
+const mongoose = require("mongoose");
 
 const calculateByes = (n) => {
     const nextPowerOfTwo = getNextPowerOfTwo(n);
@@ -24,7 +26,7 @@ const getNextPowerOfTwo = (n) => {
 
 const createMatch = (category, tournamentRoundText, nextMatchId = null) => {
     const match = {
-        _id: uuidv4(),
+        _id: new mongoose.Types.ObjectId().toHexString(),
         category,
         tournamentRoundText,
         state: "SCHEDULED", // This is the default value since all matches are new and NOT played
