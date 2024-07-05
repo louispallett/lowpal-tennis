@@ -87,6 +87,7 @@ exports.signUp = [
                     categories: req.body.categories,
                     seeded: req.body.seeded,
                     password: hashedPassword,
+                    ranking: 0,
                 });
                 const newUser = await user.save();
                 await addUserToCategories(newUser._id, newUser.categories)
