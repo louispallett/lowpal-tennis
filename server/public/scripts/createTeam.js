@@ -34,39 +34,54 @@ Create match objects by category
 
 
 */
+const mongoose = require("mongoose");
 
 const Category = require("../../models/category");
 const Team = require("../../models/team");
 
-const createTeams = async (categoryId) => {
-    try {
-        const category = await Category.findById(categoryId).populate({ path: "players", select: "seeded" }).exec();
-        if (!category) throw new Error("Category not found");
+// const OLDcreateTeams = async (categoryId) => {
+//     try {
+//         const category = await Category.findById(categoryId).populate({ path: "players", select: "seeded" }).exec();
+//         if (!category) throw new Error("Category not found");
 
-        const seeded = category.players.filter(player => player.seeded);
-        const notSeeded = category.players.filter(player => !player.seeded);
+//         const seeded = category.players.filter(player => player.seeded);
+//         const notSeeded = category.players.filter(player => !player.seeded);
 
-        const teams = matchDoublesPairs(seeded, notSeeded);
+//         const teams = matchDoublesPairs(seeded, notSeeded);
         
-        for (let i = 0; i < teams.length; i++) {
-            const new_team = new Team({
-                players: [teams[i][0], teams[i][1]],
-                category: categoryId
-            });
-            await new_team.save();
-        }
+//         for (let i = 0; i < teams.length; i++) {
+//             const new_team = new Team({
+//                 players: [teams[i][0], teams[i][1]],
+//                 category: categoryId
+//             });
+//             await new_team.save();
+//         }
 
-        const newTeams = Team.find({ category: categoryId });
-        return newTeams;
+//         const newTeams = Team.find({ category: categoryId });
+//         return newTeams;
 
-    } catch (err) {
-        console.error("Error creating teams: ", err);
-        throw err;
-    }
+//     } catch (err) {
+//         console.error("Error creating teams: ", err);
+//         throw err;
+//     }
+// }
+
+const createTeams = (category) => {
+    // TODO: This function works on the assumption that notSeeded exists and it is greater than seeded
+    // console.log(category.players);
+    let seeded = category.players.filter(player => player.seeded);
+    const notSeeded = category.players.filter(player => !player.seeded);
+    if (!seeded) seeded = [];
+    if (!notSeeded) throw new Error("No non-seeded players found");
+    // console.log(seeded, notSeeded);
+
+    const teams = matchDoublesPairs(category._id, seeded, notSeeded);
+
+    return teams;
 }
 
 // This function assumes seeded.length < notSeeded.length
-const matchDoublesPairs = (seeded, notSeeded) => {
+const matchDoublesPairs = (categoryId, seeded, notSeeded) => {
 
     // I.e. total number of players is not even
     if ((seeded.length + notSeeded.length) % 2 != 0) {
@@ -81,14 +96,24 @@ const matchDoublesPairs = (seeded, notSeeded) => {
     while(seeded.length > 0 && notSeeded.length > 0) {
         const playerA = seeded.shift();
         const playerB = notSeeded.shift();
-        teams.push([playerA, playerB])
+        teams.push({
+            _id: new mongoose.Types.ObjectId().toHexString(),
+            players: [playerA, playerB],
+            category: categoryId,
+            ranking: playerA.ranking + playerB.ranking,
+        })
     }
 
     // Remaining nonSeeded matched
     while(notSeeded.length > 1) {
         const playerA = notSeeded.shift();
         const playerB = notSeeded.shift();
-        teams.push([playerA, playerB])
+        teams.push({
+            _id: new mongoose.Types.ObjectId().toHexString(),
+            players: [playerA, playerB],
+            category: categoryId,
+            ranking: playerA.ranking + playerB.ranking,
+        });
     }
 
     return teams;

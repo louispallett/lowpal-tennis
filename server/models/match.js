@@ -20,7 +20,7 @@ const Match = new Schema({
     // We need this to distinguish between the two types of matches. The enumeration value is so that only either 'singles' or 'doubles' can be given for this element!
     // matchType: { type: String, enum: ["singles", "doubles"], required: true },
     participants: [participant]
-});
+}, { id: false });
 
 Match.virtual("date_formatted").get(function() {
     return DateTime.fromJSDate(this.date).toLocaleString(DateTime.DATETIME_MED);
