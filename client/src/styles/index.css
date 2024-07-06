@@ -109,8 +109,8 @@ input[type="checkbox"] {
 }
 
 @font-face {
-    font-family: "poppins";
+    font-family: "kanit";
     src: 
-    url("/assets/fonts/Poppins.woff2") format("woff2"),
-    url("/assets/fonts/Poppins.woff") format("woff");
+    url("/assets/fonts/kanit.woff2") format("woff2"),
+    url("/assets/fonts/kanit.woff") format("woff");
 }
