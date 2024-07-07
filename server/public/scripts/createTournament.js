@@ -6,8 +6,6 @@ Creating Tournaments
 This file, via the generateMatchesForTournament function, takes a teams array (assumed to be in order of skill) and produces a multidimensional array of match objects by round, with their participants included.
 */
 
-// const { v4: uuidv4 } = require('uuid');
-// const crypto = require('crypto');
 const mongoose = require("mongoose");
 
 const calculateByes = (n) => {

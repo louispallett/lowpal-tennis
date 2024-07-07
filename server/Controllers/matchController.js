@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 
-const createTeams = require("../public/scripts/createTeam");
+const createTeams = require("../public/scripts/createTeam").createTeams;
+const createMixedTeams = require("../public/scripts/createTeam").createMixedTeams;
 const generateMatchesForTournament = require("../public/scripts/createTournament");
 
 const Match = require("../models/match");
@@ -9,7 +10,6 @@ const User = require("../models/user");
 const Team = require("../models/team");
 
 const verifyUser = require("../config/verifyUser");
-const team = require("../models/team");
 
 exports.get_match = asyncHandler(async (req, res, next) => {
     try {
@@ -43,7 +43,12 @@ exports.create_matches = asyncHandler(async (req, res, next) => {
     const matchesAlreadyExist = await Match.find({ category: req.body.category }).exec();
     if (matchesAlreadyExist.length > 0) res.status(401).json({ error: `Matches for ${req.body.category} already exist`});
 
-    const singles = await Category.find({ name: { $in: ["Mens Singles", "Womens Singles"] }}).exec();
+    const [isMixed, singles] = await Promise.all([
+        Category.findOne({ name: "Mixed Doubles" }).exec(),
+        Category.find({ name: { $in: ["Mens Singles", "Womens Singles"] }}).exec()
+    ]);
+    if (!isMixed || !singles) res.status(500).json({ error: "Server error: categories not found" })
+
     const isSinglesMatch = singles.some(single => single._id.toString() === req.body.category); 
 
     if (isSinglesMatch) {
@@ -62,24 +67,42 @@ exports.create_matches = asyncHandler(async (req, res, next) => {
         }    
     } else {
         // In this instance, we need to create our doubles teams.
-        // First try catch creates our teams
-        try {
-            const category = await Category.findById(req.body.category).populate({ path: "players", select: "firstName lastName seeded ranking" }).exec();
-            if (!category) throw new Error("Category not found");
-            
-            const teamsAlreadyExit = await Team.find({ category: req.body.category }).exec();
-            if (teamsAlreadyExit.length > 0) res.status(401).json({ error: `Teams for ${req.body.category} already exist`});
-            const teams = createTeams(category);
-            for (let i = 0; i < teams.length; i++) {
-                const team = new Team(teams[i]);
-                await team.save();
+        // Since creating mixed doubles is obviously slightly different, we need to check whether it's mixed. If it isn't, it's a non-mixed doubles (mens || womens)
+        if (req.body.category == isMixed._id) {
+            try {
+                const category = await Category.findById(req.body.category).populate({ path: "players", select: "firstName male lastName seeded ranking" }).exec();
+                if (!category) throw new Error("Category not found");
+                
+                const teamsAlreadyExit = await Team.find({ category: req.body.category }).exec();
+                if (teamsAlreadyExit.length > 0) res.status(401).json({ error: `Teams for ${req.body.category} already exist`});
+                const teams = createMixedTeams(category);
+                for (let i = 0; i < teams.length; i++) {
+                    const team = new Team(teams[i]);
+                    await team.save();
+                }
+            } catch (err) {
+                console.log(err);
+                res.status(401).json({ message: `Error (team creation): ${err}` });
             }
-        } catch (err) {
-            console.log(err);
-            res.status(401).json({ message: `Error (team creation): ${err}` });
+        } else {
+            try {
+                const category = await Category.findById(req.body.category).populate({ path: "players", select: "firstName lastName seeded ranking" }).exec();
+                if (!category) throw new Error("Category not found");
+                
+                const teamsAlreadyExit = await Team.find({ category: req.body.category }).exec();
+                if (teamsAlreadyExit.length > 0) res.status(401).json({ error: `Teams for ${req.body.category} already exist`});
+                const teams = createTeams(category);
+                for (let i = 0; i < teams.length; i++) {
+                    const team = new Team(teams[i]);
+                    await team.save();
+                }
+            } catch (err) {
+                console.log(err);
+                res.status(401).json({ message: `Error (team creation): ${err}` });
+            }
         }
 
-        // Second try catch creates our matches
+        // Second try catch creates our matches. Since this is the same for both mixed and non-mixed, we run this for either case here, to be less verbose
         try {
             const teams = await Team.find({ category: req.body.category }).populate({ path: "players", select: "firstName lastName seeded ranking" }).sort({ ranking: 1 }).exec();
             const matches = generateMatchesForTournament(req.body.category, teams).flat();
@@ -87,12 +110,10 @@ exports.create_matches = asyncHandler(async (req, res, next) => {
                 const match = new Match(matches[i]);
                 await match.save();
             }
-            res.status(200).json({ matches });
+            res.json({ matches });
         } catch (err) {
             res.status(401).json({ message: `Error (match (doubles) creation): ${err}` });
         }
-
-        // TODO: We need to run a case in which we use mixed, spliting the men and women up... currently we aren't accounting for this!
     }    
 });
 

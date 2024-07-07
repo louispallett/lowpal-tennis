@@ -36,35 +36,59 @@ Create match objects by category
 */
 const mongoose = require("mongoose");
 
-const Category = require("../../models/category");
-const Team = require("../../models/team");
+const createMixedTeams = (category) => {
+    // Filter out our players so we are left with seeded males and females, and non-seeded males and females
+    const seededPlayers = category.players.filter(player => player.seeded);
+    const notSeededPlayers = category.players.filter(player => !player.seeded);
+    let seededFemale = seededPlayers.filter(player => !player.male);
+    let seededMale = seededPlayers.filter(player => player.male);
+    let notSeededFemale = notSeededPlayers.filter(player => !player.male);
+    let notSeededMale = notSeededPlayers.filter(player => player.male);  
 
-// const OLDcreateTeams = async (categoryId) => {
-//     try {
-//         const category = await Category.findById(categoryId).populate({ path: "players", select: "seeded" }).exec();
-//         if (!category) throw new Error("Category not found");
+    if ((seededPlayers.length + notSeededPlayers.length) % 2 != 0) throw new Error("Number of players must be even");
+    if ((seededMale.length + notSeededMale.length) != (seededFemale.length + notSeededFemale.length)) throw new Error("Number of female and male players must be even");
 
-//         const seeded = category.players.filter(player => player.seeded);
-//         const notSeeded = category.players.filter(player => !player.seeded);
+    const teams = [];
+    seededFemale = seededFemale.sort(() => Math.random() - 0.5);
+    seededMale = seededMale.sort(() => Math.random() - 0.5);
+    notSeededFemale = notSeededFemale.sort(() => Math.random() - 0.5);
+    notSeededMale = notSeededMale.sort(() => Math.random() - 0.5);
 
-//         const teams = matchDoublesPairs(seeded, notSeeded);
-        
-//         for (let i = 0; i < teams.length; i++) {
-//             const new_team = new Team({
-//                 players: [teams[i][0], teams[i][1]],
-//                 category: categoryId
-//             });
-//             await new_team.save();
-//         }
+    while (seededFemale.length > 0 && notSeededMale.length > 0) {
+        const femalePlayer = seededFemale.shift();
+        const malePlayer = notSeededMale.shift();
+        teams.push({
+            _id: new mongoose.Types.ObjectId().toHexString(),
+            players: [femalePlayer, malePlayer],
+            category: category._id,
+            ranking: femalePlayer.ranking + malePlayer.ranking,
+        });
+    }
 
-//         const newTeams = Team.find({ category: categoryId });
-//         return newTeams;
+    while (seededMale.length > 0 && notSeededFemale.length > 0) {
+        const malePlayer = seededMale.shift();
+        const femalePlayer = notSeededFemale.shift();
+        teams.push({
+            _id: new mongoose.Types.ObjectId().toHexString(),
+            players: [femalePlayer, malePlayer],
+            category: category._id,
+            ranking: femalePlayer.ranking + malePlayer.ranking,
+        });
+    }
 
-//     } catch (err) {
-//         console.error("Error creating teams: ", err);
-//         throw err;
-//     }
-// }
+    while (notSeededFemale.length > 0 && notSeededMale.length > 0) {
+        const malePlayer = notSeededMale.shift();
+        const femalePlayer = notSeededFemale.shift();
+        teams.push({
+            _id: new mongoose.Types.ObjectId().toHexString(),
+            players: [femalePlayer, malePlayer],
+            category: category._id,
+            ranking: femalePlayer.ranking + malePlayer.ranking,
+        });
+    }
+
+    return teams;
+}
 
 const createTeams = (category) => {
     // TODO: This function works on the assumption that notSeeded exists and it is greater than seeded
@@ -84,16 +108,14 @@ const createTeams = (category) => {
 const matchDoublesPairs = (categoryId, seeded, notSeeded) => {
 
     // I.e. total number of players is not even
-    if ((seeded.length + notSeeded.length) % 2 != 0) {
-        return new Error("Number of players must be even");
-    }
+    if ((seeded.length + notSeeded.length) % 2 != 0) return new Error("Number of players must be even");
 
     // Note that seeded and notSeeded must be arrays
     seeded = seeded.sort(() => Math.random() - 0.5);
     notSeeded = notSeeded.sort(() => Math.random() - 0.5);
-    let teams = [];
+    const teams = [];
 
-    while(seeded.length > 0 && notSeeded.length > 0) {
+    while (seeded.length > 0 && notSeeded.length > 0) {
         const playerA = seeded.shift();
         const playerB = notSeeded.shift();
         teams.push({
@@ -105,7 +127,7 @@ const matchDoublesPairs = (categoryId, seeded, notSeeded) => {
     }
 
     // Remaining nonSeeded matched
-    while(notSeeded.length > 1) {
+    while (notSeeded.length > 1) {
         const playerA = notSeeded.shift();
         const playerB = notSeeded.shift();
         teams.push({
@@ -119,4 +141,4 @@ const matchDoublesPairs = (categoryId, seeded, notSeeded) => {
     return teams;
 }
 
-module.exports = createTeams;
+module.exports = {createTeams, createMixedTeams};
