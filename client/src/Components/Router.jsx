@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider, Outlet } from "react-router-dom";
 
+import About from "./About";
+import Bracket from "./Bracket";
+import BracketsList from "./BracketsList";
 import Users from "./Users/Users";
 import SignIn from "./Users/SignIn";
 import SignUp from "./Users/SignUp";
 import Dashboard from "./Dashboard";
-import Categories from "./Categories";
+import Home from "./Home";
 import Match from "./Match";
+
+function ProtectedRoute({ isAuth, children }) {
+    return isAuth ? children : <Navigate to="/users/sign-in" replace />;
+}
 
 export default function Router() {
     const [isAuth, setIsAuth] = useState(false);
@@ -33,11 +40,45 @@ export default function Router() {
         }
         checkUser();
     }, []);
-
+    
     const router = createBrowserRouter([
         {
             path: "/",
-            element: isAuth ? <Navigate to="/dashboard" replace /> : <Navigate to="/users/sign-in" />
+            // element: <ProtectedRoute isAuth={isAuth}><Outlet /></ProtectedRoute>,
+            children: [
+                {
+                    path: "dashboard",
+                    element: <Dashboard />,
+                    children: [
+                        {
+                            // Using index allows us to set a default child!
+                            index: true,
+                            element: <Home />
+                        },
+                        {
+                            path: ":matchId",
+                            element: <Match />
+                        },
+                        {
+                            path: "about",
+                            element: <About />
+                        },
+                        {
+                            path: "brackets",
+                            children: [
+                                {
+                                    index: true,
+                                    element: <BracketsList />
+                                },
+                                {
+                                    path: ":bracketId",
+                                    element: <Bracket />
+                                }
+                            ]
+                        },
+                    ]
+                }
+            ]
         },
         {
             path: "/users",
@@ -53,20 +94,6 @@ export default function Router() {
                 }
             ]
         },
-        {
-            path: "/dashboard",
-            element: <Dashboard />,
-            children: [
-                {
-                    path: "about",
-                    element: <Categories />
-                },
-                {
-                    path: "categories",
-                    element: <Categories />
-                },
-            ]
-        }
     ]);
 
     return <RouterProvider router={router} />;

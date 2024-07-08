@@ -17,7 +17,7 @@ export default function SignIn() {
 
     const onSubmit = async (data) => {
         setIsPending(true)
-        axios.post("/api/sign-in", data)
+        axios.post("/api/users/sign-in", data)
             .then(response => {
                 const token = response.data.token;
                 if (!token) {
@@ -26,7 +26,7 @@ export default function SignIn() {
                     return;
                 }
                 localStorage.setItem("Authorization", token);
-                window.location.assign("/dashboard/articles")
+                window.location.assign("/dashboard/home")
             }).catch(err => {
                 console.log(err);
             })
