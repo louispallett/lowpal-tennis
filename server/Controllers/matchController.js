@@ -10,14 +10,27 @@ const User = require("../models/user");
 const Team = require("../models/team");
 
 const verifyUser = require("../config/verifyUser");
+const { default: mongoose } = require("mongoose");
+
+exports.get_matches = asyncHandler(async (req, res, next) => {
+    try {
+        const user = await verifyUser(req.headers.authorization);
+        const userId = user.user._id;
+        const userTeams = await Team.find({ players: userId }).exec();
+        const userTeamsIds = userTeams.map(item => item._id.toString());
+        const idsToCheck = [userId.toString(), ...userTeamsIds];
+        const userMatchData = await Match.find({ state: 'SCHEDULED', 'participants.id': { $in: idsToCheck }}).populate({ path: "category", select: "name"}).exec();
+        res.json({ userMatchData });
+    } catch (err) {
+        console.log(err);
+        res.status(403).json(err);
+    }
+});
 
 exports.get_match = asyncHandler(async (req, res, next) => {
     try {
-        await verifyUser(req.headers.authorization);
-        const match = Match.findById(req.params.matchId)
-            .populate({ path: "participants.player", select: ["firstName", "lastName"]})
-            .exec();
-        res.status(200).json({ match });
+        const match = await Match.findById(req.params.matchId).populate({ path: "category", select: "name"}).exec();
+        res.json({ match });
     } catch (error) {
         res.sendStatus(403);
     }
@@ -112,6 +125,7 @@ exports.create_matches = asyncHandler(async (req, res, next) => {
             }
             res.json({ matches });
         } catch (err) {
+            console.log(err);
             res.status(401).json({ message: `Error (match (doubles) creation): ${err}` });
         }
     }    

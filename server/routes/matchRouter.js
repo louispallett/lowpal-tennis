@@ -3,6 +3,8 @@ const router = express.Router();
 
 const matchController = require("../Controllers/matchController");
 
+router.get("/matches", matchController.get_matches);
+
 router.get("/:matchId", matchController.get_match);
 
 router.post("/teams/create", matchController.create_teams);

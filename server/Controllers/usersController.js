@@ -5,10 +5,9 @@ const passport = require("../config/passport");
 const { body, validationResult } = require("express-validator");
 
 const transporter = require("../config/nodemailerConfig");
+const verifyUser = require("../config/verifyUser");
 const User = require("../models/user");
 const Category = require("../models/category");
-
-// require('dotenv').config();
 
 exports.signIn = [
     body("email", "Email needs to be a valid email")
@@ -32,7 +31,7 @@ exports.signIn = [
             } else {
                 req.login(user, next); // Note that this assigns req.user to user. It is also a req, so we need a response in this line (otherwise we receive an error)
                 jwt.sign({ user }, process.env.USER_KEY, { expiresIn: "10h" }, (err, token) => {
-                    res.json({ token, userId: user._id }); // We send this to the front end and save it in local storage
+                    res.json({ token }); // We send this to the front end and save it in local storage
                 });
             }
         })(req, res, next);
@@ -139,9 +138,15 @@ const addUserToCategories = async (userId, userCategories) => {
 
 exports.verify = asyncHandler(async (req, res, next) => {
     try {
-        await verifyUser(req.headers.authorization);
-        res.sendStatus(200);
+        const user = await verifyUser(req.headers.authorization);
+        res.json({ 
+            userId: user.user._id,
+            email: user.user.email,
+            firstName: user.user.firstName,
+            categories: user.user.categories
+         });
     } catch (err) {
-        res.sendStatus(403)
+        console.log(err);
+        res.status(403).json(err);
     }
 });

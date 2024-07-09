@@ -8,12 +8,12 @@ const Category = require("../models/category");
 
 
 exports.get_categories = asyncHandler(async (req, res, next) => {
+    try { await verifyUser(req.headers.authorization) } catch (error) { res.sendStatus(403) };
     try {
-        await verifyUser(req.headers.authorization);
         const user = await User.findById(req.params.userId).populate({ path: "categories" }).exec();
         const categories = user.categories.map(category => category.name);
-        res.status(200).json({ categories })
-        } catch (error) {
-            res.sendStatus(403);
-        }
+        res.json({ categories });
+    } catch (err) {
+        res.status(500).json({ error: `Server Error: ${err}` });
+    }
 });

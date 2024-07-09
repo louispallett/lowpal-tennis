@@ -1,3 +1,16 @@
+/* 
+========================
+SERVER SIDE TODO LIST 
+========================
+
+- Return information for the client side home page (fetching user via verifyUser and finding their relevant matches)
+- Return information for the client side specific match (can use _id provided)
+- POST method for updating match scores
+- GET method for fetching matches for specific category (results pages)
+- Any final clean up
+
+*/
+
 const cookieParser = require("cookie-parser");
 const express = require("express");
 const logger = require('morgan');

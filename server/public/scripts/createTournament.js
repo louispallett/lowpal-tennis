@@ -105,8 +105,19 @@ const generateMatchesForTournament = (category, teams) => {
         // We start our index in the array somewhere, we then 
         while (_teams.length > (teams.length - numOfQualPlayers)) {
             if (_teams.length === 0) throw new Error("Memory error: Teams assignment returned 0.");
-            // We use the spread operator here to deconstruct it. This means we can 
-            qualMatches[i].participants.push(..._teams.splice(index, 1));
+            const qualPlayers = _teams.splice(index, 1)[0];
+            // console.log(qualPlayers);
+            qualMatches[i].participants.push({
+                id: qualPlayers._id.toString(),
+                name: qualPlayers.firstName ? `${qualPlayers.firstName} ${qualPlayers.lastName}` : `${qualPlayers.players[0].firstName} ${qualPlayers.players[0].lastName} and ${qualPlayers.players[1].firstName} ${qualPlayers.players[1].lastName}`,
+                ranking: qualPlayers.ranking,
+                seeded: qualPlayers.seeded,
+                resultText: null,
+                isWinner: false,
+                status: null,
+            });
+            // We use the spread operator here to deconstruct it.
+            // qualMatches[i].participants.push(..._teams.splice(index, 1));
             i++;
             // Loop back around for second players
             if (i > qualMatches.length - 1) i = 0;
@@ -129,9 +140,25 @@ const generateMatchesForTournament = (category, teams) => {
                 }
             }
             if (leftIndex % 2 == 0) {
-                leftRound1Matches[Math.floor(leftIndex / 2)].participants.push(_teams[i]);
+                leftRound1Matches[Math.floor(leftIndex / 2)].participants.push({
+                    id: _teams[i]._id.toString(),
+                    name: _teams[i].firstName ? `${_teams[i].firstName} ${_teams[i].lastName}` : `${_teams[i].players[0].firstName} ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName} ${_teams[i].players[1].lastName}`,
+                    ranking: _teams[i].ranking,
+                    seeded: _teams[i].seeded,
+                    resultText: null,
+                    isWinner: false,
+                    status: null,
+                });
             } else {
-                leftRound1Matches[leftRound1Matches.length - Math.ceil(leftIndex / 2)].participants.push(_teams[i]);
+                leftRound1Matches[leftRound1Matches.length - Math.ceil(leftIndex / 2)].participants.push({
+                    id: _teams[i]._id.toString(),
+                    name: _teams[i].firstName ? `${_teams[i].firstName} ${_teams[i].lastName}` : `${_teams[i].players[0].firstName} ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName} ${_teams[i].players[1].lastName}`,
+                    ranking: _teams[i].ranking,
+                    seeded: _teams[i].seeded,
+                    resultText: null,
+                    isWinner: false,
+                    status: null,
+                });
             }
             leftIndex++;
         }
@@ -146,9 +173,25 @@ const generateMatchesForTournament = (category, teams) => {
                 }
             }
             if (rightIndex % 2 == 0) {
-                rightRound1Matches[rightRound1Matches.length - Math.ceil(rightIndex / 2) - 1].participants.push(_teams[i]);
+                rightRound1Matches[rightRound1Matches.length - Math.ceil(rightIndex / 2) - 1].participants.push({
+                    id: _teams[i]._id.toString(),
+                    name: _teams[i].firstName ? `${_teams[i].firstName} ${_teams[i].lastName}` : `${_teams[i].players[0].firstName} ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName} ${_teams[i].players[1].lastName}`,
+                    ranking: _teams[i].ranking,
+                    seeded: _teams[i].seeded,
+                    resultText: null,
+                    isWinner: false,
+                    status: null,
+                });
             } else {
-                rightRound1Matches[Math.floor(rightIndex / 2)].participants.push(_teams[i]);
+                rightRound1Matches[Math.floor(rightIndex / 2)].participants.push({
+                    id: _teams[i]._id.toString(),
+                    name: _teams[i].firstName ? `${_teams[i].firstName} ${_teams[i].lastName}` : `${_teams[i].players[0].firstName} ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName} ${_teams[i].players[1].lastName}`,
+                    ranking: _teams[i].ranking,
+                    seeded: _teams[i].seeded,
+                    resultText: null,
+                    isWinner: false,
+                    status: null,
+                });
             }
             rightIndex++;
         }
@@ -165,9 +208,25 @@ const generateMatchesForTournament = (category, teams) => {
         let index = 0;
         for (let i = 0; i < _teams.length; i++) {
             if (index % 2 == 0) {
-                round1Matches[Math.floor(index / 2)].participants.push(_teams[i]);
+                round1Matches[Math.floor(index / 2)].participants.push({
+                    id: _teams[i]._id.toString(),
+                    name: _teams[i].firstName ? `${_teams[i].firstName} ${_teams[i].lastName}` : `${_teams[i].players[0].firstName} ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName} ${_teams[i].players[1].lastName}`,
+                    ranking: _teams[i].ranking,
+                    seeded: _teams[i].seeded,
+                    resultText: null,
+                    isWinner: false,
+                    status: null,
+                });
             } else {
-                round1Matches[round1Matches.length - Math.ceil(index / 2)].participants.push(_teams[i]);
+                round1Matches[round1Matches.length - Math.ceil(index / 2)].participants.push({
+                    id: _teams[i]._id.toString(),
+                    name: _teams[i].firstName ? `${_teams[i].firstName} ${_teams[i].lastName}` : `${_teams[i].players[0].firstName} ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName} ${_teams[i].players[1].lastName}`,
+                    ranking: _teams[i].ranking,
+                    seeded: _teams[i].seeded,
+                    resultText: null,
+                    isWinner: false,
+                    status: null,
+                });
             }
             index++;
         }
@@ -187,10 +246,27 @@ const generateMatchesForTournament = (category, teams) => {
                     break;
                 }
             }
+
             if (leftIndex % 2 == 0) {
-                leftRound1Matches[Math.floor(leftIndex / 2)].participants.push(_teams[i]);
+                leftRound1Matches[Math.floor(leftIndex / 2)].participants.push({
+                    id: _teams[i]._id.toString(),
+                    name: _teams[i].firstName ? `${_teams[i].firstName} ${_teams[i].lastName}` : `${_teams[i].players[0].firstName} ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName} ${_teams[i].players[1].lastName}`,
+                    ranking: _teams[i].ranking,
+                    seeded: _teams[i].seeded,
+                    resultText: null,
+                    isWinner: false,
+                    status: null,
+                });
             } else {
-                leftRound1Matches[leftRound1Matches.length - Math.ceil(leftIndex / 2)].participants.push(_teams[i]);
+                leftRound1Matches[leftRound1Matches.length - Math.ceil(leftIndex / 2)].participants.push({
+                    id: _teams[i]._id.toString(),
+                    name: _teams[i].firstName ? `${_teams[i].firstName} ${_teams[i].lastName}` : `${_teams[i].players[0].firstName} ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName} ${_teams[i].players[1].lastName}`,
+                    ranking: _teams[i].ranking,
+                    seeded: _teams[i].seeded,
+                    resultText: null,
+                    isWinner: false,
+                    status: null,
+                });
             }
             leftIndex++;
         }
@@ -205,9 +281,25 @@ const generateMatchesForTournament = (category, teams) => {
                 }
             }
             if (rightIndex % 2 == 0) {
-                rightRound1Matches[rightRound1Matches.length - Math.ceil(rightIndex / 2) - 1].participants.push(_teams[i]);
+                rightRound1Matches[rightRound1Matches.length - Math.ceil(rightIndex / 2) - 1].participants.push({
+                    id: _teams[i]._id.toString(),
+                    name: _teams[i].firstName ? `${_teams[i].firstName} ${_teams[i].lastName}` : `${_teams[i].players[0].firstName} ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName} ${_teams[i].players[1].lastName}`,
+                    ranking: _teams[i].ranking,
+                    seeded: _teams[i].seeded,
+                    resultText: null,
+                    isWinner: false,
+                    status: null,
+                });
             } else {
-                rightRound1Matches[Math.floor(rightIndex / 2)].participants.push(_teams[i]);
+                rightRound1Matches[Math.floor(rightIndex / 2)].participants.push({
+                    id: _teams[i]._id.toString(),
+                    name: _teams[i].firstName ? `${_teams[i].firstName} ${_teams[i].lastName}` : `${_teams[i].players[0].firstName} ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName} ${_teams[i].players[1].lastName}`,
+                    ranking: _teams[i].ranking,
+                    seeded: _teams[i].seeded,
+                    resultText: null,
+                    isWinner: false,
+                    status: null,
+                });
             }
             rightIndex++;
         }
