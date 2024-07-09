@@ -26,7 +26,7 @@ export default function SignIn() {
                     return;
                 }
                 localStorage.setItem("Authorization", token);
-                window.location.assign("/dashboard/home")
+                window.location.assign("/dashboard/home");
             }).catch(err => {
                 console.log(err);
             })

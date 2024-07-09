@@ -1,3 +1,18 @@
+/* 
+========================
+CLIENT SIDE TODO LIST 
+========================
+
+- Create our tournament brackets using react-tournament-bracket and the current information we have created on the backend.
+- Finish home page by fetching relevant information (each match can have an #id matching it's mongo _id)
+- Create individual matchId pages where users can submit scores
+- Create a dialog box after clicking 'sign up' to detail how data is used. The sign-up box will trigger this dialog whilst the 'I agree' in the dialog will actually submit the information (and close the dialog box)
+- Finish About page, tournament rules, etc.
+
+*/
+
+
+
 import { useEffect, useState } from "react";
 import { createBrowserRouter, Navigate, RouterProvider, Outlet } from "react-router-dom";
 
@@ -27,7 +42,7 @@ export default function Router() {
             try {
                 const response = await fetch("/api/users/verify", { 
                     mode: "cors", 
-                    headers: { "Authorization": `${token}`} 
+                    headers: { "Authorization": token} 
                 })
                 if (response.status < 400) {
                     setIsAuth(true);
@@ -40,11 +55,11 @@ export default function Router() {
         }
         checkUser();
     }, []);
-    
+
     const router = createBrowserRouter([
         {
             path: "/",
-            // element: <ProtectedRoute isAuth={isAuth}><Outlet /></ProtectedRoute>,
+            element: <ProtectedRoute isAuth={isAuth}><Outlet /></ProtectedRoute>,
             children: [
                 {
                     path: "dashboard",
