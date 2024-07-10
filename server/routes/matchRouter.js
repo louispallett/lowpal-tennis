@@ -7,6 +7,8 @@ router.get("/matches", matchController.get_matches);
 
 router.get("/:matchId", matchController.get_match);
 
+router.get("/:matchId/contactDetails", matchController.get_contact_details);
+
 router.post("/teams/create", matchController.create_teams);
 
 router.post("/create", matchController.create_matches);
