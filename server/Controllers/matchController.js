@@ -39,18 +39,23 @@ exports.get_match = asyncHandler(async (req, res, next) => {
 exports.get_contact_details = asyncHandler(async (req, res, next) => {
     try {
         const match = await Match.findById(req.params.matchId);
+        console.log(match);
         let isUser = await User.findById(match.participants[0].id);
         const data = [];
         if (isUser) {
             data.push({ name: `${isUser.firstName[0]}. ${isUser.lastName}`, mobile: isUser.mobile });
-            const user2 = await User.findById(match.participants[1].id);
-            if (user2) data.push({ name: `${user2.firstName[0]}. ${user2.lastName}`, mobile: user2.mobile });
+            let user2;
+            if (match.participants.length > 1) {
+                user2 = await User.findById(match.participants[1].id);
+                data.push({ name: `${user2.firstName[0]}. ${user2.lastName}`, mobile: user2.mobile });
+            }
         } else {
             const team1 = await Team.findById(match.participants[0].id).populate({ path: "players", select: "mobile firstName lastName" });
             data.push({ name: `${team1.players[0].firstName[0]}. ${team1.players[0].lastName}`, mobile: team1.players[0].mobile });
             data.push({ name: `${team1.players[1].firstName[0]}. ${team1.players[1].lastName}`, mobile: team1.players[1].mobile });
-            const team2 = await Team.findById(match.participants[1].id).populate({ path: "players", select: "mobile firstName lastName" });
-            if (team2) {
+            let team2;
+            if (match.participants.length > 1) {
+                team2 = await Team.findById(match.participants[1].id).populate({ path: "players", select: "mobile firstName lastName" });
                 data.push({ name: `${team2.players[0].firstName[0]}. ${team2.players[0].lastName}`, mobile: team2.players[0].mobile });
                 data.push({ name: `${team2.players[1].firstName[0]}. ${team2.players[1].lastName}`, mobile: team2.players[1].mobile });
             }
