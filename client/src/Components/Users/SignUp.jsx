@@ -4,18 +4,12 @@ import { DevTool } from "@hookform/devtools";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { Spinner } from "../tailwind_components/tailwind-ex-elements";
 import arrow from "/assets/images/select-arrow.svg";
 
-/* 
-TODO: Add another input for phoneNumber (we may want to add a library to the backend to check whether this is valid)
-*/
-
 export default function SignUp() {
     const form = useForm();
-    const navigate = useNavigate();
     const { register, control, handleSubmit, formState, watch } = form;
     const { errors } = formState;
     const [isPending, setIsPending] = useState(false);
