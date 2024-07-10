@@ -65,7 +65,7 @@ function Navigation() {
           Menu
           <ChevronDownIcon className="w-4 h-6 fill-white/60" />
       </Menu.Button>
-      <Menu.Items transition className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition dark:bg-slate-800 focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in">
+      <Menu.Items transition="true" className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition dark:bg-slate-800 focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in">
           <Menu.Item>
             <p className="block px-4 py-2 text-gray-700 dark:text-slate-100">Signed in as <b>{userData ? userData.email : ""}</b></p>
           </Menu.Item>
