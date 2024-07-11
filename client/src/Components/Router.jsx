@@ -23,6 +23,7 @@ import Users from "./Users/Users";
 import SignIn from "./Users/SignIn";
 import SignUp from "./Users/SignUp";
 import Dashboard from "./Dashboard";
+import Rules from "./Rules";
 import Home from "./Home";
 import Match from "./Match";
 
@@ -77,6 +78,10 @@ export default function Router() {
                         {
                             path: "about",
                             element: <About />
+                        },
+                        {
+                            path: "rules",
+                            element: <Rules />
                         },
                         {
                             path: "brackets",
