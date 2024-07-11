@@ -39,7 +39,6 @@ exports.get_match = asyncHandler(async (req, res, next) => {
 exports.get_contact_details = asyncHandler(async (req, res, next) => {
     try {
         const match = await Match.findById(req.params.matchId);
-        console.log(match);
         let isUser = await User.findById(match.participants[0].id);
         const data = [];
         if (isUser) {
