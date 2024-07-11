@@ -6,20 +6,22 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 
 import { Spinner } from "../tailwind_components/tailwind-ex-elements";
-import arrow from "/assets/images/select-arrow.svg";
+import { ChevronDownIcon } from "@heroicons/react/16/solid";
 
 export default function SignUp() {
     const form = useForm();
-    const { register, control, handleSubmit, formState, watch } = form;
+    const { register, control, handleSubmit, formState, watch, reset } = form;
     const { errors } = formState;
     const [isPending, setIsPending] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const countryCodesArray = Object.entries(countryCodes.customList('countryCode', '+{countryCallingCode}'));
+    const categories = watch("categories") || [];
 
     const onSubmit = async (data) => {
         setIsPending(true);
         data.gender = gender;
-        data.mobile = `${data.phoneCode} ${data.mobile}`
+        data.mobile = `${data.phoneCode} ${data.mobile}`;
+        data.categories = categories;
         if (data.seeded) data.seeded = true;
         axios.post("/api/users/sign-up", data)
             .then(() => {
@@ -32,11 +34,12 @@ export default function SignUp() {
 
     const [gender, setGender] = useState('');
     const [tournamentsVisible, setTournamentsVisible] = useState(false);
-  
+
     const handleGenderChange = (event) => {
         const selectedGender = event.target.value;
         setGender(selectedGender);
         setTournamentsVisible(selectedGender === 'male' || selectedGender === 'female');
+        reset({ categories: [] });
     };
 
     return (
@@ -96,7 +99,7 @@ export default function SignUp() {
                                         },
                                     })}
                                         className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700" />
-                                </div>
+                                </div                                >
                                 <span className="text-xs font-bold text-red-700 dark:text-red-400">
                                     <p>{errors.email?.message}</p>
                                 </span>
@@ -135,7 +138,7 @@ export default function SignUp() {
                                     <option value="female">Female</option>
                                 </select>
                                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <img src={arrow} alt="" className="h-4 w-4" />
+                                    <ChevronDownIcon className="h-6 w-6 fill-white/60" />
                                 </div>
                             </div>
                             <span className="text-xs font-bold text-red-700 dark:text-red-400">
@@ -149,7 +152,7 @@ export default function SignUp() {
                                 <div className="flex items-center mb-4">
                                     <input type="checkbox" id="666f36e408bbfeb7beb9cb9b" value="666f36e408bbfeb7beb9cb9b" disabled={gender == "female"}
                                         className="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-                                        {...register("categories")} />
+                                        {...register("categories", { required: "At least one category must be selected" })} />
                                     <label htmlFor="666f36e408bbfeb7beb9cb9b" name="666f36e408bbfeb7beb9cb9b" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Men's Singles</label>
                                 </div>
                                 <div className="flex items-center mb-4">
@@ -181,6 +184,9 @@ export default function SignUp() {
                                     <label htmlFor="666f36e408bbfeb7beb9cb9f" name="666f36e408bbfeb7beb9cb9f" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Mixed Doubles</label>
                                 </div>
                             </div>
+                            <span className="text-xs text-center font-bold text-red-700 dark:text-red-400">
+                                <p>{errors.categories?.message}</p>
+                            </span>
                             <p className="dark:text-white">Seeded</p>
                             <hr className="my-2" />
                             <div className="text-sm px-2.5 py-1.5 rounded-md bg-indigo-300">
@@ -234,6 +240,15 @@ export default function SignUp() {
                                 </span>
                             </div>
                         </div>
+                        <div className="flex items-center gap-2.5">
+                            <input type="checkbox" id="finalsDates" required 
+                                className="w-6 h-6 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                                {...register("finalsDates", { required: "Please confirm" })} />
+                            <label htmlFor="finalsDates" className="text-sm dark:text-slate-100">By ticking this box, you confirm that you are available to play tennis on 19th and 20th October (finals weekend).</label>
+                        </div>
+                        <span className="text-xs font-bold text-red-700 dark:text-red-400">
+                            <p>{errors.finalsDates?.message}</p>
+                        </span>
                         <div>
                             { isPending ? (
                                     <div className="flex justify-center">
@@ -252,5 +267,5 @@ export default function SignUp() {
                 </div>
             )}
         </>
-    )
+    );
 }
