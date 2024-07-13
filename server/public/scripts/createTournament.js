@@ -109,7 +109,7 @@ const generateMatchesForTournament = (category, teams) => {
             // console.log(qualPlayers);
             qualMatches[i].participants.push({
                 id: qualPlayers._id.toString(),
-                name: qualPlayers.firstName ? `${qualPlayers.firstName[0]}. ${qualPlayers.lastName}` : `${qualPlayers.players[0].firstName[0]}. ${qualPlayers.players[0].lastName} and ${qualPlayers.players[1].firstName[0]}. ${qualPlayers.players[1].lastName}`,
+                nameFormatted: qualPlayers.firstName ? `${qualPlayers.firstName[0]}. ${qualPlayers.lastName}` : `${qualPlayers.players[0].firstName[0]}. ${qualPlayers.players[0].lastName} and ${qualPlayers.players[1].firstName[0]}. ${qualPlayers.players[1].lastName}`,
                 ranking: qualPlayers.ranking,
                 seeded: qualPlayers.seeded,
                 resultText: null,
@@ -142,7 +142,7 @@ const generateMatchesForTournament = (category, teams) => {
             if (leftIndex % 2 == 0) {
                 leftRound1Matches[Math.floor(leftIndex / 2)].participants.push({
                     id: _teams[i]._id.toString(),
-                    name: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
+                    nameFormatted: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
                     ranking: _teams[i].ranking,
                     seeded: _teams[i].seeded,
                     resultText: null,
@@ -152,7 +152,7 @@ const generateMatchesForTournament = (category, teams) => {
             } else {
                 leftRound1Matches[leftRound1Matches.length - Math.ceil(leftIndex / 2)].participants.push({
                     id: _teams[i]._id.toString(),
-                    name: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
+                    nameFormatted: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
                     ranking: _teams[i].ranking,
                     seeded: _teams[i].seeded,
                     resultText: null,
@@ -175,7 +175,7 @@ const generateMatchesForTournament = (category, teams) => {
             if (rightIndex % 2 == 0) {
                 rightRound1Matches[rightRound1Matches.length - Math.ceil(rightIndex / 2) - 1].participants.push({
                     id: _teams[i]._id.toString(),
-                    name: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
+                    nameFormatted: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
                     ranking: _teams[i].ranking,
                     seeded: _teams[i].seeded,
                     resultText: null,
@@ -185,7 +185,7 @@ const generateMatchesForTournament = (category, teams) => {
             } else {
                 rightRound1Matches[Math.floor(rightIndex / 2)].participants.push({
                     id: _teams[i]._id.toString(),
-                    name: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
+                    nameFormatted: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
                     ranking: _teams[i].ranking,
                     seeded: _teams[i].seeded,
                     resultText: null,
@@ -210,7 +210,7 @@ const generateMatchesForTournament = (category, teams) => {
             if (index % 2 == 0) {
                 round1Matches[Math.floor(index / 2)].participants.push({
                     id: _teams[i]._id.toString(),
-                    name: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
+                    nameFormatted: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
                     ranking: _teams[i].ranking,
                     seeded: _teams[i].seeded,
                     resultText: null,
@@ -220,7 +220,7 @@ const generateMatchesForTournament = (category, teams) => {
             } else {
                 round1Matches[round1Matches.length - Math.ceil(index / 2)].participants.push({
                     id: _teams[i]._id.toString(),
-                    name: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
+                    nameFormatted: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
                     ranking: _teams[i].ranking,
                     seeded: _teams[i].seeded,
                     resultText: null,
@@ -250,7 +250,7 @@ const generateMatchesForTournament = (category, teams) => {
             if (leftIndex % 2 == 0) {
                 leftRound1Matches[Math.floor(leftIndex / 2)].participants.push({
                     id: _teams[i]._id.toString(),
-                    name: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
+                    nameFormatted: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
                     ranking: _teams[i].ranking,
                     seeded: _teams[i].seeded,
                     resultText: null,
@@ -260,7 +260,7 @@ const generateMatchesForTournament = (category, teams) => {
             } else {
                 leftRound1Matches[leftRound1Matches.length - Math.ceil(leftIndex / 2)].participants.push({
                     id: _teams[i]._id.toString(),
-                    name: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
+                    nameFormatted: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
                     ranking: _teams[i].ranking,
                     seeded: _teams[i].seeded,
                     resultText: null,
@@ -283,7 +283,7 @@ const generateMatchesForTournament = (category, teams) => {
             if (rightIndex % 2 == 0) {
                 rightRound1Matches[rightRound1Matches.length - Math.ceil(rightIndex / 2) - 1].participants.push({
                     id: _teams[i]._id.toString(),
-                    name: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
+                    nameFormatted: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
                     ranking: _teams[i].ranking,
                     seeded: _teams[i].seeded,
                     resultText: null,
@@ -293,7 +293,7 @@ const generateMatchesForTournament = (category, teams) => {
             } else {
                 rightRound1Matches[Math.floor(rightIndex / 2)].participants.push({
                     id: _teams[i]._id.toString(),
-                    name: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
+                    nameFormatted: _teams[i].firstName ? `${_teams[i].firstName[0]}. ${_teams[i].lastName}` : `${_teams[i].players[0].firstName[0]}. ${_teams[i].players[0].lastName} and ${_teams[i].players[1].firstName[0]}. ${_teams[i].players[1].lastName}`,
                     ranking: _teams[i].ranking,
                     seeded: _teams[i].seeded,
                     resultText: null,

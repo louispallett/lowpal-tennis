@@ -32,6 +32,7 @@ export default function Home() {
             }
         }
         getUserMatches();
+        console.log(userMatchData)
     }, []);
 
     return (
@@ -70,9 +71,9 @@ function MatchCard({ data }) {
                     </div>
                     <div className="flex flex-col min-w-full bg-white rounded-lg rounded-t-none shadow text-sm lg:text-base dark:bg-slate-700">
                         <div className="grid grid-cols-3 items-center px-2.5 py-1.5 font-semi-bold text-center dark:text-slate-100 sm:px-4 sm:py-3.5">
-                            <p>{data.participants[0].name}</p>
+                            <p>{data.participants[0].nameFormatted}</p>
                             <p className="text-lg font-black"><i>vs</i></p>
-                            <p>{data.participants[1] ? data.participants[1].name : "TBC"}</p>
+                            <p>{data.participants[1] ? data.participants[1].nameFormatted : "TBC"}</p>
                         </div>
                         <hr className="m-2.5 mx-10 sm:mx-20"/>
                         <div className="px-2.5 py-1.5 text-sm lg:text-base sm:px-4 sm:py-2.5 dark:text-slate-100">

@@ -9,10 +9,8 @@ router.get("/:matchId", matchController.get_match);
 
 router.get("/:matchId/contactDetails", matchController.get_contact_details);
 
-router.post("/teams/create", matchController.create_teams);
-
 router.post("/create", matchController.create_matches);
 
-router.post("/:categoryId/matches/:matchId/update", matchController.post_match_results);
+router.post("/matches/:matchId/update", matchController.post_match_results);
 
 module.exports = router;

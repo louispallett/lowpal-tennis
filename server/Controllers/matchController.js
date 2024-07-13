@@ -65,19 +65,6 @@ exports.get_contact_details = asyncHandler(async (req, res, next) => {
     }
 });
 
-exports.create_teams = asyncHandler(async (req, res, next) => {
-    const categoryId = req.body.category;
-    if (!categoryId) {
-        res.sendStatus(400);
-    }
-    try {
-        const newTeams = await createTeams(categoryId);
-        res.status(200).json({ newTeams });
-    } catch (err) {
-        console.log(err);
-    }
-})
-
 exports.create_matches = asyncHandler(async (req, res, next) => {
     if (!req.body.category) res.status(400).json({ message: "Category missing" });
 
@@ -160,6 +147,56 @@ exports.create_matches = asyncHandler(async (req, res, next) => {
     }    
 });
 
-exports.post_match_results = asyncHandler((req, res, next) => {
+exports.post_match_results = asyncHandler(async (req, res, next) => {
+    try {
+        const match = await Match.findById(req.params.matchId);
+        await Match.updateOne(
+          { _id: req.params.matchId, 'participants.id': req.body.winner },
+          { $set: { 'participants.$.isWinner': true } }
+        );
+      
+        await Match.updateOne(
+          { _id: req.params.matchId },
+          {
+            $set: {
+              'participants.$[participant1].resultText': req.body.team1Score,
+              'participants.$[participant2].resultText': req.body.team2Score
+            }
+          },
+          {
+            arrayFilters: [
+              { 'participant1.id': match.participants[0].id },
+              { 'participant2.id': match.participants[1].id }
+            ]
+          }
+        );
+        await Match.updateOne(
+            { _id: req.params.matchId },
+            { $set: { state: "SCORE_DONE" } }
+        );
 
+        let winningPlayerInfo = await User.findById(req.body.winner);
+        if (!winningPlayerInfo) winningPlayerInfo = await Team.findById(req.body.winner); // MAYBE adding name to team model?
+        console.log(winningPlayerInfo);
+
+        // Finally, we need find the next match and push our winning participant to it
+        await Match.updateOne(
+            { _id: match.nextMatchId },
+            { $push: 
+                { participants: { 
+                    id: req.body.winner, 
+                    nameFormatted: winningPlayerInfo.nameFormatted,
+                    ranking: winningPlayerInfo.ranking,
+                    resultText: null,
+                    isWinner: false,
+                    status: null
+                }}
+            }
+        );
+      
+        console.log(await Match.findById(match.nextMatchId));
+      } catch (error) {
+        console.error('Error updating participant:', error);
+      }
+      
 });

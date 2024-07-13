@@ -15,10 +15,10 @@ const User = new Schema({
 });
 
 // Returns initial followed by surname - i.e. "J. Doe"
-// User.virtual("name_formatted").get(function() {
-//     return(`${this.firstName[0]} ${this.lastName}`);
-// });
+User.virtual("nameFormatted").get(function() {
+    return(`${this.firstName[0]} ${this.lastName}`);
+});
 
-// User.set('toJSON', { virtuals: true });
+User.set('toJSON', { virtuals: true });
 
 module.exports = mongoose.model("User", User);

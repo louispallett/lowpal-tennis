@@ -11,7 +11,7 @@ export default function Dashboard() {
       <HeaderContainer>
         <HeaderContainerInner>
             <div>
-              <Link to="/dashboard/articles/" >
+              <Link to="/dashboard" >
                   <div className="flex flex-col">
                       <h1 id="subtitle" className="relative font-kanit text-base sm:text-2xl text-white">2024 SLTC</h1>
                   </div>
