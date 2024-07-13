@@ -60,7 +60,7 @@ const createMixedTeams = (category) => {
         teams.push({
             _id: new mongoose.Types.ObjectId().toHexString(),
             players: [femalePlayer, malePlayer],
-            nameFormatted: `${malePlayer.firstName[0]}. ${malePlayer.lastName} and ${femalePlayer.firstName[0]}. ${femalePlayer.lastName}`,
+            name: `${malePlayer.firstName[0]}. ${malePlayer.lastName} and ${femalePlayer.firstName[0]}. ${femalePlayer.lastName}`,
             category: category._id,
             ranking: femalePlayer.ranking + malePlayer.ranking,
         });
@@ -72,7 +72,7 @@ const createMixedTeams = (category) => {
         teams.push({
             _id: new mongoose.Types.ObjectId().toHexString(),
             players: [femalePlayer, malePlayer],
-            nameFormatted: `${malePlayer.firstName[0]}. ${malePlayer.lastName} and ${femalePlayer.firstName[0]}. ${femalePlayer.lastName}`,
+            name: `${malePlayer.firstName[0]}. ${malePlayer.lastName} and ${femalePlayer.firstName[0]}. ${femalePlayer.lastName}`,
             category: category._id,
             ranking: femalePlayer.ranking + malePlayer.ranking,
         });
@@ -84,7 +84,7 @@ const createMixedTeams = (category) => {
         teams.push({
             _id: new mongoose.Types.ObjectId().toHexString(),
             players: [femalePlayer, malePlayer],
-            nameFormatted: `${malePlayer.firstName[0]}. ${malePlayer.lastName} and ${femalePlayer.firstName[0]}. ${femalePlayer.lastName}`,
+            name: `${malePlayer.firstName[0]}. ${malePlayer.lastName} and ${femalePlayer.firstName[0]}. ${femalePlayer.lastName}`,
             category: category._id,
             ranking: femalePlayer.ranking + malePlayer.ranking,
         });
@@ -124,7 +124,7 @@ const matchDoublesPairs = (categoryId, seeded, notSeeded) => {
         teams.push({
             _id: new mongoose.Types.ObjectId().toHexString(),
             players: [playerA, playerB],
-            nameFormatted: `${playerA.firstName[0]}. ${playerA.lastName} and ${playerB.firstName[0]}. ${playerB.lastName}`,
+            name: `${playerA.firstName[0]}. ${playerA.lastName} and ${playerB.firstName[0]}. ${playerB.lastName}`,
             category: categoryId,
             ranking: playerA.ranking + playerB.ranking,
         })
@@ -137,7 +137,7 @@ const matchDoublesPairs = (categoryId, seeded, notSeeded) => {
         teams.push({
             _id: new mongoose.Types.ObjectId().toHexString(),
             players: [playerA, playerB],
-            nameFormatted: `${playerA.firstName[0]}. ${playerA.lastName} and ${playerB.firstName[0]}. ${playerB.lastName}`,
+            name: `${playerA.firstName[0]}. ${playerA.lastName} and ${playerB.firstName[0]}. ${playerB.lastName}`,
             category: categoryId,
             ranking: playerA.ranking + playerB.ranking,
         });

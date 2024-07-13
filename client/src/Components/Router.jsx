@@ -91,7 +91,7 @@ export default function Router() {
                                     element: <BracketsList />
                                 },
                                 {
-                                    path: ":bracketId",
+                                    path: ":categoryId",
                                     element: <Bracket />
                                 }
                             ]

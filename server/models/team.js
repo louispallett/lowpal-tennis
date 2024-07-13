@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 const Team = new Schema({
     players: [{ type: Schema.Types.ObjectId, ref: "User", required: true }],
-    nameFormatted: { type: String, required: true },
+    name: { type: String, required: true },
     category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
     ranking: { type: Number, required: true }
 }, { id: false });

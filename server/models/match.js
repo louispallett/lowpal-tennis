@@ -8,14 +8,13 @@ const Match = new Schema({
     previousMatchId: { type: Schema.Types.ObjectId, ref: "Match" },
     tournamentRoundText: { type: String, required: true },
     state: { type: String, required: true }, // 'NO_SHOW' | 'WALK_OVER' | 'NO_PARTY' | 'DONE' | 'SCORE_DONE' Only needed to decide walkovers and if teamNames are TBD (to be decided)
-    // We need this to distinguish between the two types of matches. The enumeration value is so that only either 'singles' or 'doubles' can be given for this element!
-    // matchType: { type: String, enum: ["singles", "doubles"], required: true },
     participants: [{ type: Object }],
-    startTime: { type: Date, default: null }
+    date: { type: Date, default: null },
+    qualifyingMatch: { type: Boolean }
 });
 
-Match.virtual("date_formatted").get(function() {
-    return DateTime.fromJSDate(this.startTime).toLocaleString(DateTime.DATETIME_MED);
+Match.virtual("startTime").get(function() {
+    return DateTime.fromJSDate(this.date).toLocaleString(DateTime.DATETIME_MED);
 });
 
 Match.set('toJSON', { virtuals: true });

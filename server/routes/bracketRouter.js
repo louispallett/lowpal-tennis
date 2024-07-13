@@ -10,7 +10,7 @@ const bracketController = require("../Controllers/bracketController");
 router.get("/", bracketController.get_bracket_categories);
 
 // Bracket for category
-router.get("/:categoryId/bracket", bracketController.get_bracket);
+router.get("/:categoryId", bracketController.get_bracket);
 
 // Get specific match detail
 // If we perfect the React Tournament Bracket library, this may not be necessary!

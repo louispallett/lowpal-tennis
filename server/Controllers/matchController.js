@@ -177,7 +177,6 @@ exports.post_match_results = asyncHandler(async (req, res, next) => {
 
         let winningPlayerInfo = await User.findById(req.body.winner);
         if (!winningPlayerInfo) winningPlayerInfo = await Team.findById(req.body.winner); // MAYBE adding name to team model?
-        console.log(winningPlayerInfo);
 
         // Finally, we need find the next match and push our winning participant to it
         await Match.updateOne(
@@ -185,7 +184,7 @@ exports.post_match_results = asyncHandler(async (req, res, next) => {
             { $push: 
                 { participants: { 
                     id: req.body.winner, 
-                    nameFormatted: winningPlayerInfo.nameFormatted,
+                    name: winningPlayerInfo.name,
                     ranking: winningPlayerInfo.ranking,
                     resultText: null,
                     isWinner: false,

@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { ChevronDownIcon, CalendarIcon, CursorArrowRippleIcon, TagIcon } from "@heroicons/react/16/solid";
 import { Spinner } from "./tailwind_components/tailwind-ex-elements";
-// import match from "../../../server/models/match";
 
 
 export default function Match() {
@@ -30,7 +29,6 @@ export default function Match() {
             }
         }
         getMatch();
-        console.log(matchData);
     }, []);
     
     return (
@@ -68,9 +66,9 @@ function MatchCard({ matchData, loading }) {
                         </div>
                         <div className="flex flex-col p-2.5 bg-white rounded-lg shadow text-sm lg:text-base dark:bg-slate-700">
                             <div className="grid grid-cols-3 items-center px-2.5 py-1.5 font-semi-bold text-center dark:text-slate-100 sm:px-4 sm:py-3.5">
-                                <p>{matchData.participants[0].nameFormatted}</p>
+                                <p>{matchData.participants[0].name}</p>
                                 <p className="text-lg font-black"><i>vs</i></p>
-                                <p>{matchData.participants.length == 2 ? matchData.participants[1].nameFormatted : "TBC"}</p>
+                                <p>{matchData.participants.length == 2 ? matchData.participants[1].name : "TBC"}</p>
                             </div>
                         </div>
                         <div className="flex items-center gap-2.5 bg-white rounded-lg shadow text-sm px-5 sm:text-base dark:bg-slate-700 py-2.5 sm:py-5">
@@ -220,8 +218,8 @@ function MatchForm({ matchData, loading }) {
                                             value={winner} onChange={handleWinnerChange}
                                             className="appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded leading-tight focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:text-white dark:bg-slate-700">
                                             <option value="">- - Winner - -</option>
-                                            <option value={matchData.participants[0].id}>{matchData.participants[0].nameFormatted}</option>
-                                            <option value={matchData.participants[1].id}>{matchData.participants[1].nameFormatted}</option>
+                                            <option value={matchData.participants[0].id}>{matchData.participants[0].name}</option>
+                                            <option value={matchData.participants[1].id}>{matchData.participants[1].name}</option>
                                         </select>
                                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                             <ChevronDownIcon className="h-4 w-4 md:h-6 md:w-6 dark:fill-slate-100" />
@@ -240,14 +238,14 @@ function MatchForm({ matchData, loading }) {
                                             <p>Set 1</p>
                                             <p>Set 2</p>
                                             <p>Set 3/tie-break</p>
-                                            <p>{matchData.participants[0].nameFormatted}</p>
+                                            <p>{matchData.participants[0].name}</p>
                                             <input min="0" max="8" className="max-w-16 self-start rounded-md py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"
                                                 {...register("team1ScoreA", { required: "Please enter a value" })} />
                                             <input min="0" max="8" className="max-w-16 self-start rounded-md py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"
                                                 {...register("team1ScoreB", { required: "Please enter a value" })} />
                                             <input min="0" max="8" className="max-w-16 self-start rounded-md py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"
                                                 {...register("team1ScoreC", { required: "Please enter a value" })} />
-                                            <p>{matchData.participants[1].nameFormatted}</p>
+                                            <p>{matchData.participants[1].name}</p>
                                             <input min="0" max="8" className="max-w-16 self-start rounded-md py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"
                                                 {...register("team2ScoreA", { required: "Please enter a value" })} />
                                             <input min="0" max="8" className="max-w-16 self-start rounded-md py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"
@@ -260,12 +258,12 @@ function MatchForm({ matchData, loading }) {
                                             <p></p>
                                             <p>Set 1</p>
                                             <p>Set 2</p>
-                                            <p>{matchData.participants[0].nameFormatted}</p>
+                                            <p>{matchData.participants[0].name}</p>
                                             <input min="0" max="8" className="max-w-16 self-start rounded-md py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"
                                                 {...register("team1ScoreA", { required: "Please enter a value" })} />
                                             <input min="0" max="8" className="max-w-16 self-start rounded-md py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"
                                                 {...register("team1ScoreB", { required: "Please enter a value" })} />
-                                            <p>{matchData.participants[1].nameFormatted}</p>
+                                            <p>{matchData.participants[1].name}</p>
                                             <input min="0" max="8" className="max-w-16 self-start rounded-md py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"
                                                 {...register("team2ScoreA", { required: "Please enter a value" })} />
                                             <input min="0" max="8" className="max-w-16 self-start rounded-md py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"

@@ -15,7 +15,7 @@ const User = new Schema({
 });
 
 // Returns initial followed by surname - i.e. "J. Doe"
-User.virtual("nameFormatted").get(function() {
+User.virtual("name").get(function() {
     return(`${this.firstName[0]} ${this.lastName}`);
 });
 
