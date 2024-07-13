@@ -45,7 +45,7 @@ require("./config/passport.js");
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/api/bracket", bracketRouter);
+app.use("/api/brackets", bracketRouter);
 app.use("/api/dashboard/:userId", dashboardRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/match", matchRouter);

@@ -32,7 +32,6 @@ export default function Home() {
             }
         }
         getUserMatches();
-        console.log(userMatchData)
     }, []);
 
     return (

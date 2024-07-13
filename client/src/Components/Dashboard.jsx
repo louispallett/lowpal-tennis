@@ -42,16 +42,16 @@ function Navigation() {
           return;
       };
       try {
-          const response = await fetch("/api/users/verify", { 
-              mode: "cors", 
-              headers: { "Authorization": token} 
-          })
-          if (response.status < 400) {
-            const data = await response.json();
-            setUserData({ email: data.email, firstName: data.firstName, lastName: data.lastName });
-          } else {
-            setUserData(false);
-          }
+        const response = await fetch("/api/users/verify", { 
+            mode: "cors", 
+            headers: { "Authorization": token} 
+        })
+        if (response.status < 400) {
+          const data = await response.json();
+          setUserData({ email: data.email, firstName: data.firstName, lastName: data.lastName });
+        } else {
+          setUserData(false);
+        }
       } catch (err) {
           console.log(err)
       }

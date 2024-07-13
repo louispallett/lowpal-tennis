@@ -7,6 +7,8 @@ const bracketController = require("../Controllers/bracketController");
 // a static page with all 5 categories on (just to save requests to the server)
 // router.get("/", bracketController.get_categories);
 
+router.get("/", bracketController.get_bracket_categories);
+
 // Bracket for category
 router.get("/:categoryId/bracket", bracketController.get_bracket);
 
