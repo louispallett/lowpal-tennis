@@ -14,7 +14,7 @@ const Match = new Schema({
 });
 
 Match.virtual("startTime").get(function() {
-    return DateTime.fromJSDate(this.date).toLocaleString(DateTime.DATETIME_MED);
+    return DateTime.fromJSDate(this.date).toLocaleString(DateTime.DATE_MED);
 });
 
 Match.set('toJSON', { virtuals: true });

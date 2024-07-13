@@ -13,9 +13,9 @@ export default function Dashboard() {
             <div>
               <Link to="/dashboard" >
                   <div className="flex flex-col">
-                      <h1 id="subtitle" className="relative font-kanit text-base sm:text-2xl text-white">2024 SLTC</h1>
+                      <h1 id="subtitle" className="relative font-kanit text-base sm:text-2xl text-slate-100">2024 SLTC</h1>
                   </div>
-                  <h1 id="main-title" className="text-lg font-kanit sm:text-2xl text-white">In-House Tournament</h1>
+                  <h1 id="main-title" className="text-lg font-kanit sm:text-2xl text-slate-100">In-House Tournament</h1>
               </Link>
             </div>
             <Navigation />
@@ -60,8 +60,8 @@ function Navigation() {
   }, [])
 
   return (
-    <Menu as="div" className="relative inline-block text-left">
-      <Menu.Button className="inline-flex items-center gap-2 rounded-md bg-lime-600 dark:bg-gray-800 py-1.5 px-3 font-bold text-white shadow-inner shadow-white/10 focus:outline-none hover:bg-lime-500 dark:hover:bg-gray-700">
+    <Menu as="div" className="relative inline-block text-left shadow-[5px_5px_rgba(0,_98,_90,_0.4),_10px_10px_rgba(0,_98,_90,_0.3),_15px_15px_rgba(0,_98,_90,_0.2),_20px_20px_rgba(0,_98,_90,_0.1),_25px_25px_rgba(0,_98,_90,_0.05)]">
+      <Menu.Button className="inline-flex items-center gap-2 rounded-md bg-lime-600 py-1.5 px-3 font-bold text-white focus:outline-none hover:bg-lime-500 transition-all">
           Menu
           <ChevronDownIcon className="w-4 h-6 fill-white/60" />
       </Menu.Button>
@@ -104,7 +104,7 @@ function Navigation() {
 
 function Footer() {
   return (
-    <footer className="flex px-3 py-3 justify-between items-center rounded-lg shadow m-2 bg-indigo-600 text-white sm:px-5">
+    <footer className="flex px-3 py-3 justify-between items-center rounded-lg m-2 bg-indigo-600 text-white sm:px-5 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
       <div>
         <a href="https://github.com/louispallett/odin-blog-api">
           <p className="font-bold text-xs py-5 sm:text-sm hover:text-lime-300">© 2024 LowPal/Louis Nicholson-Pallett</p>

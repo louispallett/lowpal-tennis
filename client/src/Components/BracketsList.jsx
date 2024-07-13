@@ -27,8 +27,21 @@ export default function BracketsList() {
     
 
     return (
-        <div className="flex my-20 mx-2.5 flex-col flex-1 items-center gap-5">
-            <div className="flex flex-col bg-lime-600 rounded-lg shadow text-sm px-10 lg:text-base dark:bg-slate-700">
+        <div className="flex my-10 mx-2.5 flex-col flex-1 items-center gap-5">
+            <div>
+                <div className="bg-lime-600 rounded-b-none rounded-lg shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
+                    <h5 className="p-3 text-xl font-kanit tracking-tight text-slate-200 text-center lg:text-left sm:text-2xl sm:font-black sm:p-5">Tournament Brackets</h5>
+                </div>
+                <div className="flex flex-col min-w-full bg-white rounded-lg rounded-t-none shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)] text-sm lg:text-base dark:bg-slate-700">
+                    <div className="flex flex-col gap-2.5 p-2.5 dark:text-slate-100">
+                        <p>The tournament brackets below are designed using a library called <a href="https://github.com/g-loot/react-tournament-brackets?tab=readme-ov-file" className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-300"><b>react-tournament-brackets</b></a>. I'm greatful to the contributors to this project who made displaying these brackets 'live' possible. Because the information for these brackets are fetched directly from the database, when a player updates their scores, the brackets are immediately updated.</p>
+                        <p>However, the design of this library means that double eliminations are done in a way which creates a more complex bracket. It would mean placing all double eliminations on one side of the bracket which is quite complicated.</p>
+                        <p>Therefore, qualification matches are not included in these brackets. If a category does not have a number of players which is equal to a perfect power of 2 (2, 4, 8, 16, 32, etc.), there are qualification matches and some players receive byes. These matches are not included in the brackets and therefore some of the first matches you play may not be included in the brackets.</p>
+                        <p>The solution to this problem is to build a library myself but, time is my enemy, and therefore this will have to do for now.</p>
+                    </div>
+                </div>
+            </div>
+            <div className="flex justify-center bg-lime-600 rounded-lg text-sm px-10 lg:text-base shadow-[5px_5px_0px_0px_#4f46e5] min-w-full">
                 <h5 className="p-3 text-lg tracking-tight text-slate-100 text-center sm:text-2xl sm:p-5">Select a tournament below</h5>
             </div>
             <div className="flex flex-col lg:flex-row justify-center items-center gap-5">
@@ -53,8 +66,8 @@ export default function BracketsList() {
 
 function CategoryCard({ data }) {
     return (
-        <Link to={data._id} className="hover:opacity-80">
-            <div className="bg-lime-600 rounded-lg">
+        <Link to={data._id} className="hover:-translate-y-1 hover:-translate-x-1 transition-all">
+            <div className="bg-lime-600 rounded-lg shadow-[5px_5px_0px_0px_#4f46e5]">
                 <h5 className="p-3 text-xl font-kanit tracking-tight text-slate-200 text-center lg:text-left sm:text-2xl sm:font-black sm:p-5">{data.name}</h5>
             </div>
         </Link>
