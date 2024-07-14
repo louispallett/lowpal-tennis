@@ -104,7 +104,7 @@ function WelcomeMessage() {
                     link in the top right (or via the menu on smaller screens). You can then select from the five on-going tournaments to see their current state.
                 </p>
                 <p>Using this site and submitting results has been designed so that it can be done so in a user-friendly manner. However, if you need some guidance on how to use it, or with to know more about how this site was made, 
-                    please navigate to the site guidance page by clicking on the <Link to="/dasshboard/guide" className="text-lime-300 hover:text-lime-600 transition-all"><b>Site Guide</b></Link> link in the menu on the top-right.
+                    please navigate to the site guidance page by clicking on the <Link to="/dashboard/about" className="text-lime-300 hover:text-lime-600 transition-all"><b>Site Guide</b></Link> link in the menu on the top-right.
                 </p>
                 <div>
                     <p>Finally, if you need a reminder of the rules in this tournament, including:</p>
@@ -114,7 +114,7 @@ function WelcomeMessage() {
                         <li>Finals weekend</li>
                         <li>Player etiquette</li>
                     </ul>
-                    <p>Please navigate to the rules page by clicking on <Link to="/dasshboard/guide" className="text-lime-300 hover:text-lime-600 transition-all"><b>Tournament Rules</b></Link> on the menu.</p>
+                    <p>Please navigate to the rules page by clicking on <Link to="/dashboard/rules" className="text-lime-300 hover:text-lime-600 transition-all"><b>Tournament Rules</b></Link> on the menu.</p>
                 </div>
             </div>
         </div>

@@ -193,7 +193,7 @@ exports.post_match_results = asyncHandler(async (req, res, next) => {
             }
         );
       
-        console.log(await Match.findById(match.nextMatchId));
+        res.sendStatus(200);
       } catch (error) {
         console.error('Error updating participant:', error);
       }
