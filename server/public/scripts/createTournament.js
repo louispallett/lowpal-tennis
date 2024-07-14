@@ -108,7 +108,6 @@ const generateMatchesForTournament = (category, teams) => {
         while (_teams.length > (teams.length - numOfQualPlayers)) {
             if (_teams.length === 0) throw new Error("Memory error: Teams assignment returned 0.");
             const qualPlayers = _teams.splice(index, 1)[0];
-            // console.log(qualPlayers);
             qualMatches[i].participants.push({
                 id: qualPlayers._id.toString(),
                 name: qualPlayers.firstName ? `${qualPlayers.firstName[0]}. ${qualPlayers.lastName}` : `${qualPlayers.players[0].firstName[0]}. ${qualPlayers.players[0].lastName} and ${qualPlayers.players[1].firstName[0]}. ${qualPlayers.players[1].lastName}`,
@@ -118,8 +117,6 @@ const generateMatchesForTournament = (category, teams) => {
                 isWinner: false,
                 status: null,
             });
-            // We use the spread operator here to deconstruct it.
-            // qualMatches[i].participants.push(..._teams.splice(index, 1));
             i++;
             // Loop back around for second players
             if (i > qualMatches.length - 1) i = 0;
@@ -130,7 +127,6 @@ const generateMatchesForTournament = (category, teams) => {
         _teams = [...teams];
         const leftRound1Matches = firstRoundMatches.splice(0, firstRoundMatches.length / 2);
         const rightRound1Matches = firstRoundMatches.splice(0);
-
         let leftIndex = 0;
         for (let i = 0; i < _teams.length; i+=2) {
             while ((leftIndex % 2 == 0 && leftRound1Matches[Math.floor(leftIndex / 2)].previousMatchId) || (leftIndex % 2 != 0 && leftRound1Matches[leftRound1Matches.length - Math.ceil(leftIndex / 2)].previousMatchId)) {
@@ -207,6 +203,7 @@ const generateMatchesForTournament = (category, teams) => {
     
     // Condition - if teams.length > doublesLimit, this means we have doubles matches, so we can simply loop from inside out
     if (teams.length > doublesLimit) {
+        console.log("YESSSSSS");
         let index = 0;
         for (let i = 0; i < _teams.length; i++) {
             if (index % 2 == 0) {
@@ -237,7 +234,6 @@ const generateMatchesForTournament = (category, teams) => {
     } else {
         const leftRound1Matches = round1Matches.splice(0, round1Matches.length / 2);
         const rightRound1Matches = round1Matches.splice(0);
-
         let leftIndex = 0;
         for (let i = 0; i < _teams.length; i+=2) {
             while ((leftIndex % 2 == 0 && leftRound1Matches[Math.floor(leftIndex / 2)].previousMatchId) || (leftIndex % 2 != 0 && leftRound1Matches[leftRound1Matches.length - Math.ceil(leftIndex / 2)].previousMatchId)) {
@@ -271,6 +267,7 @@ const generateMatchesForTournament = (category, teams) => {
                 });
             }
             leftIndex++;
+            if (leftIndex == leftRound1Matches.length) leftIndex = 0;
         }
         let rightIndex = 0;
         for (let i = 1; i < _teams.length; i+=2) {
@@ -291,7 +288,7 @@ const generateMatchesForTournament = (category, teams) => {
                     resultText: null,
                     isWinner: false,
                     status: null,
-                });
+                }); // index = 2. i = 5 ("John"). [4 - Math.ceil(2 / 2) - 1] = [4 - 1 - 1] = [2]
             } else {
                 rightRound1Matches[Math.floor(rightIndex / 2)].participants.push({
                     id: _teams[i]._id.toString(),
@@ -304,6 +301,7 @@ const generateMatchesForTournament = (category, teams) => {
                 });
             }
             rightIndex++;
+            if (rightIndex == rightRound1Matches.length) rightIndex = 0;
         }
         result = [...leftRound1Matches, ...rightRound1Matches];
         matchesByRound.splice(matchesByRound.length - 1, 0, result);
