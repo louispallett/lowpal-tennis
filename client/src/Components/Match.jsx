@@ -177,10 +177,12 @@ function MatchForm({ matchData, loading }) {
     }
 
     const [winner, setWinner] = useState('');
+    const [scoresVisible, setScoresVisible] = useState(false);
 
     const handleWinnerChange = (event) => {
         const selectedWinner = event.target.value;
         setWinner(selectedWinner);
+        setScoresVisible(selectedWinner != "");
     };
 
     const handleThirdSet = () => setThirdSet(!thirdSet);
@@ -201,6 +203,11 @@ function MatchForm({ matchData, loading }) {
                                 </svg>
                                 <span className="sr-only">Loading...</span>
                             </div>
+                        </div>
+                    )}
+                    { error && (
+                        <div className="text-center dark:text-slate-100">
+                            <p>{error}</p>
                         </div>
                     )}
                     { isSubmitted ? (
@@ -237,11 +244,11 @@ function MatchForm({ matchData, loading }) {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-2.5">
-                                        <input type="checkbox" className="h-6" id="thirdSet" onClick={handleThirdSet} />
-                                        <label htmlFor="thirdSet" name="thirdSet">Played a third set/match tiebreak</label>
-                                    </div>
-                                    <div>
+                                    <div className={scoresVisible ? '' : 'hidden'}>
+                                        <div className="flex items-center justify-center my-2.5 gap-2.5">
+                                            <input type="checkbox" className="h-6" id="thirdSet" onClick={handleThirdSet} />
+                                            <label htmlFor="thirdSet" name="thirdSet">Played a third set/match tiebreak</label>
+                                        </div>
                                         <label htmlFor="scores" className="font-bold text-sm leading-6 dark:text-white">Scores</label>
                                         { thirdSet ? (
                                             <div className="grid grid-cols-4 grid-row-3 gap-1.5 text-sm items-center">
