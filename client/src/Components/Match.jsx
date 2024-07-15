@@ -35,7 +35,7 @@ export default function Match() {
     return (
         <div className="flex flex-1 lg:my-2.5 justify-center items-center">
             <div className="grid grid-row-2 my-5 lg:my-0 gap-2.5">
-                <div className="flex flex-col justify-start lg:flex-row lg:gap-5 flex-1">
+                <div className="flex flex-col justify-between lg:flex-row lg:gap-5 flex-1">
                     <MatchCard matchData={matchData} loading={loading} />
                     <PlayerContactDetails matchId={matchId} />
                 </div>
