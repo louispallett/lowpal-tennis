@@ -10,6 +10,7 @@ const Match = new Schema({
     state: { type: String, required: true }, // 'NO_SHOW' | 'WALK_OVER' | 'NO_PARTY' | 'DONE' | 'SCORE_DONE' Only needed to decide walkovers and if teamNames are TBD (to be decided)
     participants: [{ type: Object }],
     date: { type: Date, default: null },
+    updateNumber: { type: Number, required: true, default: 0 },
     qualifyingMatch: { type: Boolean }
 });
 

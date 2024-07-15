@@ -34,8 +34,6 @@ export default function Home() {
         getUserMatches();
     }, []);
 
-    console.log(userMatchData)
-
     return (
         <div className="flex flex-col lg:grid lg:grid-cols-2">
             <div>

@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-
+const { body, validationResult } = require("express-validator");
 const createTeams = require("../public/scripts/createTeam").createTeams;
 const createMixedTeams = require("../public/scripts/createTeam").createMixedTeams;
 const generateMatchesForTournament = require("../public/scripts/createTournament");
@@ -23,7 +23,7 @@ exports.get_matches = asyncHandler(async (req, res, next) => {
         res.json({ userMatchData });
     } catch (err) {
         console.log(err);
-        res.status(403).json(err);
+        res.status(403).json({ msg: `Get matches error: ${err}` });
     }
 });
 
@@ -31,7 +31,7 @@ exports.get_match = asyncHandler(async (req, res, next) => {
     try {
         const match = await Match.findById(req.params.matchId).populate({ path: "category", select: "name"}).exec();
         res.json({ match });
-    } catch (error) {
+    } catch (err) {
         res.sendStatus(403);
     }
 });
@@ -62,6 +62,7 @@ exports.get_contact_details = asyncHandler(async (req, res, next) => {
         res.json({ data })
     } catch (err) {
         console.log(err);
+        res.status(401).json({ msg: `Get contact details error: ${err}` });
     }
 });
 
@@ -142,60 +143,81 @@ exports.create_matches = asyncHandler(async (req, res, next) => {
             res.json({ matches });
         } catch (err) {
             console.log(err);
-            res.status(401).json({ message: `Error (match (doubles) creation): ${err}` });
+            res.status(500).json({ error: `Error (match (doubles) creation): ${err}` });
         }
     }    
 });
 
-exports.post_match_results = asyncHandler(async (req, res, next) => {
-    try {
-        const match = await Match.findById(req.params.matchId);
-        await Match.updateOne(
-          { _id: req.params.matchId, 'participants.id': req.body.winner },
-          { $set: { 'participants.$.isWinner': true } }
-        );
-      
-        await Match.updateOne(
-          { _id: req.params.matchId },
-          {
-            $set: {
-              'participants.$[participant1].resultText': req.body.team1Score,
-              'participants.$[participant2].resultText': req.body.team2Score
+exports.post_match_results = [
+    body("winner", "You must provide a winner")
+        .trim()
+        .escape(),
+    body("team1Score", "Score must be provided")
+        .trim()
+        .escape(),
+    body("team2Score", "Score must be provided")
+        .trim()
+        .escape(),
+    asyncHandler(async (req, res, next) => {
+        try {
+            const match = await Match.findById(req.params.matchId);
+            if (match.updateNumber > 0) {
+                console.log("Match already updated");
+                res.json({ error: "This match has already been updated." });
+                return;
             }
-          },
-          {
-            arrayFilters: [
-              { 'participant1.id': match.participants[0].id },
-              { 'participant2.id': match.participants[1].id }
-            ]
-          }
-        );
-        await Match.updateOne(
+            await Match.updateOne(
+            { _id: req.params.matchId, 'participants.id': req.body.winner },
+            { $set: { 'participants.$.isWinner': true } }
+            );
+        
+            await Match.updateOne(
             { _id: req.params.matchId },
-            { $set: { state: "SCORE_DONE" } }
-        );
-
-        let winningPlayerInfo = await User.findById(req.body.winner);
-        if (!winningPlayerInfo) winningPlayerInfo = await Team.findById(req.body.winner); // MAYBE adding name to team model?
-
-        // Finally, we need find the next match and push our winning participant to it
-        await Match.updateOne(
-            { _id: match.nextMatchId },
-            { $push: 
-                { participants: { 
-                    id: req.body.winner, 
-                    name: winningPlayerInfo.name,
-                    ranking: winningPlayerInfo.ranking,
-                    resultText: null,
-                    isWinner: false,
-                    status: null
-                }}
+            {
+                $set: {
+                'participants.$[participant1].resultText': req.body.team1Score,
+                'participants.$[participant2].resultText': req.body.team2Score
+                }
+            },
+            {
+                arrayFilters: [
+                { 'participant1.id': match.participants[0].id },
+                { 'participant2.id': match.participants[1].id }
+                ]
             }
-        );
+            );
+            await Match.updateOne(
+                { _id: req.params.matchId },
+                { $set: { state: "SCORE_DONE" } }
+            );
+            await Match.updateOne(
+                { _id: req.params.matchId },
+                { $inc: { updateNumber: 1 } }
+            );
+
+            let winningPlayerInfo = await User.findById(req.body.winner);
+            if (!winningPlayerInfo) winningPlayerInfo = await Team.findById(req.body.winner); // MAYBE adding name to team model?
+
+            // Finally, we need find the next match and push our winning participant to it
+            await Match.updateOne(
+                { _id: match.nextMatchId },
+                { $push: 
+                    { participants: { 
+                        id: req.body.winner, 
+                        name: winningPlayerInfo.name,
+                        ranking: winningPlayerInfo.ranking,
+                        resultText: null,
+                        isWinner: false,
+                        status: null
+                    }}
+                }
+            );
+        
+            res.json({ msg: "Success" });
+        } catch (err) {
+            console.error('Error updating participant:', err);
+            res.status(500).json({ msg: `Error (match update): ${err}` });
+        }
       
-        res.sendStatus(200);
-      } catch (error) {
-        console.error('Error updating participant:', error);
-      }
-      
-});
+    })
+]
