@@ -23,6 +23,7 @@ export default function SignIn() {
                 if (!token) {
                     setIsPending(false);
                     setLoginError(response.data.error);
+                    console.log(loginError);
                     return;
                 }
                 localStorage.setItem("Authorization", token);

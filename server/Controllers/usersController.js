@@ -20,14 +20,14 @@ exports.signIn = [
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.sendStatus(400).json({ message: "Validation Failed", errors: errors.array() });
+            res.json({ message: "Validation Failed", errors: errors.array() });
             return;
         }
 
         passport.authenticate("user_local", (err, user, info) => {
             if (err) return next(err);
             if (!user) {
-                res.status(400).json({ error: info.message });
+                res.json({ error: info.message });
             } else {
                 req.login(user, next); // Note that this assigns req.user to user. It is also a req, so we need a response in this line (otherwise we receive an error)
                 jwt.sign({ user }, process.env.USER_KEY, { expiresIn: "10h" }, (err, token) => {

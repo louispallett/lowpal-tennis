@@ -8,11 +8,11 @@ passport.use("user_local", new LocalStrategy({ usernameField: "email" }, async (
   try {
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
-      return done(null, false, { message: "User not found" });
+      return done(null, false, { message: "User not found. Please check your email." });
     };
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-      return done(null, false, { message: "Incorrect password" });
+      return done(null, false, { message: "Incorrect password." });
     }
     return done(null, user);
   } catch(err) {
