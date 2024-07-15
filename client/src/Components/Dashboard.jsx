@@ -13,15 +13,19 @@ export default function Dashboard() {
             <div>
               <Link to="/dashboard" >
                   <div className="flex flex-col">
-                      <h1 id="subtitle" className="relative font-kanit text-base sm:text-2xl text-slate-100">2024 SLTC</h1>
+                      <h1 id="subtitle" className="relative font-sedan text-base sm:text-2xl text-slate-100">2024 SLTC</h1>
                   </div>
-                  <h1 id="main-title" className="text-lg font-kanit sm:text-2xl text-slate-100">In-House Tournament</h1>
+                  <h1 id="main-title" className="text-lg font-sedan sm:text-2xl text-slate-100">In-House Tournament</h1>
               </Link>
             </div>
             <Navigation />
             </HeaderContainerInner>
-      </HeaderContainer>        
-      <Outlet />
+      </HeaderContainer>
+      <div className="flex flex-1 justify-center">
+        <div className="grid justify-center max-w-full">
+          <Outlet />
+        </div>
+      </div>   
       <Footer />
     </ BackgroundContainer>
   );

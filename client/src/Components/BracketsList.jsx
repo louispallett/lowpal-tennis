@@ -30,7 +30,7 @@ export default function BracketsList() {
         <div className="flex my-10 mx-2.5 flex-col flex-1 items-center gap-5">
             <div>
                 <div className="bg-lime-600 rounded-b-none rounded-lg shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
-                    <h5 className="p-3 text-xl font-kanit tracking-tight text-slate-200 text-center lg:text-left sm:text-2xl sm:font-black sm:p-5">Tournament Brackets</h5>
+                    <h5 className="p-3 text-xl font-sedan text-slate-50 text-center sm:text-3xl sm:font-black sm:p-5">Tournament Brackets</h5>
                 </div>
                 <div className="flex flex-col min-w-full bg-white rounded-lg rounded-t-none shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)] text-sm lg:text-base dark:bg-slate-700">
                     <div className="flex flex-col gap-2.5 p-2.5 dark:text-slate-100">
@@ -42,7 +42,7 @@ export default function BracketsList() {
                 </div>
             </div>
             <div className="flex justify-center bg-lime-600 rounded-lg text-sm px-10 lg:text-base shadow-[5px_5px_0px_0px_#4f46e5] min-w-full">
-                <h5 className="p-3 text-lg tracking-tight text-slate-100 text-center sm:text-2xl sm:p-5">Select a tournament below</h5>
+                <h5 className="p-3 text-lg tracking-tight font-sedan text-slate-100 text-center sm:text-2xl sm:p-5">Select a tournament below</h5>
             </div>
             <div className="flex flex-col lg:flex-row justify-center items-center gap-5">
                 { loading && (
@@ -68,7 +68,7 @@ function CategoryCard({ data }) {
     return (
         <Link to={data._id} className="hover:-translate-y-1 hover:-translate-x-1 transition-all">
             <div className="bg-lime-600 rounded-lg shadow-[5px_5px_0px_0px_#4f46e5]">
-                <h5 className="p-3 text-xl font-kanit tracking-tight text-slate-200 text-center lg:text-left sm:text-2xl sm:font-black sm:p-5">{data.name}</h5>
+                <h5 className="p-3 text-xl font-sedan tracking-tight text-slate-50 text-center lg:text-left sm:text-2xl sm:font-black sm:p-5">{data.name}</h5>
             </div>
         </Link>
     )

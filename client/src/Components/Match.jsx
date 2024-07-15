@@ -221,7 +221,7 @@ function MatchForm({ matchData, loading }) {
                                 <p>Thank you for submitting your match scores.</p>
                                 <p>If you won, you'll find your next match back on your dashboard.</p>
                             </div>
-                            <Link to="/dashboard" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 my-2.5 text-sm font-semibold leading-6 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Go to dashboard</Link>
+                            <Link to="/dashboard" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 my-2.5 text-sm font-semibold leading-6 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Return to dashboard</Link>
                         </>
                     ) : (
                         matchData && (

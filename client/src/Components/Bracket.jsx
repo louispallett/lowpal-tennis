@@ -1,7 +1,8 @@
 import { SingleEliminationBracket, Match, SVGViewer, createTheme } from '@g-loot/react-tournament-brackets';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useWindowSize } from '@react-hook/window-size'
+import { ArrowUturnLeftIcon } from "@heroicons/react/16/solid";
 
 export default function Bracket() {
     const { categoryId } = useParams();
@@ -48,7 +49,7 @@ export default function Bracket() {
     });
 
     return (
-        <div className="flex justify-center my-2.5 flex-1">
+        <div className="flex flex-col justify-center my-2.5 flex-1">
             { loading && (
                 <div className="flex justify-center m-10 items-center p-20 bg-slate-300 rounded-lg shadow dark:bg-slate-700">
                     <div role="status">
@@ -61,16 +62,22 @@ export default function Bracket() {
                 </div>
             )}
             { matchData && (
-                <SingleEliminationBracket
-                theme={WhiteTheme}
-                matches={matchData}
-                matchComponent={Match}
-                svgWrapper={({ children, ...props }) => (
-                <SVGViewer width={finalWidth} height={finalHeight} {...props}>
-                    {children}
-                </SVGViewer>
-                )}
-            />
+                <>
+                    <SingleEliminationBracket
+                        theme={WhiteTheme}
+                        matches={matchData}
+                        matchComponent={Match}
+                        svgWrapper={({ children, ...props }) => (
+                        <SVGViewer width={finalWidth} height={finalHeight} {...props}>
+                            {children}
+                        </SVGViewer>
+                    )}
+                    />
+                    <Link to="/dashboard/brackets" className="flex w-full my-10 gap-1.5 items-center justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        <ArrowUturnLeftIcon className="h-4" />
+                        <p>Back to bracket list</p>
+                    </Link>
+                </>
             )}
         </div>
     )

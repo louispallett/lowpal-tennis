@@ -1,17 +1,21 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-    content: [
-      "./index.html",
-      "./src/**/*.{js,ts,jsx,tsx}",
-    ],
-    theme: {
-      extend: {},
-      fontFamily: {
-        roboto: ["Roboto", "sans-serif"],
-        kanit: ["kanit", "sans-serif"]
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      spacing: {
+        "minArticle": "40em",
+        "maxArticle": "70em"
       }
     },
-    plugins: [],
-  }
-  
-  
+    fontFamily: {
+      roboto: ["Roboto", "sans-serif"],
+      sedan: ["Sedan", "sans-serif"],
+      kanit: ["kanit", "sans-serif"]
+    }
+  },
+  plugins: [],
+}
