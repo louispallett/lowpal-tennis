@@ -1,5 +1,6 @@
 import axios from "axios";
 import React from "react";
+import { Dialog } from '@headlessui/react'
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -46,6 +47,7 @@ export default function Match() {
 }
 
 function MatchCard({ matchData, loading }) {
+    const [isOpen, setIsOpen] = useState(false);
     return (
         <>
             { loading && (
@@ -78,7 +80,19 @@ function MatchCard({ matchData, loading }) {
                         </div>
                         <div className="flex items-center gap-2.5 bg-white rounded-lg shadow text-sm px-5 sm:text-base dark:bg-slate-700 py-2.5 sm:py-5 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
                             <CursorArrowRippleIcon className="h-4 w-4 dark:fill-slate-100" />
-                            <p className="dark:text-slate-100">State:&nbsp; <b className="text-green-400">{matchData.state}</b></p>
+                            { matchData.qualifyingMatch ? (<p className="dark:text-slate-100">This is a <button onClick={() => setIsOpen(true)} className="cursor-pointer text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 transition-all"><b>qualifying match</b></button>!</p>) : (<p className="dark:text-slate-100">State:&nbsp; <b className="text-green-400">{matchData.state}</b></p>)}
+                            <Dialog as="div" open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
+                                <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+                                    <Dialog.Panel as="div" className="max-w-lg space-y-4 p-12 bg-slate-200 rounded-lg shadow-[5px_5px_0px_0px_#4f46e5] dark:bg-slate-800 dark:text-slate-50">
+                                        <h3 className="font-sedan">Qualifying Matches</h3>
+                                        <p><b>A qualifying match is part of a first round which not everyone plays. If the number of players is not a power of 2 (2, 4, 8, 16, 32, etc.), some players will have to play a qualifying round to join the tournament.</b></p>
+                                        <p><b>Other than not appearing on the tournament bracket, this is still an ordinary match!</b></p>
+                                        <div className="flex gap-4">
+                                        <button className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all" onClick={() => setIsOpen(false)}><b>Got it!</b></button>
+                                        </div>
+                                    </Dialog.Panel>
+                                    </div>
+                            </Dialog>
                         </div>
                         <div className="flex items-center gap-2.5 bg-white rounded-lg shadow text-sm px-5 sm:text-base dark:bg-slate-700 py-2.5 sm:py-5 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
                             <CalendarIcon className="h-4 w-4 dark:fill-white" />
@@ -303,7 +317,7 @@ function MatchForm({ matchData, loading }) {
                                             <img src={tennisBall} className="h-10 fill-slate-100" id="spinner" alt="Loading" />
                                         </div>
                                     ) : (
-                                        <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit Results</button>
+                                        <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all">Submit Results</button>
                                     )}
                                 </form>
                             )
