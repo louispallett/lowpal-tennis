@@ -140,7 +140,7 @@ export default function SignUp() {
                                     <option value="female">Female</option>
                                 </select>
                                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <ChevronDownIcon className="h-6 w-6 fill-white/60" />
+                                    <ChevronDownIcon className="h-6 w-6 dark:fill-white/60" />
                                 </div>
                             </div>
                             <span className="text-xs font-bold text-red-700 dark:text-red-400">
@@ -246,7 +246,13 @@ export default function SignUp() {
                             <input type="checkbox" id="finalsDates" required 
                                 className="w-6 h-6 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                                 {...register("finalsDates", { required: "Please confirm" })} />
-                            <label htmlFor="finalsDates" className="text-sm dark:text-slate-100">By ticking this box, you confirm that you are available to play tennis on 19th and 20th October (finals weekend).</label>
+                            <label htmlFor="finalsDates" className="text-sm dark:text-slate-100">By ticking this box, you confirm that you are available to attend on 19th and 20th October (finals weekend).</label>
+                        </div>
+                        <div className="flex items-center gap-2.5">
+                            <input type="checkbox" id="finalsDates" required 
+                                className="w-6 h-6 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                                {...register("finalsDates", { required: "Please confirm" })} />
+                            <label htmlFor="finalsDates" className="text-sm dark:text-slate-100">By ticking this box, you confirm that you understand how we <Link to="/users/using-your-data" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 transition-all"><b>use your data</b></Link> and consent to us doing so.</label>
                         </div>
                         <span className="text-xs font-bold text-red-700 dark:text-red-400">
                             <p>{errors.finalsDates?.message}</p>

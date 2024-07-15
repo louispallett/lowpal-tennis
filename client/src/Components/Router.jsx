@@ -26,6 +26,7 @@ import Dashboard from "./Dashboard";
 import Rules from "./Rules";
 import Home from "./Home";
 import Match from "./Match";
+import UsingData from "./UsingData";
 
 function ProtectedRoute({ isAuth, children }) {
     return isAuth ? children : <Navigate to="/users/sign-in" replace />;
@@ -111,6 +112,10 @@ export default function Router() {
                 {
                     path: "sign-in",
                     element: isAuth ? <Navigate to="/dashboard" replace /> : <SignIn />
+                },
+                {
+                    path: "using-your-data",
+                    element: <UsingData />
                 }
             ]
         },
