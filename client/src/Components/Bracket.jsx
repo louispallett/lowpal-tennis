@@ -73,7 +73,7 @@ export default function Bracket() {
                         </SVGViewer>
                     )}
                     />
-                    <Link to="/dashboard/brackets" className="flex w-full my-10 gap-1.5 items-center justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    <Link to="/dashboard/brackets" className="flex w-full my-10 gap-1.5 items-center justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all">
                         <ArrowUturnLeftIcon className="h-4" />
                         <p>Back to bracket list</p>
                     </Link>

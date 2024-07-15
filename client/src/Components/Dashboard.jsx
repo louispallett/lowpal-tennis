@@ -76,27 +76,27 @@ function Navigation() {
           <div className="px-2.5">
             <hr />
           </div>
-          <Menu.Item className="flex gap-1.5 items-center items-center hover:bg-slate-200 dark:hover:bg-slate-700">
+          <Menu.Item className="flex gap-1.5 items-center items-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
             <Link to="/dashboard" className="block px-4 py-2 text-gray-700 dark:text-slate-100">
               <HomeIcon className="w-4 h-6 fill-slate/60"/>
               My Matches</Link>
           </Menu.Item>
-          <Menu.Item className="flex gap-1.5 items-center hover:bg-slate-200 dark:hover:bg-slate-700">
+          <Menu.Item className="flex gap-1.5 items-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
             <Link to="/dashboard/brackets" className="block px-4 py-2 text-gray-700 dark:text-slate-100">
             <ChartBarIcon className="w-4 h-6 fill-slate/60"/>
             All Results</Link>
           </Menu.Item>
-          <Menu.Item className="flex gap-1.5 items-center hover:bg-slate-200 dark:hover:bg-slate-700">
+          <Menu.Item className="flex gap-1.5 items-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
             <Link to="/dashboard/about" className="block px-4 py-2 text-gray-700 dark:text-slate-100">
             <PaperClipIcon className="w-4 h-6 fill-slate/60"/>
             Site Guide</Link>
           </Menu.Item>
-          <Menu.Item className="flex gap-1.5 items-center hover:bg-slate-200 dark:hover:bg-slate-700">
+          <Menu.Item className="flex gap-1.5 items-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
             <Link to="/dashboard/rules" className="block px-4 py-2 text-gray-700 dark:text-slate-100">
             <ScaleIcon className="w-4 h-6 fill-slate/60"/>
             Tournament Rules</Link>
           </Menu.Item>
-          <Menu.Item className="flex gap-1.5 items-center hover:bg-slate-200 dark:hover:bg-slate-700 w-full text-left">
+          <Menu.Item className="flex gap-1.5 items-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all w-full text-left">
             <button onClick={handleLogOut} className="block px-4 py-2 text-gray-700 font-black dark:text-slate-100 rounded-md rounded-t-none">
             <ArrowLeftStartOnRectangleIcon className="w-4 h-6 fill-slate/60" />
             Log Out</button>
@@ -114,6 +114,9 @@ function Footer() {
           <p className="font-bold text-xs py-5 sm:text-sm hover:text-lime-300">© 2024 LowPal/Louis Nicholson-Pallett</p>
         </a>
       </div>
+      <Link className="text-sm hover:text-lime-500 transition-all" >
+        Data & Privacy Policy
+      </Link>
     </footer>
   )
 }
