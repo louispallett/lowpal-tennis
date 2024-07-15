@@ -22,7 +22,7 @@ export default function Dashboard() {
             </HeaderContainerInner>
       </HeaderContainer>
       <div className="flex flex-1 justify-center">
-        <div className="grid justify-center max-w-full">
+        <div className="grid justify-center max-w-full max-w-screen-3xl">
           <Outlet />
         </div>
       </div>   
@@ -84,7 +84,7 @@ function Navigation() {
           <Menu.Item className="flex gap-1.5 items-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
             <Link to="/dashboard/brackets" className="block px-4 py-2 text-gray-700 dark:text-slate-100">
             <ChartBarIcon className="w-4 h-6 fill-slate/60"/>
-            All Results</Link>
+            Results</Link>
           </Menu.Item>
           <Menu.Item className="flex gap-1.5 items-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
             <Link to="/dashboard/about" className="block px-4 py-2 text-gray-700 dark:text-slate-100">
@@ -108,13 +108,13 @@ function Navigation() {
 
 function Footer() {
   return (
-    <footer className="flex px-3 py-3 justify-between items-center rounded-lg m-2 bg-indigo-600 text-white sm:px-5 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
+    <footer className="flex px-3 py-3 justify-between items-center rounded-lg m-1 my-2 bg-indigo-600 text-white sm:px-5 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
       <div>
         <a href="https://github.com/louispallett/odin-blog-api">
           <p className="font-bold text-xs py-5 sm:text-sm hover:text-lime-300">© 2024 LowPal/Louis Nicholson-Pallett</p>
         </a>
       </div>
-      <Link className="text-sm hover:text-lime-500 transition-all" >
+      <Link to="/users/using-your-data" target="_blank" rel="noopener noreferrer" className="text-xs sm:text-sm text-right hover:text-lime-500 transition-all" >
         Data & Privacy Policy
       </Link>
     </footer>

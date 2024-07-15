@@ -35,13 +35,23 @@ export default function Match() {
     
     return (
         <div className="flex flex-1 lg:my-2.5 justify-center items-center">
-            <div className="grid grid-row-2 my-5 lg:my-0 gap-2.5">
-                <div className="flex flex-col justify-between lg:flex-row lg:gap-5 flex-1">
-                    <MatchCard matchData={matchData} loading={loading} />
-                    <PlayerContactDetails matchId={matchId} />
+            { error ? (
+                <div className="flex justify-center p-5 bg-slate-200 rounded-lg dark:bg-slate-700 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
+                    <div className="flex flex-col items-center gap-5 min-w-full rounded-lg rounded-t-none text-sm lg:text-base dark:text-slate-100">
+                        <h5 className="text-xl font-sedan tracking-tight text-center lg:text-left sm:text-2xl sm:font-black">500 ERROR</h5>
+                        <img src={tennisBall} alt="" className="h-10" id="spinner" />
+                        <p>Oops! Looks like a server error. Please take a screenshot, note the time, and contact the administrator.</p>
+                    </div>
                 </div>
-                <MatchForm matchData={matchData} loading={loading} />
-            </div>
+            ) : (
+                <div className="grid grid-row-2 my-5 lg:my-0 gap-2.5">
+                    <div className="flex flex-col justify-between lg:flex-row lg:gap-5 flex-1">
+                        <MatchCard matchData={matchData} loading={loading} />
+                        <PlayerContactDetails matchId={matchId} />
+                    </div>
+                    <MatchForm matchData={matchData} loading={loading} />
+                </div>
+            )}
         </div>
     )
 }
@@ -50,6 +60,10 @@ function MatchCard({ matchData, loading }) {
     const [isOpen, setIsOpen] = useState(false);
     return (
         <>
+            <div className="flex flex-col gap-1.5 m-2.5">
+                <div className="flex flex-col bg-lime-600 rounded-lg text-sm px-10 mb-2.5 shadow-[5px_5px_0px_0px_#4f46e5] lg:text-base">
+                    <h5 className="p-3 text-xl tracking-tight text-slate-100 text-center sm:text-2xl sm:p-5">Match Details</h5>
+                </div>
             { loading && (
                 <div className="flex justify-center m-10 items-center p-20 bg-slate-300 rounded-lg dark:bg-slate-700">
                     <div role="status">
@@ -63,44 +77,40 @@ function MatchCard({ matchData, loading }) {
             )}
             { matchData && (
                 <>
-                    <div className="flex flex-col gap-1.5 m-2.5">
-                        <div className="flex flex-col bg-lime-600 rounded-lg text-sm px-10 mb-2.5 shadow-[5px_5px_0px_0px_#4f46e5] lg:text-base">
-                            <h5 className="p-3 text-xl tracking-tight text-slate-100 text-center sm:text-2xl sm:p-5">Match Details</h5>
+                    <div className="flex flex-col p-2.5 bg-white rounded-lg shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)] text-sm lg:text-base dark:bg-slate-700">
+                        <div className="grid grid-cols-3 items-center px-2.5 py-1.5 font-semi-bold text-center dark:text-slate-100 sm:px-4 sm:py-3.5">
+                            <p>{matchData.participants[0].name}</p>
+                            <p className="text-lg font-black"><i>vs</i></p>
+                            <p>{matchData.participants.length == 2 ? matchData.participants[1].name : "TBC"}</p>
                         </div>
-                        <div className="flex flex-col p-2.5 bg-white rounded-lg shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)] text-sm lg:text-base dark:bg-slate-700">
-                            <div className="grid grid-cols-3 items-center px-2.5 py-1.5 font-semi-bold text-center dark:text-slate-100 sm:px-4 sm:py-3.5">
-                                <p>{matchData.participants[0].name}</p>
-                                <p className="text-lg font-black"><i>vs</i></p>
-                                <p>{matchData.participants.length == 2 ? matchData.participants[1].name : "TBC"}</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2.5 bg-white rounded-lg text-sm px-5 sm:text-base shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)] dark:bg-slate-700 py-2.5 sm:py-5">
-                            <TagIcon className="h-4 w-4 dark:fill-white" />
-                            <p className="tracking-tight dark:text-slate-200"><b>Category</b>: {matchData.category.name}</p>
-                        </div>
-                        <div className="flex items-center gap-2.5 bg-white rounded-lg shadow text-sm px-5 sm:text-base dark:bg-slate-700 py-2.5 sm:py-5 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
-                            <CursorArrowRippleIcon className="h-4 w-4 dark:fill-slate-100" />
-                            { matchData.qualifyingMatch ? (<p className="dark:text-slate-100">This is a <button onClick={() => setIsOpen(true)} className="cursor-pointer text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 transition-all"><b>qualifying match</b></button>!</p>) : (<p className="dark:text-slate-100">State:&nbsp; <b className="text-green-400">{matchData.state}</b></p>)}
-                            <Dialog as="div" open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
-                                <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-                                    <Dialog.Panel as="div" className="max-w-lg space-y-4 p-12 bg-slate-200 rounded-lg shadow-[5px_5px_0px_0px_#4f46e5] dark:bg-slate-800 dark:text-slate-50">
-                                        <h3 className="font-sedan">Qualifying Matches</h3>
-                                        <p><b>A qualifying match is part of a first round which not everyone plays. If the number of players is not a power of 2 (2, 4, 8, 16, 32, etc.), some players will have to play a qualifying round to join the tournament.</b></p>
-                                        <p><b>Other than not appearing on the tournament bracket, this is still an ordinary match!</b></p>
-                                        <div className="flex gap-4">
-                                        <button className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all" onClick={() => setIsOpen(false)}><b>Got it!</b></button>
-                                        </div>
-                                    </Dialog.Panel>
+                    </div>
+                    <div className="flex items-center gap-2.5 bg-white rounded-lg text-sm px-5 sm:text-base shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)] dark:bg-slate-700 py-2.5 sm:py-5">
+                        <TagIcon className="h-4 w-4 dark:fill-white" />
+                        <p className="tracking-tight dark:text-slate-200"><b>Category</b>: {matchData.category.name}</p>
+                    </div>
+                    <div className="flex items-center gap-2.5 bg-white rounded-lg shadow text-sm px-5 sm:text-base dark:bg-slate-700 py-2.5 sm:py-5 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
+                        <CursorArrowRippleIcon className="h-4 w-4 dark:fill-slate-100" />
+                        { matchData.qualifyingMatch ? (<p className="dark:text-slate-100">This is a <button onClick={() => setIsOpen(true)} className="cursor-pointer text-slate-100 bg-indigo-600 p-1 px-2 rounded-md hover:bg-indigo-500 transition-all"><b>qualifying match</b></button></p>) : (<p className="dark:text-slate-100">State:&nbsp; <b className="text-green-400">{matchData.state}</b></p>)}
+                        <Dialog as="div" open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
+                            <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+                                <Dialog.Panel as="div" className="max-w-lg space-y-4 p-12 bg-slate-100 rounded-lg shadow-[5px_5px_0px_0px_#4f46e5] dark:bg-slate-800 dark:text-slate-50">
+                                    <h3 className="font-sedan">Qualifying Matches</h3>
+                                    <p><b>A qualifying match is part of a first round which not everyone plays. If the number of players is not a power of 2 (2, 4, 8, 16, 32, etc.), some players will have to play a qualifying round to join the tournament.</b></p>
+                                    <p><b>Other than not appearing on the tournament bracket, this is still an ordinary match!</b></p>
+                                    <div className="flex gap-4">
+                                    <button className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all" onClick={() => setIsOpen(false)}><b>Got it!</b></button>
                                     </div>
-                            </Dialog>
-                        </div>
-                        <div className="flex items-center gap-2.5 bg-white rounded-lg shadow text-sm px-5 sm:text-base dark:bg-slate-700 py-2.5 sm:py-5 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
-                            <CalendarIcon className="h-4 w-4 dark:fill-white" />
-                            <p className="dark:text-slate-100">Deadline to play:&nbsp; <b className="text-red-600">{matchData.startTime}</b></p>
-                        </div>
+                                </Dialog.Panel>
+                                </div>
+                        </Dialog>
+                    </div>
+                    <div className="flex items-center gap-2.5 bg-white rounded-lg shadow text-sm px-5 sm:text-base dark:bg-slate-700 py-2.5 sm:py-5 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
+                        <CalendarIcon className="h-4 w-4 dark:fill-white" />
+                        <p className="dark:text-slate-100">Deadline to play:&nbsp; <b className="text-red-600">{matchData.startTime}</b></p>
                     </div>
                 </>
             )}
+            </div>
         </>
     )
 }
@@ -135,6 +145,12 @@ function PlayerContactDetails({ matchId }) {
             </div>
             <div className="flex flex-col p-2.5 bg-white rounded-lg shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)] text-sm lg:text-base dark:bg-slate-700">
                 <div className="px-2.5 py-1.5 font-semi-bold dark:text-slate-100 sm:px-4 sm:py-3.5">
+                    { error && (
+                        <div className="flex flex-col justify-center gap-5">
+                            <img src={tennisBall} alt="" className="h-10" id="spinner" />
+                            <p>Oops! Looks like a server error. Please take a screenshot, note the time, and contact the administrator.</p>
+                        </div>
+                    )}
                     { loading && (
                         <div className="flex justify-center m-10 items-center py-10">
                             <div role="status">
@@ -197,11 +213,11 @@ function MatchForm({ matchData, loading }) {
                 setError(response.data.error);
                 return;
             }
-            setIsPending(false);
             setIsSubmitted(true);
         } catch (err) {
             console.log(err);
             setError(err);
+        } finally {
             setIsPending(false);
         }
     };
@@ -214,7 +230,7 @@ function MatchForm({ matchData, loading }) {
             <div className="flex flex-col p-2.5 bg-white rounded-lg text-sm lg:text-base shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)] dark:bg-slate-700">
                 <div className="px-2.5 py-1.5 font-semi-bold dark:text-slate-100 sm:px-4 sm:py-3.5">
                     {loading && (
-                        <div className="flex justify-center m-10 items-center p-20 bg-slate-300 rounded-lg dark:bg-slate-700">
+                        <div className="flex justify-center m-10 items-center p-20 rounded-lg">
                             <div role="status">
                                 <svg aria-hidden="true" className="w-8 h-8 text-indigo-500 animate-spin dark:text-gray-600 fill-lime-500" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
@@ -235,7 +251,7 @@ function MatchForm({ matchData, loading }) {
                                 <p>Thank you for submitting your match scores.</p>
                                 <p>If you won, you'll find your next match back on your dashboard.</p>
                             </div>
-                            <Link to="/dashboard" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 my-2.5 text-sm font-semibold leading-6 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Return to dashboard</Link>
+                            <Link to="/dashboard" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 my-2.5 text-sm font-semibold leading-6 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all">Return to dashboard</Link>
                         </>
                     ) : (
                         matchData && (

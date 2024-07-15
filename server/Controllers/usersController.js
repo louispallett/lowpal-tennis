@@ -20,6 +20,7 @@ exports.signIn = [
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
+            console.log("Yes")
             res.json({ message: "Validation Failed", errors: errors.array() });
             return;
         }
@@ -61,7 +62,7 @@ exports.signUp = [
     asyncHandler(async (req, res, next) => {
         const userExists = await User.findOne({ email: req.body.email.toLowerCase() }, "email").exec();
         if (userExists) {
-            res.status(400).json({ errors: "Email already used for another account" });
+            res.status(400).json({ errors: [{ msg: "Email already used for another account" }]});
             return;
         }
 

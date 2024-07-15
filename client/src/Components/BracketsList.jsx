@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
+import tennisBall from "/assets/images/tennis-ball.svg";
 
 export default function BracketsList() {
     const [categories, setCategories] = useState(null);
@@ -59,7 +60,23 @@ export default function BracketsList() {
                 { categories && categories.map(item => (
                     <CategoryCard data={item} key={item._id} />
                 ))}
+                { error && (
+                    <div className="flex justify-center p-5 bg-slate-200 rounded-lg dark:bg-slate-700 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
+                        <div className="flex flex-col items-center gap-5 min-w-full rounded-lg rounded-t-none text-sm lg:text-base dark:text-slate-100">
+                            <h5 className="text-xl font-sedan tracking-tight text-center lg:text-left sm:text-2xl sm:font-black">500 ERROR</h5>
+                            <img src={tennisBall} alt="" className="h-10" id="spinner" />
+                            <p>Oops! Looks like a server error. Please take a screenshot, note the time, and contact the administrator.</p>
+                        </div>
+                    </div>
+                )}
             </div>
+            {/* <div className="flex justify-center p-5 bg-slate-200 rounded-lg dark:bg-slate-700 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
+                <div className="flex flex-col items-center gap-5 min-w-full rounded-lg rounded-t-none text-sm lg:text-base dark:text-slate-100">
+                    <h5 className="text-xl font-sedan tracking-tight text-center lg:text-left sm:text-2xl sm:font-black">No Brackets Yet</h5>
+                    <img src={tennisBall} alt="" className="h-10" id="spinner" />
+                    <p>Please wait for sign-up to close and the host to create your matches.</p>
+                </div>
+            </div> */}
         </div>
     )
 }

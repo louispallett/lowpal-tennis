@@ -11,9 +11,9 @@ export default function Users() {
                     <div className="sm:mx-auto sm:w-full sm:max-w-lg">
                         <div className="flex justify-center gap-5 items-center">
                             <img src={tennisBall} alt="" className="h-10" id="spinner" />
-                            <h1 className="font-poppins text-3xl font-bold tracking-tight text-nowrap max-sm:text-wrap dark:text-white">Saltford Lawn Tennis Club</h1>
+                            <h1 className="font-sedan text-3xl font-bold tracking-tight text-nowrap max-sm:text-wrap dark:text-white">Saltford Lawn Tennis Club</h1>
                         </div>
-                        <h2 className="font-poppins text-center text-xl leading-9 tracking-tight text-gray-900 dark:text-white">2024 In-House Tournament</h2>
+                        <h2 className="font-sedan text-center text-xl leading-9 tracking-tight text-gray-900 dark:text-white">2024 In-House Tournament</h2>
                     </div>
                     <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-lg">
                         <Outlet />

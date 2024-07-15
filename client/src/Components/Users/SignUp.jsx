@@ -17,7 +17,9 @@ export default function SignUp() {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const countryCodesArray = Object.entries(countryCodes.customList('countryCode', '+{countryCallingCode}'));
     const categories = watch("categories") || [];
-    const [showPassword, setShowPassword] = useState();
+    const [showPassword, setShowPassword] = useState(false);
+    const [signupError, setSignupError] = useState(null);
+
 
     const onSubmit = async (data) => {
         setIsPending(true);
@@ -30,7 +32,13 @@ export default function SignUp() {
                 setIsPending(false);
                 setIsSubmitted(true);
             }).catch((err) => {
-                console.log(err);
+                console.log(err.response.data.errors[0].msg);
+                if (err.response.data.errors) {
+                    setSignupError(err.response.data.errors);
+                } else {
+                    setSignupError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
+                }
+                setIsPending(false);
             });
     }
 
@@ -257,6 +265,9 @@ export default function SignUp() {
                                 {...register("finalsDates", { required: "Please confirm" })} />
                             <label htmlFor="finalsDates" className="text-sm dark:text-slate-100">By ticking this box, you confirm that you are available to attend on 19th and 20th October (finals weekend).</label>
                         </div>
+                        <span className="text-xs font-bold text-red-700 dark:text-red-400">
+                            <p>{errors.finalsDates?.message}</p>
+                        </span>
                         <div className="flex items-center gap-2.5">
                             <input type="checkbox" id="useData" required 
                                 className="w-6 h-6 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
@@ -264,7 +275,7 @@ export default function SignUp() {
                             <label htmlFor="useData" className="text-sm dark:text-slate-100">By ticking this box, you confirm that you understand how we <Link to="/users/using-your-data" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 transition-all"><b>use your data</b></Link> and consent to us doing so.</label>
                         </div>
                         <span className="text-xs font-bold text-red-700 dark:text-red-400">
-                            <p>{errors.finalsDates?.message}</p>
+                            <p>{errors.useData?.message}</p>
                         </span>
                         <div>
                             { isPending ? (
@@ -276,10 +287,13 @@ export default function SignUp() {
                                         className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                     >Sign Up</button>
                             )}
+                            { signupError && signupError.map(item => ((
+                                <p className="my-2.5 text-center text-sm font-bold text-red-600 dark:text-red-400">{item.msg}</p>
+                            )))}
                         </div>
                     </form>
                     {/* Development: */}
-                    <DevTool control={control}/> 
+                    {/* <DevTool control={control}/>  */}
                     <p className="mt-10 text-center text-sm dark:text-white"> Already a member? <Link to="/users/sign-in" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">Sign In</Link></p>
                 </div>
             )}
