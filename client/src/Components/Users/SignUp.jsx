@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/16/solid";
 import { Spinner } from "../tailwind_components/tailwind-ex-elements";
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
 
@@ -16,6 +17,7 @@ export default function SignUp() {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const countryCodesArray = Object.entries(countryCodes.customList('countryCode', '+{countryCallingCode}'));
     const categories = watch("categories") || [];
+    const [showPassword, setShowPassword] = useState();
 
     const onSubmit = async (data) => {
         setIsPending(true);
@@ -206,7 +208,7 @@ export default function SignUp() {
                         <div className="grid grid-cols-2 gap-2.5">
                             <div>
                                 <label htmlFor="password" className="text-sm leading-6 font-bold dark:text-white">Password</label>
-                                <input type="password" id="password" autoComplete="current-password" required
+                                <input type={showPassword ? "text" : "password"} id="password" autoComplete="current-password" required
                                     {...register("password", {
                                         required: "Password is required",
                                         minLength: {
@@ -225,18 +227,25 @@ export default function SignUp() {
                             </div>
                             <div>
                                 <label htmlFor="confPassword" className="text-sm leading-6 font-bold dark:text-white">Confirm Password</label>
-                                <input type="password" id="confPassword" required
-                                    {...register("confPassword", {
-                                        required: "Please confirm your password",
-                                        validate: {
-                                            passwordMatch: (fieldValue) => {
-                                                return (
-                                                    fieldValue == watch("password") || "Passwords do not match"
-                                                )
+                                <div className="flex items-center gap-1">
+                                    <input type={showPassword ? "text" : "password"} id="confPassword" required
+                                        {...register("confPassword", {
+                                            required: "Please confirm your password",
+                                            validate: {
+                                                passwordMatch: (fieldValue) => {
+                                                    return (
+                                                        fieldValue == watch("password") || "Passwords do not match"
+                                                    )
+                                                }
                                             }
-                                        }
-                                    })}
-                                    className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"/>
+                                        })}
+                                        className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"/>
+                                        { showPassword ? (
+                                        <EyeIcon onClick={() => setShowPassword(!showPassword)} className="h-6 cursor-pointer dark:fill-slate-100 hover:fill-indigo-600 transition-all" />
+                                        ) : (
+                                            <EyeSlashIcon onClick={() => setShowPassword(!showPassword)} className="h-6 cursor-pointer dark:fill-slate-100 hover:fill-indigo-600 transition-all" />
+                                        )}
+                                </div>
                                 <span className="text-xs font-bold text-red-700 dark:text-red-400">
                                     <p>{errors.confPassword?.message}</p>
                                 </span>
@@ -249,10 +258,10 @@ export default function SignUp() {
                             <label htmlFor="finalsDates" className="text-sm dark:text-slate-100">By ticking this box, you confirm that you are available to attend on 19th and 20th October (finals weekend).</label>
                         </div>
                         <div className="flex items-center gap-2.5">
-                            <input type="checkbox" id="finalsDates" required 
+                            <input type="checkbox" id="useData" required 
                                 className="w-6 h-6 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-                                {...register("finalsDates", { required: "Please confirm" })} />
-                            <label htmlFor="finalsDates" className="text-sm dark:text-slate-100">By ticking this box, you confirm that you understand how we <Link to="/users/using-your-data" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 transition-all"><b>use your data</b></Link> and consent to us doing so.</label>
+                                {...register("useData", { required: "Please confirm" })} />
+                            <label htmlFor="useData" className="text-sm dark:text-slate-100">By ticking this box, you confirm that you understand how we <Link to="/users/using-your-data" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 transition-all"><b>use your data</b></Link> and consent to us doing so.</label>
                         </div>
                         <span className="text-xs font-bold text-red-700 dark:text-red-400">
                             <p>{errors.finalsDates?.message}</p>

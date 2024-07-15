@@ -3,6 +3,7 @@ import { DevTool } from "@hookform/devtools";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/16/solid";
 
 import { Spinner } from "../tailwind_components/tailwind-ex-elements";
 
@@ -14,6 +15,8 @@ export default function SignIn() {
     const { errors } = formState;
     const [isPending, setIsPending] = useState(false);
     const [loginError, setLoginError] = useState(null);
+    const [serverError, setServerError] = useState(null);
+    const [showPassword, setShowPassword] = useState(false);
 
     const onSubmit = async (data) => {
         setIsPending(true)
@@ -30,6 +33,8 @@ export default function SignIn() {
                 window.location.assign("/dashboard/home");
             }).catch(err => {
                 console.log(err);
+                setIsPending(false);
+                setServerError(err);
             })
     }
 
@@ -37,7 +42,10 @@ export default function SignIn() {
         <>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
                 {loginError && (
-                    <p className="font-bold text-red-400">{loginError}</p>
+                    <p className="font-bold text-red-600 dark:text-red-400">{loginError}</p>
+                )}
+                {serverError && (
+                    <p className="font-bold text-red-600 dark:text-red-400">Sorry, it looks like a server error has occured. Please inform the administrator.</p>
                 )}
                 <div>
                     <label htmlFor="email" className="block text-sm leading-6 dark:text-slate-100">Email</label>
@@ -55,15 +63,22 @@ export default function SignIn() {
                 </span>
                 <div>
                     <label htmlFor="password" className="block text-sm font-medium leading-6 sm:min-w-80 dark:text-slate-100">Password</label>
-                    <input type="password" id="password" autoComplete="current-password" required 
-                        {...register("password", {
-                            required: "Password is required",
-                            minLength: {
-                                value: 8,
-                                message: "Password must be at least eight (8) characters long"
-                            },
-                        })} 
-                        className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"/>
+                    <div className="flex gap-1 items-center">
+                        <input type={showPassword ? "text" : "password"} id="password" autoComplete="current-password" required
+                            {...register("password", {
+                                required: "Password is required",
+                                minLength: {
+                                    value: 8,
+                                    message: "Password must be at least eight (8) characters long"
+                                },
+                            })}
+                            className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"/>
+                        { showPassword ? (
+                            <EyeIcon onClick={() => setShowPassword(!showPassword)} className="h-6 cursor-pointer dark:fill-slate-100 hover:fill-indigo-600 transition-all" />
+                        ) : (
+                            <EyeSlashIcon onClick={() => setShowPassword(!showPassword)} className="h-6 cursor-pointer dark:fill-slate-100 hover:fill-indigo-600 transition-all" />
+                        )}
+                    </div>
                     <span className="text-sm font-bold text-red-400">
                         <p>{errors.password?.message}</p>
                     </span>
