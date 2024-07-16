@@ -24,6 +24,7 @@ export default function SignIn() {
                 const token = response.data.token;
                 if (!token) {
                     setIsPending(false);
+                    console.log(response);
                     setLoginError(response.data.error);
                     console.log(loginError);
                     return;

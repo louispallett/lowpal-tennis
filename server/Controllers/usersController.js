@@ -20,7 +20,7 @@ exports.signIn = [
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            console.log("Yes")
+            console.log(errors.array());
             res.json({ message: "Validation Failed", errors: errors.array() });
             return;
         }
