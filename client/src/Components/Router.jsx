@@ -42,7 +42,7 @@ export default function Router() {
                 return;
             };
             try {
-                const response = await fetch("/api/users/verify", { 
+                const response = await fetch("https://lowpal-tennis-server.fly.dev/api/users/verify", { 
                     mode: "cors", 
                     headers: { "Authorization": token} 
                 })

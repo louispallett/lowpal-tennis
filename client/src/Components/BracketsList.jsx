@@ -11,7 +11,7 @@ export default function BracketsList() {
         const getCategories = async () => {
             setLoading(true);
             try {
-                const response = await fetch("/api/brackets", { mode: "cors" });
+                const response = await fetch("https://lowpal-tennis-server.fly.dev/api/brackets", { mode: "cors" });
                 if (response.status < 400) {
                     const actualData = await response.json();
                     setCategories(actualData.categories);

@@ -27,7 +27,7 @@ export default function SignUp() {
         data.mobile = `${data.phoneCode} ${data.mobile}`;
         data.categories = categories;
         if (data.seeded) data.seeded = true;
-        axios.post("/api/users/sign-up", data)
+        axios.post("https://lowpal-tennis-server.fly.dev/api/users/sign-up", data)
             .then(() => {
                 setIsPending(false);
                 setIsSubmitted(true);

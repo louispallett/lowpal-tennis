@@ -6,7 +6,7 @@ import macrosPlugin from 'vite-plugin-babel-macros';
 export default defineConfig({
   plugins: [macrosPlugin(), react()],
   server: {
-    port: 3000,
+    port: 3001,
     proxy: {
       '/api': {
         target: 'https://lowpal-tennis-server.fly.dev/',
