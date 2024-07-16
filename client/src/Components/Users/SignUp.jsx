@@ -60,6 +60,7 @@ export default function SignUp() {
                     <p className="text-center">Successfully Submitted!</p>
                     <p>Thank you for registering to play in the 2024 Saltford Lawn Tennis Club In-House Tournament.</p>
                     <p>You should have received an email from saltfordtourn2023@gmail.com confirming your sign-up and the categories you have signed up to. Please feel free to respond to this email if you have any questions.</p>
+                    <p className="mt-10 text-center text-sm dark:text-white"> You can now <Link to="/users/sign-in" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">Sign In</Link> to your account and explore the site. However, matches and teams will not yet have been allocated.</p>
                 </div>
             ) : (
                 <div>
