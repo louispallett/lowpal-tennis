@@ -109,10 +109,10 @@ const sendConfirmationEmail = (user, categoryNames) => {
         to: user.email,
         subject: "2024 Saltford In-House Tennis Tournament",
         text: `Hi ${user.firstName}, 
-                \n\nThanks you for signing up to the 2024 Saltford In-House Tournament. This email confirms that your sign up in the following categories:
-                \n\n${categoryNames}
-                \n\nSelection for teams will occur in the coming weeks. Until then, please feel free to reply to this email with any questions you have.
-                \n\nBest wishes,\nLouis`
+            \nThanks you for signing up to the 2024 Saltford In-House Tournament. This email confirms that your sign up in the following categories:
+            \n${categoryNames}
+            \nTeams and matches will be announced on Friday 26th July. Until then, please feel free to reply to this email with any questions you have.
+            \nBest wishes,\nLouis`
     }
 
     transporter.sendMail(mailOptions, (error, info) => {

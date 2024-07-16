@@ -162,38 +162,38 @@ export default function SignUp() {
                             <hr className="my-2" />
                             <div className="flex justify-between">
                                 <div className="flex items-center mb-4">
-                                    <input type="checkbox" id="666f36e408bbfeb7beb9cb9b" value="666f36e408bbfeb7beb9cb9b" disabled={gender == "female"}
+                                    <input type="checkbox" id="66962f95b7876c4d354c8127" value="66962f95b7876c4d354c8127" disabled={gender == "female"}
                                         className="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                                         {...register("categories", { required: "At least one category must be selected" })} />
-                                    <label htmlFor="666f36e408bbfeb7beb9cb9b" name="666f36e408bbfeb7beb9cb9b" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Men's Singles</label>
+                                    <label htmlFor="66962f95b7876c4d354c8127" name="66962f95b7876c4d354c8127" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Men's Singles</label>
                                 </div>
                                 <div className="flex items-center mb-4">
-                                    <input type="checkbox" id="666f36e408bbfeb7beb9cb9c" value="666f36e408bbfeb7beb9cb9c" disabled={gender == "male"}
+                                    <input type="checkbox" id="66962f95b7876c4d354c8128" value="66962f95b7876c4d354c8128" disabled={gender == "male"}
                                         className="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                                         {...register("categories")} />
-                                    <label htmlFor="666f36e408bbfeb7beb9cb9c" name="666f36e408bbfeb7beb9cb9c" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Women's Singles</label>
+                                    <label htmlFor="66962f95b7876c4d354c8128" name="66962f95b7876c4d354c8128" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Women's Singles</label>
                                 </div>
                             </div>
                             <div className="flex justify-between">
                                 <div className="flex items-center mb-4">
-                                    <input type="checkbox" id="666f36e408bbfeb7beb9cb9d" value="666f36e408bbfeb7beb9cb9d" disabled={gender == "female"}
+                                    <input type="checkbox" id="66962f95b7876c4d354c8129" value="66962f95b7876c4d354c8129" disabled={gender == "female"}
                                         className="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                                         {...register("categories")} />
-                                    <label htmlFor="666f36e408bbfeb7beb9cb9d" name="666f36e408bbfeb7beb9cb9d" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Men's Doubles</label>
+                                    <label htmlFor="66962f95b7876c4d354c8129" name="66962f95b7876c4d354c8129" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Men's Doubles</label>
                                 </div>
                                 <div className="flex items-center mb-4">
-                                    <input type="checkbox" id="666f36e408bbfeb7beb9cb9e" value="666f36e408bbfeb7beb9cb9e" disabled={gender == "male"}
+                                    <input type="checkbox" id="66962f95b7876c4d354c812a" value="66962f95b7876c4d354c812a" disabled={gender == "male"}
                                         className="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                                         {...register("categories")} />
-                                    <label htmlFor="666f36e408bbfeb7beb9cb9e" name="666f36e408bbfeb7beb9cb9e" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Women's Doubles</label>
+                                    <label htmlFor="66962f95b7876c4d354c812a" name="66962f95b7876c4d354c812a" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Women's Doubles</label>
                                 </div>
                             </div>
                             <div className="flex justify-center">
                                 <div className="flex item-center mb-4">
-                                    <input type="checkbox" id="666f36e408bbfeb7beb9cb9f" value="666f36e408bbfeb7beb9cb9f" disabled={false}
+                                    <input type="checkbox" id="66962f95b7876c4d354c812b" value="66962f95b7876c4d354c812b" disabled={false}
                                         className="w-4 h-4 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
                                         {...register("categories")} />
-                                    <label htmlFor="666f36e408bbfeb7beb9cb9f" name="666f36e408bbfeb7beb9cb9f" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Mixed Doubles</label>
+                                    <label htmlFor="66962f95b7876c4d354c812b" name="66962f95b7876c4d354c812b" className="font-bold leading-6 text-grey-900 ms-2 dark:text-white" >Mixed Doubles</label>
                                 </div>
                             </div>
                             <span className="text-xs text-center font-bold text-red-700 dark:text-red-400">
