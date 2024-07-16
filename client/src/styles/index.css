@@ -107,13 +107,6 @@ input[type="checkbox"] {
 }
 
 @font-face {
-    font-family: "kanit";
-    src: 
-    url("/assets/fonts/kanit.woff2") format("woff2"),
-    url("/assets/fonts/kanit.woff") format("woff");
-}
-
-@font-face {
     font-family: "Sedan";
     src: 
     url("/assets/fonts/sedanSC.woff2") format("woff2"),

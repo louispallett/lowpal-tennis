@@ -14,7 +14,6 @@ export default {
     fontFamily: {
       roboto: ["Roboto", "sans-serif"],
       sedan: ["Sedan", "sans-serif"],
-      kanit: ["kanit", "sans-serif"]
     }
   },
   plugins: [],

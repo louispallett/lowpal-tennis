@@ -40,9 +40,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(
     helmet.contentSecurityPolicy({
         directives: {
-            "default-src": ["'self'", "'https://lowpal-tennis.fly.dev/favicon.ico'"],
+            "default-src": ["'self'", "'https://lowpal-tennis-server.fly.dev/favicon.ico'"],
             "script-src": ["'self'", "'unsafe-inline'"], // Removed cloudinary here - may use it later
-            "img-src": ["'self'", "https://lowpal-tennis.fly.dev/favicon.ico"] // Removed cloudinary here - may use it later
+            "img-src": ["'self'", "https://lowpal-tennis-server.fly.dev/favicon.ico"] // Removed cloudinary here - may use it later
         },
     }),
 );
@@ -64,5 +64,5 @@ app.use("/api/dashboard/:userId", dashboardRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/match", matchRouter);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
