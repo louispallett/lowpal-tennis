@@ -1,5 +1,4 @@
 import axios from "axios";
-import { DevTool } from "@hookform/devtools";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -95,8 +94,6 @@ export default function SignIn() {
                     )}
                 </div>
             </form>
-            {/* Development: */}
-            <DevTool control={control}/> 
             <p className="mt-10 text-center text-sm dark:text-white"> Not a member? <Link to="/users/sign-up" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">Sign Up</Link></p>
         </>
     )
