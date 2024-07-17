@@ -110,7 +110,7 @@ function Footer() {
   return (
     <footer className="flex px-3 py-3 justify-between items-center rounded-lg m-1 my-2 bg-indigo-600 text-white sm:px-5 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
       <div>
-        <a href="https://github.com/louispallett/odin-blog-api">
+        <a href="https://github.com/louispallett/lowpal-tennis/">
           <p className="font-bold text-xs py-5 sm:text-sm hover:text-lime-300">© 2024 LowPal/Louis Nicholson-Pallett</p>
         </a>
       </div>
