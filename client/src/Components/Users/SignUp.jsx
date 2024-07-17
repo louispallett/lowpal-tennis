@@ -213,50 +213,55 @@ export default function SignUp() {
                                 </div>
                             </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-2.5">
-                            <div>
-                                <label htmlFor="password" className="text-sm leading-6 font-bold dark:text-white">Password</label>
-                                <input type={showPassword ? "text" : "password"} id="password" autoComplete="current-password" required
-                                    {...register("password", {
-                                        required: "Password is required",
-                                        minLength: {
-                                            value: 8,
-                                            message: "Password must be at least eight (8) characters long"
-                                        },
-                                        pattern: {
-                                            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                                            message: "Must contain: uppercase, lowercase, number, and special character"
-                                        },
-                                    })}
-                                    className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"/>
-                                <span className="text-xs font-bold text-red-700 dark:text-red-400">
-                                    <p>{errors.password?.message}</p>
-                                </span>
+                        <div>
+                            <div className="text-xs">
+                                <p>Password needs to be at least 8 characters in length and contain at least one of each of the following: uppercase, lowercase, number, and special character (e.g. '!', '?', etc.)</p>
                             </div>
-                            <div>
-                                <label htmlFor="confPassword" className="text-sm leading-6 font-bold dark:text-white">Confirm Password</label>
-                                <div className="flex items-center gap-1">
-                                    <input type={showPassword ? "text" : "password"} id="confPassword" required
-                                        {...register("confPassword", {
-                                            required: "Please confirm your password",
-                                            validate: {
-                                                passwordMatch: (fieldValue) => {
-                                                    return (
-                                                        fieldValue == watch("password") || "Passwords do not match"
-                                                    )
-                                                }
-                                            }
+                            <div className="grid grid-cols-2 gap-2.5">
+                                <div>
+                                    <label htmlFor="password" className="text-sm leading-6 font-bold dark:text-white">Password</label>
+                                    <input type={showPassword ? "text" : "password"} id="password" autoComplete="current-password" required
+                                        {...register("password", {
+                                            required: "Password is required",
+                                            minLength: {
+                                                value: 8,
+                                                message: "Password must be at least eight (8) characters long"
+                                            },
+                                            pattern: {
+                                                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                                                message: "Must contain: uppercase, lowercase, number, and special character"
+                                            },
                                         })}
                                         className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"/>
-                                        { showPassword ? (
-                                        <EyeIcon onClick={() => setShowPassword(!showPassword)} className="h-6 cursor-pointer dark:fill-slate-100 hover:fill-indigo-600 transition-all" />
-                                        ) : (
-                                            <EyeSlashIcon onClick={() => setShowPassword(!showPassword)} className="h-6 cursor-pointer dark:fill-slate-100 hover:fill-indigo-600 transition-all" />
-                                        )}
+                                    <span className="text-xs font-bold text-red-700 dark:text-red-400">
+                                        <p>{errors.password?.message}</p>
+                                    </span>
                                 </div>
-                                <span className="text-xs font-bold text-red-700 dark:text-red-400">
-                                    <p>{errors.confPassword?.message}</p>
-                                </span>
+                                <div>
+                                    <label htmlFor="confPassword" className="text-sm leading-6 font-bold dark:text-white">Confirm Password</label>
+                                    <div className="flex items-center gap-1">
+                                        <input type={showPassword ? "text" : "password"} id="confPassword" required
+                                            {...register("confPassword", {
+                                                required: "Please confirm your password",
+                                                validate: {
+                                                    passwordMatch: (fieldValue) => {
+                                                        return (
+                                                            fieldValue == watch("password") || "Passwords do not match"
+                                                        )
+                                                    }
+                                                }
+                                            })}
+                                            className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"/>
+                                            { showPassword ? (
+                                            <EyeIcon onClick={() => setShowPassword(!showPassword)} className="h-6 cursor-pointer dark:fill-slate-100 hover:fill-indigo-600 transition-all" />
+                                            ) : (
+                                                <EyeSlashIcon onClick={() => setShowPassword(!showPassword)} className="h-6 cursor-pointer dark:fill-slate-100 hover:fill-indigo-600 transition-all" />
+                                            )}
+                                    </div>
+                                    <span className="text-xs font-bold text-red-700 dark:text-red-400">
+                                        <p>{errors.confPassword?.message}</p>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div className="flex items-center gap-2.5">
@@ -284,7 +289,7 @@ export default function SignUp() {
                                     </div>
                                 ) : (
                                     <button type="submit" 
-                                        className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
                                     >Sign Up</button>
                             )}
                             { signupError && signupError.map(item => ((
@@ -292,7 +297,7 @@ export default function SignUp() {
                             )))}
                         </div>
                     </form>
-                    <p className="mt-10 text-center text-sm dark:text-white"> Already a member? <Link to="/users/sign-in" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">Sign In</Link></p>
+                    <p className="mt-10 text-center text-sm dark:text-white"> Already signed up? <Link to="/users/sign-in" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 transition-all">Sign In</Link></p>
                 </div>
             )}
         </>

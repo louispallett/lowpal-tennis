@@ -30,7 +30,7 @@ export default function SignIn() {
                     return;
                 }
                 localStorage.setItem("Authorization", token);
-                window.location.assign("/dashboard/home");
+                window.location.assign("/dashboard");
             }).catch(err => {
                 console.log(err);
                 setIsPending(false);
@@ -90,12 +90,12 @@ export default function SignIn() {
                             </div>
                         ) : (
                             <button type="submit" 
-                                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
                             >Sign In</button>
                     )}
                 </div>
             </form>
-            <p className="mt-10 text-center text-sm dark:text-white"> Not a member? <Link to="/users/sign-up" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">Sign Up</Link></p>
+            <p className="mt-10 text-center text-sm dark:text-white transition-all"> Not signed up yet? <Link to="/users/sign-up" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">Sign Up</Link></p>
         </>
     )
 }

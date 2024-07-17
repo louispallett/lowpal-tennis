@@ -93,7 +93,7 @@ exports.signUp = [
                 await addUserToCategories(newUser._id, newUser.categories)
                 const newUserCategories = await User.findById(newUser._id).populate({ path: "categories", select: "name -_id" });
                 const categoryNames = newUserCategories.categories.map(category => category.name).join('\n');                
-                // sendConfirmationEmail(user, categoryNames); 
+                sendConfirmationEmail(user, categoryNames); 
                 res.sendStatus(200);
             });
         } catch (err) {
