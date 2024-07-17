@@ -55,7 +55,7 @@ export default function SignUp() {
 
     return (
         <>
-            {isSubmitted ? (
+            {/* {isSubmitted ? (
                 <div className="flex flex-col gap-2.5 dark:text-white">
                     <p className="text-center">Successfully Submitted!</p>
                     <p>Thank you for registering to play in the 2024 Saltford Lawn Tennis Club In-House Tournament.</p>
@@ -299,7 +299,8 @@ export default function SignUp() {
                     </form>
                     <p className="mt-10 text-center text-sm dark:text-white"> Already signed up? <Link to="/users/sign-in" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 transition-all">Sign In</Link></p>
                 </div>
-            )}
+            )} */}
+            <p className="dark:text-slate">Sign up has ended. Please <Link to="/users/sign-in" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 transition-all">Sign In</Link> if you have an account.</p>
         </>
     );
 }
