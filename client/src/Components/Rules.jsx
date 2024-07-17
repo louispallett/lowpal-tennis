@@ -4,7 +4,7 @@ export default function Rules() {
             <div className="bg-lime-600 rounded-b-none rounded-lg shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
                 <h3 className="p-3 text-2xl font-sedan font-bold tracking-tight text-gray-100 sm:text-4xl sm:font-black sm:p-5">Guidance and Rules for Competitors</h3>
             </div>
-            <div className="flex flex-col min-w-full bg-slate-100 rounded-lg rounded-t-none bg-slate-100 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)] dark:bg-slate-700">
+            <div className="flex flex-col min-w-full bg-slate-50 rounded-lg rounded-t-none bg-slate-100 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)] dark:bg-slate-700">
                 <div className="flex flex-col p-5 gap-2.5 dark:text-slate-100">
                     <h5 className="my-1 text-lg text-center font-sedan">Organising Matches</h5>
                     <p>It is your responsibility to play the matches by the draw deadline. Please plan early and  make every attempt to respond promptly to requests for availability. The biggest problem is  flexibility in agreeing dates for matches - so please be especially mindful of that.</p>

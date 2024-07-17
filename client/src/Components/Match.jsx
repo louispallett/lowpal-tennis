@@ -36,7 +36,7 @@ export default function Match() {
     return (
         <div className="flex flex-1 lg:my-2.5 justify-center items-center">
             { error ? (
-                <div className="flex justify-center p-5 bg-slate-200 rounded-lg dark:bg-slate-700 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
+                <div className="flex justify-center p-5 bg-slate-50 rounded-lg dark:bg-slate-700 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
                     <div className="flex flex-col items-center gap-5 min-w-full rounded-lg rounded-t-none text-sm lg:text-base dark:text-slate-100">
                         <h5 className="text-xl font-sedan tracking-tight text-center lg:text-left sm:text-2xl sm:font-black">500 ERROR</h5>
                         <img src={tennisBall} alt="" className="h-10" id="spinner" />
@@ -86,7 +86,7 @@ function MatchCard({ matchData, loading }) {
                     </div>
                     <div className="flex items-center gap-2.5 bg-white rounded-lg text-sm px-5 sm:text-base shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)] dark:bg-slate-700 py-2.5 sm:py-5">
                         <TagIcon className="h-4 w-4 dark:fill-white" />
-                        <p className="tracking-tight dark:text-slate-200"><b>Category</b>: {matchData.category.name}</p>
+                        <p className="tracking-tight dark:text-slate-100"><b>Category</b>: {matchData.category.name}</p>
                     </div>
                     <div className="flex items-center gap-2.5 bg-white rounded-lg shadow text-sm px-5 sm:text-base dark:bg-slate-700 py-2.5 sm:py-5 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
                         <CursorArrowRippleIcon className="h-4 w-4 dark:fill-slate-100" />
