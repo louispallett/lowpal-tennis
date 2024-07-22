@@ -45,7 +45,7 @@ export default function BracketsList() {
             <div className="flex justify-center bg-lime-600 rounded-lg text-sm px-10 lg:text-base shadow-[5px_5px_0px_0px_#4f46e5] min-w-full">
                 <h5 className="p-3 text-lg tracking-tight font-sedan text-slate-100 text-center sm:text-2xl sm:p-5">Select a tournament below</h5>
             </div>
-            <div className="flex flex-col lg:flex-row justify-center items-center gap-5">
+            {/* <div className="flex flex-col lg:flex-row justify-center items-center gap-5">
                 { loading && (
                     <div className="flex justify-center items-center p-20">
                         <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
@@ -71,14 +71,14 @@ export default function BracketsList() {
                         </div>
                     </div>
                 )}
-            </div>
-            {/* <div className="flex justify-center p-5 bg-slate-50 rounded-lg dark:bg-slate-700 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
+            </div> */}
+            <div className="flex justify-center p-5 bg-slate-50 rounded-lg dark:bg-slate-700 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
                 <div className="flex flex-col items-center gap-5 min-w-full rounded-lg rounded-t-none text-sm lg:text-base dark:text-slate-100">
                     <h5 className="text-xl font-sedan tracking-tight text-center lg:text-left sm:text-2xl sm:font-black">No Brackets Yet</h5>
                     <img src={tennisBall} alt="" className="h-10" id="spinner" />
                     <p>Please wait for sign-up to close and the host to create your matches.</p>
                 </div>
-            </div> */}
+            </div>
         </div>
     )
 }
