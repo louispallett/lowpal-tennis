@@ -199,19 +199,21 @@ exports.post_match_results = [
             if (!winningPlayerInfo) winningPlayerInfo = await Team.findById(req.body.winner); // MAYBE adding name to team model?
 
             // Finally, we need find the next match and push our winning participant to it
-            await Match.updateOne(
-                { _id: match.nextMatchId },
-                { $push: 
-                    { participants: { 
-                        id: req.body.winner, 
-                        name: winningPlayerInfo.name,
-                        ranking: winningPlayerInfo.ranking,
-                        resultText: null,
-                        isWinner: false,
-                        status: null
-                    }}
-                }
-            );
+            if (match.nextMatchId != null) {
+                await Match.updateOne(
+                    { _id: match.nextMatchId },
+                    { $push: 
+                        { participants: { 
+                            id: req.body.winner, 
+                            name: winningPlayerInfo.name,
+                            ranking: winningPlayerInfo.ranking,
+                            resultText: null,
+                            isWinner: false,
+                            status: null
+                        }}
+                    }
+                );
+            }
         
             res.json({ msg: "Success" });
         } catch (err) {

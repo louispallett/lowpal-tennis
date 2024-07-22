@@ -78,7 +78,9 @@ const generateMatchesForTournament = (category, teams) => {
             } else { // i is odd
                 nextMatch = nextRoundMatches[(nextRoundMatches.length / 2) - Math.ceil(i / 2)];
             }
-            const match = createMatch(category, 1, nextMatch._id, true);
+            // AN ERROR HERE WITH THREE TEAMS??? I suspect this is just caused because with only 3 players, we would have one already in the final, and the margins don't add up (for our splitting the 'round1' matches, as this is the final, so there is only one).
+            // So, it assumes at least 4 players/teams... which I think is fair.
+            const match = createMatch(category, 1, nextMatch._id, true); 
 
             /* Assign the returned _id to the nextMatchId.previousMatchId (backwards pointer). We are using the nullish operator here (??=) - but there are two operations happening here - the nullish operator and the push method.
             The nullish operator checks if the condition to the left of the operator (??=) is null. If it is, it creates it and assigns it the value to the right of the operator. If it isn't null, then it just returns the element, so ]
