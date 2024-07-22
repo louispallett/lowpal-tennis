@@ -13,17 +13,35 @@ import Home from "./Home";
 import Match from "./Match";
 import UsingData from "./UsingData";
 
+function Loading() {
+    return (
+        <div className="flex justify-center items-center p-20">
+            <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                    <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                        <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                            <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 function ProtectedRoute({ isAuth, children }) {
     return isAuth ? children : <Navigate to="/users/sign-in" replace />;
 }
 
 export default function Router() {
     const [isAuth, setIsAuth] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const checkUser = async () => {
             const token = localStorage.getItem("Authorization");
             if (!token) {
+                setIsLoading(false);
                 return;
             };
             try {
@@ -33,8 +51,10 @@ export default function Router() {
                 })
                 if (response.status < 400) {
                     setIsAuth(true);
+                    setIsLoading(false);
                 } else {
                     setIsAuth(false);
+                    setIsLoading(false);
                 }
             } catch (err) {
                 console.log(err)
@@ -92,11 +112,11 @@ export default function Router() {
             children: [
                 {
                     path: "sign-up",
-                    element: isAuth ? <Navigate to="/dashboard" replace /> : <SignUp />
+                    element: isLoading ? <Loading /> : (isAuth ? <Navigate to="/dashboard" replace /> : <SignUp />)
                 },
                 {
                     path: "sign-in",
-                    element: isAuth ? <Navigate to="/dashboard" replace /> : <SignIn />
+                    element: isLoading ? <Loading /> : (isAuth ? <Navigate to="/dashboard" replace /> : <SignIn />)
                 },
                 {
                     path: "using-your-data",
