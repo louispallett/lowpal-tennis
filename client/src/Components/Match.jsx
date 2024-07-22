@@ -288,7 +288,7 @@ function MatchForm({ matchData, loading }) {
                                         <div className={scoresVisible ? '' : 'hidden'}>
                                             <div className="flex items-center justify-center my-2.5 gap-2.5">
                                                 <input type="checkbox" className="h-6" id="thirdSet" onClick={handleThirdSet} />
-                                                <label htmlFor="thirdSet" name="thirdSet">Played a third set/match tiebreak</label>
+                                                <label htmlFor="thirdSet" name="thirdSet">Played a third set/match tie break</label>
                                             </div>
                                             <label htmlFor="scores" className="font-bold text-sm leading-6 dark:text-white">Scores</label>
                                             {thirdSet ? (
