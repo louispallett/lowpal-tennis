@@ -215,7 +215,7 @@ export default function SignUp() {
                         </div>
                         <div>
                             <div className="text-xs">
-                                <p>Password needs to be at least 8 characters in length and contain at least one of each of the following: uppercase, lowercase, number, and special character (e.g. '!', '?', etc.)</p>
+                                <p className="dark:text-slate-100">Password needs to be at least 8 characters in length and contain at least one of each of the following: uppercase, lowercase, number, and special character (e.g. '!', '?', etc.)</p>
                             </div>
                             <div className="grid grid-cols-2 gap-2.5">
                                 <div>
@@ -284,9 +284,17 @@ export default function SignUp() {
                         </span>
                         <div>
                             { isPending ? (
-                                    <div className="flex justify-center">
-                                        <Spinner id="spinner"/>
+                                <div className="flex justify-center items-center">
+                                    <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                                        <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                                            <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                                                <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                                                    <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner"></div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+                                </div>
                                 ) : (
                                     <button type="submit" 
                                         className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
@@ -300,7 +308,7 @@ export default function SignUp() {
                     <p className="mt-10 text-center text-sm dark:text-white"> Already signed up? <Link to="/users/sign-in" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 transition-all">Sign In</Link></p>
                 </div>
             )} */}
-            <p className="dark:text-slate">Sign up has ended. Please <Link to="/users/sign-in" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 transition-all">Sign In</Link> if you have an account.</p>
+            <p className="dark:text-slate-100">Sign up has ended. Please <Link to="/users/sign-in" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 transition-all">Sign In</Link> if you have an account.</p>
         </>
     );
 }
