@@ -205,7 +205,6 @@ const generateMatchesForTournament = (category, teams) => {
     
     // Condition - if teams.length > doublesLimit, this means we have doubles matches, so we can simply loop from inside out
     if (teams.length > doublesLimit) {
-        console.log("YESSSSSS");
         let index = 0;
         for (let i = 0; i < _teams.length; i++) {
             if (index % 2 == 0) {

@@ -44,6 +44,7 @@ export default function Bracket() {
         },
         roundHeader: { backgroundColor: '#da96c6', fontColor: '#000' },
         connectorColor: '#CED1F2',
+        scoreWidth: 40,
         connectorColorHighlight: '#da96c6',
         svgBackground: '#FAFAFA',
     });
