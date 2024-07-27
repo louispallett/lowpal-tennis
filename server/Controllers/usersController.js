@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
+const generator = require("generate-password");
 const jwt = require("jsonwebtoken")
 const passport = require("../config/passport");
 const { body, validationResult } = require("express-validator");
@@ -137,6 +138,83 @@ const addUserToCategories = async (userId, userCategories) => {
         console.log(error);
     }
 }
+
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+    try {
+        let user = await User.find({ email: req.body.email });
+        user = user[0];
+        console.log(user);
+        if (!user) {
+            res.json({ error: "Account not found" });
+            return;
+        }
+        const newPassword = generator.generate({
+            length: 15,
+            numbers: true,
+            symbols: true,
+            exclude: "'\"`;_@,.-{}[]~#\\|¬",
+            strict: true
+        });
+
+        bcrypt.hash(newPassword, 15, async (err, hashedPassword) => {
+            if (err) {
+                console.log(err)
+                res.json({ error: "Server error. CODE UF100." });
+                return;
+            }
+            await User.updateOne(
+                { _id: user._id },
+                { $set: { password: hashedPassword } }
+            );
+        });
+
+        sendResetPasswordEmail(user, newPassword);
+        res.json({ msg: "Success" });
+        
+    } catch (err) {
+        console.log(err);
+        res.json({ error: "Server error. CODE UF100." });
+        return;
+    }
+});
+
+const sendResetPasswordEmail = (user, newPassword) => {
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: user.email,
+        subject: "2024 Saltford In-House Tennis Tournament",
+        text: `Hi ${user.firstName}, 
+            \nThanks you for requesting to reset your password.
+            \nYour password has been reset to: ${newPassword}`
+            // \nIf you wish to change your password, please login to your account with your new password and navigate to your account settings via the site menu.`
+    }
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error)
+        } else {
+            console.log("Email sent: " + info.response);
+        }
+    });
+}
+
+exports.changePassword = asyncHandler(async (req, res, next) => {
+    // First, verify user (this will also find their info)
+
+    // Confirm their old password is correct (we'll have to use passport.authenticate as we did in sign-up)
+
+        // If not, return errors (we can deal with this on the front end the same as we did in the SignUp component)
+        // if (err) return next(err);
+        // if (!user) {
+        //     res.json({ error: info.message });
+        // } else {
+        //     // Run bcrypt hash function
+                
+        //         // Update password in database with new hashed password
+
+        //         // return 200
+        // }
+});
 
 exports.verify = asyncHandler(async (req, res, next) => {
     try {
