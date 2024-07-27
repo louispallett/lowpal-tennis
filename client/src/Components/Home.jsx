@@ -61,8 +61,8 @@ export default function Home() {
                                 <div className="flex flex-col items-center gap-5 min-w-full rounded-lg rounded-t-none text-sm lg:text-base dark:text-slate-100">
                                     <h5 className="text-xl font-sedan tracking-tight text-center lg:text-left sm:text-2xl sm:font-black">Matches</h5>
                                     <img src={tennisBall} alt="" className="h-10" id="spinner" />
-                                    <p>It looks like there are no matches here yet! Please wait for sign-up to close and the host to create your matches.</p>
-                                    {/* <p>Looks like you've completed all your matches! Thank you for participating in this year's In-House Tournament. Please let me know your thoughts about this site - any suggestions are most welcome.</p> */}
+                                    {/* <p>It looks like there are no matches here yet! Please wait for sign-up to close and the host to create your matches.</p> */}
+                                    <p>Looks like you've completed all your matches! Thank you for participating in this year's In-House Tournament. Please let me know your thoughts about this site - any suggestions are most welcome.</p>
                                 </div>
                             </div>
                         </>
@@ -77,7 +77,7 @@ export default function Home() {
                         <div className="flex flex-col items-center gap-5 min-w-full rounded-lg rounded-t-none text-sm lg:text-base dark:text-slate-100">
                             <h5 className="text-xl font-sedan tracking-tight text-center lg:text-left sm:text-2xl sm:font-black">Matches</h5>
                             <img src={tennisBall} alt="" className="h-10" id="spinner" />
-                            <p>It looks like there are no matches here yet! Please wait for sign-up to close and the host to create your matches.</p>
+                            <p>Looks like a server error occured. Please contact the site administrator</p>
                         </div>
                     </div>
                 )}
@@ -85,7 +85,7 @@ export default function Home() {
         </div>
     )
 }
-// hover:opacity-80
+
 function MatchCard({ data }) {
     return (
         <>
