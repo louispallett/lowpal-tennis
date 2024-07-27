@@ -12,6 +12,8 @@ router.post("/sign-in", usersController.signIn);
 
 router.post("/sign-up", usersController.signUp);
 
+router.post("/forgot-password", usersController.forgotPassword);
+
 router.get("/verify", usersController.verify);
 
 module.exports = router;

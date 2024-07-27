@@ -12,6 +12,7 @@ import Rules from "./Rules";
 import Home from "./Home";
 import Match from "./Match";
 import UsingData from "./UsingData";
+import ForgotPassword from "./Users/ForgotPassword";
 
 function Loading() {
     return (
@@ -121,6 +122,10 @@ export default function Router() {
                 {
                     path: "using-your-data",
                     element: <UsingData />
+                },
+                {
+                    path: "forgot-password",
+                    element: <ForgotPassword />
                 }
             ]
         },

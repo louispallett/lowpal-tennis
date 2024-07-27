@@ -7,8 +7,7 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/16/solid";
 import { Spinner } from "../tailwind_components/tailwind-ex-elements";
 
 export default function SignIn() {
-    // TODO: Need to return errors is email is not valid email
-    // See the playlist on react-hook-form (https://www.youtube.com/playlist?list=PLC3y8-rFHvwjmgBr1327BA5bVXoQH-w5s)
+    // See the playlist on react-hook-form (://www.youtube.com/playlist?list=PLC3y8-rFHvwjmgBr1327BA5bVXoQH-w5s)
     const form = useForm();
     const { register, control, handleSubmit, formState, watch } = form;
     const { errors } = formState;
@@ -83,6 +82,9 @@ export default function SignIn() {
                         <p>{errors.password?.message}</p>
                     </span>
                 </div>
+                <span className="font-semibold m-0 p-0 text-sm text-right text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
+                    <Link to="/users/forgot-password">Forgot password?</Link>
+                </span>
                 <div>
                     { isPending ? (
                         <div className="flex justify-center items-center">
@@ -103,7 +105,7 @@ export default function SignIn() {
                     )}
                 </div>
             </form>
-            <p className="mt-10 text-center text-sm dark:text-white transition-all"> Not signed up yet? <Link to="/users/sign-up" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">Sign Up</Link></p>
+            {/* <p className="mt-10 text-center text-sm dark:text-white transition-all"> Not signed up yet? <Link to="/users/sign-up" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">Sign Up</Link></p> */}
         </>
     )
 }
