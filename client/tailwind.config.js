@@ -14,6 +14,7 @@ export default {
     fontFamily: {
       roboto: ["Roboto", "sans-serif"],
       sedan: ["Sedan", "sans-serif"],
+      mania: ["mania", "sans-serif"],
     }
   },
   plugins: [],

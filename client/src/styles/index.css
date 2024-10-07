@@ -68,6 +68,12 @@ input[type="checkbox"] {
     animation: fade-down 500ms ease-in;
 }
 
+#finals-container {
+    background-image: url("https://res.cloudinary.com/divlee1zx/image/upload/v1727905355/20231014_145351_i44afe.jpg");
+    background-size: cover;
+    background-position: center top;
+}
+
 @keyframes rotate {
     0% {
         transform: rotate(0);
@@ -112,3 +118,8 @@ input[type="checkbox"] {
     url("/assets/fonts/sedanSC.woff2") format("woff2"),
     url("/assets/fonts/sedanSC.woff") format("woff");
 }
+
+@font-face {
+    font-family: "mania";
+    src: url("/assets/fonts/SchoolMania-vmwBA.woff2") format("woff2");
+  }

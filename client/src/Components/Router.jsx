@@ -13,6 +13,7 @@ import Home from "./Home";
 import Match from "./Match";
 import UsingData from "./UsingData";
 import ForgotPassword from "./Users/ForgotPassword";
+import Finals from "./Finals";
 
 function Loading() {
     return (
@@ -103,6 +104,10 @@ export default function Router() {
                                 }
                             ]
                         },
+                        {
+                            path: "finals",
+                            element: <Finals />
+                        }
                     ]
                 }
             ]

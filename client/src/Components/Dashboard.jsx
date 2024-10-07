@@ -1,6 +1,6 @@
 import { Link, Outlet } from "react-router-dom";
 import { Menu } from "@headlessui/react";
-import { ChevronDownIcon, HomeIcon, ChartBarIcon, PaperClipIcon, ScaleIcon, ArrowLeftStartOnRectangleIcon } from "@heroicons/react/16/solid";
+import { ChevronDownIcon, HomeIcon, ChartBarIcon, PaperClipIcon, ScaleIcon, ArrowLeftStartOnRectangleIcon, TrophyIcon } from "@heroicons/react/16/solid";
 
 import { BackgroundContainer, HeaderContainer, HeaderContainerInner } from "./tailwind_components/tailwind-containers";
 import { useEffect, useState } from "react";
@@ -95,6 +95,11 @@ function Navigation() {
             <Link to="/dashboard/rules" className="block px-4 py-2 text-gray-700 dark:text-slate-100">
             <ScaleIcon className="w-4 h-6 fill-slate/60"/>
             Tournament Rules</Link>
+          </Menu.Item>
+          <Menu.Item className="flex gap-1.5 items-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+            <Link to="/dashboard/finals" className="block px-4 py-2 text-gray-700 dark:text-slate-100">
+            <TrophyIcon className="w-4 h-6 fill-slate/60"/>
+            Finals Weekend</Link>
           </Menu.Item>
           <Menu.Item className="flex gap-1.5 items-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all w-full text-left">
             <button onClick={handleLogOut} className="block px-4 py-2 text-gray-700 font-black dark:text-slate-100 rounded-md rounded-t-none">
