@@ -42,14 +42,14 @@ function Info() {
                             <div className="flex flex-col gap-2.5">
                                 <div>
                                     <p><b>14:30, Court 1</b></p>
-                                    <p><b><i>Mens Singles</i></b></p>
-                                    <p>Tom Warren vs. (Andy May <b>OR</b> Norman Hui)</p>
+                                    <p><b><i>Womens Singles</i></b></p>
+                                    <p>Katie Robson vs. (Milly Allen <b>OR</b> Lou Bessell)</p>
                                 </div>
                                 <hr className="mx-5"/>
                                 <div>
                                     <p><b>15:30, Court 3</b></p>
-                                    <p><b><i>Womens Singles</i></b></p>
-                                    <p>Katie Robson vs. (Milly Allen <b>OR</b> Lou Bessell)</p>
+                                    <p><b><i>Mens Singles</i></b></p>
+                                    <p>Tom Warren vs. Norman Hui</p>
                                 </div>
                             </div>
                         </div>
@@ -62,7 +62,7 @@ function Info() {
                                 <div>
                                     <p><b>11:00, Court 1</b></p>
                                     <p><b><i>Womens Doubles</i></b></p>
-                                    <p>Katie Robson and Claire Pugh vs. (Odette Reuter and Mo Smallwood <b>OR</b> Milly Allen and Kath Wilson)</p>
+                                    <p>Katie Robson and Claire Pugh vs. Milly Allen and Kath Wilson</p>
                                 </div>
                                 <hr className="mx-5"/>
                                 <div>
@@ -74,7 +74,7 @@ function Info() {
                                 <div>
                                     <p><b>13:30, Court 2</b></p>
                                     <p><b><i>Mixed Doubles</i></b></p>
-                                    <p>John Moruzzi and Katie Robson vs. (Lucas Richards and Kath Wilson <b>OR</b> Mike Clifford and Lou Bessell)</p>
+                                    <p>John Moruzzi and Katie Robson vs. Lucas Richards and Kath Wilson</p>
                                 </div>
                             </div>
                         </div>
