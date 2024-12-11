@@ -18,7 +18,7 @@ export default function Match() {
     useEffect(() => {
         const getMatch = async () => {
             try {
-                const response = await fetch(`https://lowpal-tennis-server.fly.dev/api/match/${matchId}`, { mode: "cors" });
+                const response = await fetch(`/api/match/${matchId}`, { mode: "cors" });
                 if (!response.ok) throw new Error(response.status);
                 const actualData = await response.json();
                 setMatchData(actualData.match);
@@ -125,7 +125,7 @@ function PlayerContactDetails({ matchId }) {
     useEffect(() => {
         const getContactDetails = async () => {
             try {
-                const response = await fetch(`https://lowpal-tennis-server.fly.dev/api/match/${matchId}/contactDetails`, { mode: "cors" });
+                const response = await fetch(`/api/match/${matchId}/contactDetails`, { mode: "cors" });
                 if (!response.ok) throw new Error(response.status);
                 const actualData = await response.json();
                 setContactData(actualData.data);
@@ -211,7 +211,7 @@ function MatchForm({ matchData, loading }) {
         }
 
         try {
-            const response = await axios.post(`https://lowpal-tennis-server.fly.dev/api/match/matches/${matchData._id}/update`, data);
+            const response = await axios.post(`/api/match/matches/${matchData._id}/update`, data);
             if (!response.data.msg) {
                 setIsPending(false);
                 setError(response.data.error);
