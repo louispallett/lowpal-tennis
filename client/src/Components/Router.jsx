@@ -13,6 +13,7 @@ import Home from "./Home";
 import Match from "./Match";
 import UsingData from "./UsingData";
 import ForgotPassword from "./Users/ForgotPassword";
+import SiteDown from "./Users/SiteDown";
 import Finals from "./Finals";
 
 function Loading() {
@@ -32,7 +33,7 @@ function Loading() {
 }
 
 function ProtectedRoute({ isAuth, children }) {
-    return isAuth ? children : <Navigate to="/users/sign-in" replace />;
+    return isAuth ? children : <Navigate to="/users/site-down" replace />;
 }
 
 export default function Router() {
@@ -116,21 +117,25 @@ export default function Router() {
             path: "/users",
             element: <Users />,
             children: [
+                // {
+                //     path: "sign-up",
+                //     element: isLoading ? <Loading /> : (isAuth ? <Navigate to="/dashboard" replace /> : <SignUp />)
+                // },
+                // {
+                //     path: "sign-in",
+                //     element: isLoading ? <Loading /> : (isAuth ? <Navigate to="/dashboard" replace /> : <SignIn />)
+                // },
+                // {
+                //     path: "using-your-data",
+                //     element: <UsingData />
+                // },
+                // {
+                //     path: "forgot-password",
+                //     element: <ForgotPassword />
+                // },
                 {
-                    path: "sign-up",
-                    element: isLoading ? <Loading /> : (isAuth ? <Navigate to="/dashboard" replace /> : <SignUp />)
-                },
-                {
-                    path: "sign-in",
-                    element: isLoading ? <Loading /> : (isAuth ? <Navigate to="/dashboard" replace /> : <SignIn />)
-                },
-                {
-                    path: "using-your-data",
-                    element: <UsingData />
-                },
-                {
-                    path: "forgot-password",
-                    element: <ForgotPassword />
+                    path: "site-down",
+                    element: <SiteDown />
                 }
             ]
         },
