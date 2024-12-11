@@ -33,7 +33,7 @@ function Loading() {
 }
 
 function ProtectedRoute({ isAuth, children }) {
-    return isAuth ? children : <Navigate to="/users/site-down" replace />;
+    return isAuth ? children : <Navigate to="/users/sign-in" replace />;
 }
 
 export default function Router() {
@@ -117,22 +117,22 @@ export default function Router() {
             path: "/users",
             element: <Users />,
             children: [
-                // {
-                //     path: "sign-up",
-                //     element: isLoading ? <Loading /> : (isAuth ? <Navigate to="/dashboard" replace /> : <SignUp />)
-                // },
-                // {
-                //     path: "sign-in",
-                //     element: isLoading ? <Loading /> : (isAuth ? <Navigate to="/dashboard" replace /> : <SignIn />)
-                // },
-                // {
-                //     path: "using-your-data",
-                //     element: <UsingData />
-                // },
-                // {
-                //     path: "forgot-password",
-                //     element: <ForgotPassword />
-                // },
+                {
+                    path: "sign-up",
+                    element: isLoading ? <Loading /> : (isAuth ? <Navigate to="/dashboard" replace /> : <SignUp />)
+                },
+                {
+                    path: "sign-in",
+                    element: isLoading ? <Loading /> : (isAuth ? <Navigate to="/dashboard" replace /> : <SignIn />)
+                },
+                {
+                    path: "using-your-data",
+                    element: <UsingData />
+                },
+                {
+                    path: "forgot-password",
+                    element: <ForgotPassword />
+                },
                 {
                     path: "site-down",
                     element: <SiteDown />
