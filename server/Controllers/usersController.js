@@ -223,8 +223,9 @@ exports.verify = asyncHandler(async (req, res, next) => {
             userId: user.user._id,
             email: user.user.email,
             firstName: user.user.firstName,
+            lastName: user.user.lastName,
             categories: user.user.categories
-         });
+        });
     } catch (err) {
         console.log(err);
         res.status(403).json(err);
