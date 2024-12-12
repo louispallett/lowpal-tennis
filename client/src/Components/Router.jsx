@@ -15,6 +15,7 @@ import UsingData from "./UsingData";
 import ForgotPassword from "./Users/ForgotPassword";
 import SiteDown from "./Users/SiteDown";
 import Finals from "./Finals";
+import Account from "./Account";
 
 function Loading() {
     return (
@@ -110,7 +111,7 @@ export default function Router() {
                             element: <Finals />
                         },
                         {
-                            path: ":userId/account",
+                            path: "account",
                             element: <Account />
                         }
                     ]

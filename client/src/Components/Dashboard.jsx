@@ -1,6 +1,6 @@
 import { Link, Outlet } from "react-router-dom";
 import { Menu } from "@headlessui/react";
-import { ChevronDownIcon, HomeIcon, ChartBarIcon, PaperClipIcon, ScaleIcon, ArrowLeftStartOnRectangleIcon, TrophyIcon } from "@heroicons/react/16/solid";
+import { ChevronDownIcon, HomeIcon, ChartBarIcon, PaperClipIcon, ScaleIcon, ArrowLeftStartOnRectangleIcon, TrophyIcon, UserCircleIcon } from "@heroicons/react/16/solid";
 
 import { BackgroundContainer, HeaderContainer, HeaderContainerInner } from "./tailwind_components/tailwind-containers";
 import { useEffect, useState } from "react";
@@ -43,12 +43,12 @@ function Navigation() {
     const getUserEmail = async () => {
       const token = localStorage.getItem("Authorization");
       if (!token) {
-          return;
-      };
+        return;
+      }
       try {
         const response = await fetch("/api/users/verify", { 
-            mode: "cors", 
-            headers: { "Authorization": token} 
+          mode: "cors", 
+          headers: { "Authorization": token }
         })
         if (response.status < 400) {
           const data = await response.json();
@@ -57,7 +57,7 @@ function Navigation() {
           setUserData(false);
         }
       } catch (err) {
-          console.log(err)
+        console.log(err)
       }
     }
     getUserEmail();
@@ -66,12 +66,16 @@ function Navigation() {
   return (
     <Menu as="div" className="relative inline-block text-left shadow-[5px_5px_rgba(0,_98,_90,_0.4),_10px_10px_rgba(0,_98,_90,_0.3),_15px_15px_rgba(0,_98,_90,_0.2),_20px_20px_rgba(0,_98,_90,_0.1),_25px_25px_rgba(0,_98,_90,_0.05)]">
       <Menu.Button className="inline-flex items-center gap-2 rounded-md bg-lime-600 py-1.5 px-3 font-bold text-white focus:outline-none hover:bg-lime-500 transition-all">
-          Menu
-          <ChevronDownIcon className="w-4 h-6 fill-white/60" />
+        Menu
+        <ChevronDownIcon className="w-4 h-6 fill-white/60" />
       </Menu.Button>
       <Menu.Items transition="true" className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition dark:bg-slate-800 focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in">
           <Menu.Item>
             <p className="block px-4 py-2 text-gray-700 dark:text-slate-100">Signed in as <b>{userData ? userData.email : ""}</b></p>
+          </Menu.Item>
+          <Menu.Item className="flex gap-1.5 items-center items-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+            <Link to="/dashboard/account" className="block px-4 py-2 text-gray-700 dark:text-slate-100">
+              <UserCircleIcon className="w-4 h-6 fill-slate/60"/>Account Settings</Link>
           </Menu.Item>
           <div className="px-2.5">
             <hr />
