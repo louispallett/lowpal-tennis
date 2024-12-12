@@ -1,9 +1,43 @@
-/* 
-=====================================
-Creating Tournaments
-=====================================
-
-This file, via the generateMatchesForTournament function, takes a teams array (assumed to be in order of skill) and produces a multidimensional array of match objects by round, with their participants included.
+/* ----------------------------------------------------------------------------------------------------
+ * createTournament.js
+ * ====================================================================================================
+ *
+ * This file, via the generateMatchesForTournament function, takes a teams array (assumed to be in 
+ * order of skill) and produces a multidimensional array of match objects by round, with their 
+ * participants included.
+ *
+ * This is a complex function, but the aim is fairly straightforward:
+ *
+ *   1. Recieve a list of players/teams in order of ranking for a single category
+ *   2. Create a finals match, effectively the 'tail' of our list.
+ *   3. Move backwards from the finals match and create match objects for each round (progressing in 
+ *      powers of 2 (2, 4, 8, 16, 32, etc.)
+ *   4. Assign participants to matches in accordance with a ranking-weighted order.
+ *
+ * ==========================
+ * # Ranking-weighted order #
+ * ==========================
+ *
+ * Part 4 of this algorithm is the most complex part. The aim of this section is to assign participants
+ * to matches in a way which ensures that, if they all played according to their ability, they would 
+ * reach their correct match placements - i.e.:
+ *
+ *     QF    SF     F
+ * 	1		 This order ensures that everyone still has a chance of getting to the 
+ * 	| --- 1		 final, but that players ranked 1 and 2 won't meet each other before the 
+ * 	7     |		 final match (because, in theory, this should be the most challenging match).
+ * 	5     | --- 1	 
+ * 	| --- 3		 Otherwise, if we allocate randomly, we could have a case where players ranked
+ *	3           |    1 and 2 meet each other in the quarter-finals, 1 gets to the final and has 
+ *	4           |	 to face player ranked 5, which is going to be (in theory) a much easier match
+ *	| --- 4		 than the previous ones they've played.
+ *	6     | --- 2
+ *	8     |		 Equally, we want to ensure the top four players have a chance of getting to 
+ *	| --- 2		 the semi-finals, so we need to ensure they aren't playing each other in the 
+ *	2		 quarter finals, and so on.
+ *
+ *
+ * ----------------------------------------------------------------------------------------------------
 */
 
 const mongoose = require("mongoose");

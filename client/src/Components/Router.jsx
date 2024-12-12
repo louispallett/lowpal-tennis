@@ -108,6 +108,10 @@ export default function Router() {
                         {
                             path: "finals",
                             element: <Finals />
+                        },
+                        {
+                            path: ":userId/account",
+                            element: <Account />
                         }
                     ]
                 }
