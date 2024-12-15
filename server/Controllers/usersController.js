@@ -1,3 +1,28 @@
+/* ----------------------------------------------------------------------------------------------------
+ * userController.js
+ * ====================================================================================================
+ * This file contains all our GET and POST functions for user account related requests:
+ * - sign up
+ * - sign in
+ * - update details:
+ *   	- name (first and last)
+ *   	- email
+ *   	- mobile
+ *   	- password
+ * - verifying the user's jsonwebtoken
+ *
+ * # Updates needed #
+ *
+ * TODO: Add proper error handling, returning messages to the client
+ * TODO: Restructure this file to ideally ONLY contain POST and GET requests, moving auxillary 
+ * functions to seperate files. This includes:
+ * 	- email confirmation functions
+ * 	- adding user to categories
+ * Note that adding user to categories may be bad design. We should probably restructure how we design 
+ * this so that adding user to the categories is ultimately unnecessary.
+ * ----------------------------------------------------------------------------------------------------
+*/
+
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const generator = require("generate-password");
@@ -119,6 +144,8 @@ const sendConfirmationEmail = (user, categoryNames) => {
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log(error)
+            // TODO: Throw a new error here to trigger the catch error
+            // throw error...
         } else {
             console.log("Email sent: " + info.response);
         }
@@ -185,36 +212,215 @@ const sendResetPasswordEmail = (user, newPassword) => {
         subject: "2024 Saltford In-House Tennis Tournament",
         text: `Hi ${user.firstName}, 
             \nThanks you for requesting to reset your password.
-            \nYour password has been reset to: ${newPassword}`
-            // \nIf you wish to change your password, please login to your account with your new password and navigate to your account settings via the site menu.`
-    }
+            \nYour password has been reset to: ${newPassword}
+            \nIf you wish to change your password, please login to your account with your new password and navigate to the account settings via the site menu.`
+    };
 
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log(error)
+            // TODO: Throw a new error here to trigger the catch error
+            // throw error...
         } else {
             console.log("Email sent: " + info.response);
         }
     });
 }
 
-exports.changePassword = asyncHandler(async (req, res, next) => {
-    // First, verify user (this will also find their info)
+exports.updateName = [
+    body("firstName")
+    .trim()
+    .escape()
+    .isLength({ min: 1 }).withMessage("First name must be at least 1 character")
+    .isLength({ max: 50 }).withMessage("First name cannot be more than 50 characters"),
+    body("lastName")
+    .trim()
+    .escape()
+    .isLength({ min: 1 }).withMessage("Last name must be at least 1 character")
+    .isLength({ max: 50 }).withMessage("Last name cannot be more than 50 characters"),
 
-    // Confirm their old password is correct (we'll have to use passport.authenticate as we did in sign-up)
+    asyncHandler(async (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(400).json({ message: "Validation Failed", errors: errors.array() })
+            return;
+        }
 
-        // If not, return errors (we can deal with this on the front end the same as we did in the SignUp component)
-        // if (err) return next(err);
-        // if (!user) {
-        //     res.json({ error: info.message });
-        // } else {
-        //     // Run bcrypt hash function
-                
-        //         // Update password in database with new hashed password
+        try {
+            let user = await User.findById(req.body.id);
+            if (!user) {
+                res.status(500).json({ error: "Account not found. Code UC####"});
+                return;
+            }
 
-        //         // return 200
-        // }
-});
+            await User.updateOne(
+                { _id: user.id },
+                { $set: { firstName: req.body.firstName, lastName: req.body.lastName } }
+            );
+            
+            res.sendStatus(200);
+        } catch (err) {
+            console.log(err);
+
+        }
+    })
+];
+
+exports.updateEmail = [
+    body("email")
+    .trim()
+    .isEmail().withMessage("Email needs to be a valid email")
+    .escape(),
+
+    asyncHandler(async (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(400).json({ message: "Validation Failed", errors: errors.array() });
+            return;
+        }
+
+        try {
+            let user = await User.findById(req.body.id);
+            if (!user) {
+                res.status(500).json({ error: "Account not found. Code UC####"});
+                return;
+            }
+
+            await User.updateOne(
+                { _id: user.id },
+                { $set: { email: req.body.email }}
+            );
+
+            sendUpdateEmailEmail(user, req.body.email);
+
+            res.sendStatus(200);
+        } catch (err) {
+            console.log(err);
+
+        }
+    })
+];
+
+// Note that we have to pass in the req.body.email here because the user.email will 
+// be the old one (since the fetch request to the database was made before updating
+// the email there)
+const sendUpdateEmailEmail = (user, newEmail) => {
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: newEmail,
+        subject: "LowPal Tennis: Email Updated",
+        text: `Hi ${user.firstName},
+            \nThank you for requesting a change to your email address. This email confirms that you have updated your address to ${newEmail}.
+            \nIf you did not make this request, please respond to this email immediately and let us know.
+            \nBest wishes,
+            Louis`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error);
+            // TODO: Throw a new error here to trigger the catch error
+            // throw error...
+        } else {
+            console.log("Email send: " + info.response);
+        }
+    })
+}
+
+exports.updateMob = [
+    body("mobile")
+    .trim()
+    .custom(value => value.replace(/\s*/g, "")
+    .match(/([1-6][0-9]{8,10}|7[0-9]{9})$/)).withMessage("Please enter a valid phone number"),
+
+    asyncHandler(async (req, res, next) => {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                console.log(errors.array());
+                res.status(400).json({ message: "Validation Error", errors: errors.array()});
+                return;
+            }
+
+            let user = await User.findById(req.body.id);
+            
+            if (!user) {
+                res.status(500).json({ error: "Account not found. Code UC####"});
+                return;
+            }
+
+            await User.updateOne(
+                { _id: user.id },
+                { $set: { mobile: req.body.mobile }}
+            );
+
+            res.sendStatus(201);
+
+        } catch (err) {
+            console.log(err);
+
+        }
+    })
+];
+
+exports.updatePassword = [
+    body("password")
+        .trim(),
+    asyncHandler(async (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            console.log(errors.array());
+            res.status(400).json({ message: "Validation Error", errors: errors.array()});
+            return;
+        }
+
+        try {
+            let user = await User.findById(req.body.id);
+            if (!user) {
+                res.status(500).json({ error: "Account not found. Code UC####"});
+                return;
+            }
+
+            bcrypt.hash(req.body.password, 15, async (err, hashedPassword) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: "Hash error. Code UC####.", error: err });
+                }
+
+                await User.updateOne(
+                    { _id: user.id },
+                    { $set: { password: hashedPassword }}
+                );
+            });
+            
+            sendUpdatePasswordEmail(user);
+            res.sendStatus(200);
+        } catch (err) {
+            console.log(err);
+            res.status(500).json({ error: "Code UC####: " + err});
+        }
+
+    })
+];
+
+const sendUpdatePasswordEmail = (user) => {
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: user.email,
+        subject: "LowPal Tennis: Reset password confirmation",
+        text: `Hi ${user.firstName},
+            \nYou are receieving this email because a successful request was made to reset your password.
+            \nIf you did not make this request, please respond this to email immediately.`
+    }
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log("Email sent: " + info.response);
+        }
+    });
+}
 
 exports.verify = asyncHandler(async (req, res, next) => {
     try {

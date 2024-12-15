@@ -14,6 +14,14 @@ router.post("/sign-up", usersController.signUp);
 
 router.post("/forgot-password", usersController.forgotPassword);
 
+router.post("/update-name", usersController.updateName);
+
+router.post("/update-email", usersController.updateEmail);
+
+router.post("/update-mobile", usersController.updateMob);
+
+router.post("/update-password", usersController.updatePassword);
+
 router.get("/verify", usersController.verify);
 
 module.exports = router;
