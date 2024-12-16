@@ -430,6 +430,7 @@ exports.verify = asyncHandler(async (req, res, next) => {
             email: user.user.email,
             firstName: user.user.firstName,
             lastName: user.user.lastName,
+            mobile: user.user.mobile,
             categories: user.user.categories
         });
     } catch (err) {

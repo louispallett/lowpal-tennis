@@ -14,18 +14,6 @@
  *  - gender
  *  - categories
  *
- * ======================
- * # Resetting password #
- * ======================
- *
- * Ensure that any checks regarding current password are done on the backend and not the client-side. 
- * We can check for requirements as we do during sign up (we'll want to use react-hook-form again):
- *  
- *  - minimum characters
- *  - upper and lower case
- *  - special character
- *  - numerical characters
- *
  * Obviously we'll want to check this on the backend too. But, in addition to this, we also want to 
  * check whether the new password they have entered is the same as their current one.
  */
@@ -34,13 +22,16 @@
 // TODO: Reset password feature
 
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom"
+import countryCodes from "country-codes-list";
+import { EyeIcon, EyeSlashIcon, UserCircleIcon } from "@heroicons/react/16/solid";
 
 import tennisBall from "/assets/images/tennis-ball.svg";
 
 export default function Account() {
     const [userData, setUserData] = useState(null);
-    const [loading, setLoading] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -81,7 +72,7 @@ export default function Account() {
 
     return (
         <div className="flex flex-1 lg:my-2.5 justify-center items-center">
-            { error ? (
+            { error && (
                 <div className="flex justify-center p-5 bg-slate-50 rounded-lg dark:bg-slate-700 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
                     <div className="flex flex-col items-center gap-5 min-w-full rounded-lg rounded-t-none text-sm lg:text-base dark:text-slate-100">
                         <h5 className="text-xl font-sedan tracking-tight text-center lg:text-left sm:text-2xl sm:font-black">{error.status} server error</h5>
@@ -90,39 +81,238 @@ export default function Account() {
                         <p><b>{error.status}</b>: {error.message}</p>
                     </div>
                 </div>
-            ) : (
-                <div className="grid grid-row-2 my-5 lg:my-0 gap-2.5">
-                    <div className="flex flex-col justify-between lg:flex-row lg:gap-5 flex-1">
-                        <UserPhoto userData={userData} loading={loading} />
+            )} 
+            { userData && (
+                <div className="flex flex-1 flex-col lg:grid grid-cols-2 my-5 lg:my-0 gap-2.5">
+                    <UserPhoto userData={userData} loading={loading} />
+                    <div className="flex flex-col flex-1 justify-between gap-2.5">
                         <UserDetails userData={userData} />
+                        <PasswordReset />
                     </div>
-                    <PasswordReset loading={loading} />
                 </div>
+            )}
+            { loading && (
+                <img src={tennisBall} className="h-20" id="spinner"/>
             )}
         </div>
     )
 }
 
-function UserPhoto() {
+function UserPhoto({ userData }) {
     return (
-        <>
-
-        </>
+        <div className="flex flex-1 flex-col gap-1.5 mx-1.5">
+            <div className="flex flex-1 flex-col justify-center items-center p-5 bg-slate-50 rounded-lg dark:bg-slate-700 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
+                <div className="flex flex-col items-center gap-5 min-w-full rounded-lg rounded-t-none text-sm lg:text-base dark:text-slate-100">
+                    { userData.profilePicture ? (
+                        <img src={userData.profilePicture} className="w-64" alt="The profile picture of the user" />
+                    ) : (
+                        <UserCircleIcon src={UserCircleIcon} className="w-64" alt="" />
+                    )}
+                </div>
+                <p className="font-bold dark:text-slate-100">{userData.firstName} {userData.lastName}</p>
+            </div>
+        </div>
     )
 }
 
-function UserDetails() {
+function UserDetails({ userData }) {
+    const form = useForm();
+    const { register, control, handleSubmit, formState, watch, reset, setValue, trigger } = form;
+    const { errors } = formState;
+    const countryCodesArray = Object.entries(countryCodes.customList('countryCode', '+{countryCallingCode}'));
+    const [isEditing, setIsEditing] = useState(false);
+    const [isPending, setIsPending] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
+    const onSubmit = async (data) => {
+
+    }
+
     return (
-        <>
-        
-        </>
+        <div className="flex flex-col gap-1.5 mx-1.5">
+            <div className="flex justify-center p-5 bg-slate-50 rounded-lg dark:bg-slate-700 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
+                <div className="flex flex-col items-center gap-5 min-w-full rounded-lg rounded-t-none text-sm lg:text-base dark:text-slate-100">
+                    <h2 className="text-2xl">Account Details</h2>
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
+                    <div className="grid grid-cols-2 gap-2.5">
+                        <div>
+                            <div>
+                                <label htmlFor="firstName" className="text-sm leading-6 font-bold dark:text-white">First Name</label>
+                                <input required disabled={!isEditing} id="firstName" value={userData.firstName} {...register("firstName", {
+                                    required: "First Name is required",
+                                    maxLength: {
+                                        value: 50,
+                                        message: "First name cannot be longer than a fifty (50) characters long!"
+                                    },
+                                })}
+                                    className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700" />
+                            </div>
+                            <span className="text-xs font-bold text-red-700 dark:text-red-400">
+                                <p>{errors.firstName?.message}</p>
+                            </span>
+                        </div>
+                        <div>
+                            <div>
+                                <label htmlFor="lastName" className="text-sm leading-6 font-bold dark:text-white">Last Name</label>
+                                <input required disabled={!isEditing} id="lastName" value={userData.lastName} {...register("lastName", {
+                                    required: "Last Name is required",
+                                    maxLength: {
+                                        value: 50,
+                                        message: "Last name cannot be longer than a fifty (50) characters long!"
+                                    },
+                                })}
+                                    className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700" />
+                            </div>
+                            <span className="text-xs font-bold text-red-700 dark:text-red-400">
+                                <p>{errors.lastName?.message}</p>
+                            </span>
+                        </div>
+                    </div>
+                    <div className="flex flex-col lg:grid grid-cols-2 gap-2.5">
+                            <div>
+                                <div>
+                                    <label htmlFor="email" className="text-sm leading-6 font-bold dark:text-white">Email</label>
+                                    <input required disabled={!isEditing} autoComplete="email" type="email" id="email" value={userData.email} {...register("email", {
+                                        required: "Email is required",
+                                        maxLength: {
+                                            value: 100,
+                                            message: "Email cannot be longer than a hundred (100) characters long!"
+                                        },
+                                    })}
+                                        className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700" />
+                                </div                                >
+                                <span className="text-xs font-bold text-red-700 dark:text-red-400">
+                                    <p>{errors.email?.message}</p>
+                                </span>
+                            </div>
+                            <div>
+                                <div>
+                                    <label htmlFor="mobile" className="text-sm leading-6 font-bold dark:text-white">Mobile</label>
+                                    <div className="flex gap-1.5">
+                                        <select disabled={!isEditing} name="countryCode" id="countryCode" defaultValue="+44"
+                                        {...register("phoneCode")}
+                                        className="rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700">
+                                            {countryCodesArray.map(([code, label]) => (
+                                                <option key={code} value={label}>
+                                                    {label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <input required disabled={!isEditing} id="mobile" type="tel" value={userData.mobile} {...register("mobile", {
+                                            required: "Mobile is required",
+                                        })}
+                                            className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700" />
+                                    </div>
+                                </div>
+                                <span className="text-xs font-bold text-red-700 dark:text-red-400">
+                                    <p>{errors.email?.message}</p>
+                                </span>
+                            </div>
+                        </div>
+                        { isPending && (
+                        <div className="flex justify-center items-center">
+                            <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                                <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                                    <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                                        <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                                            <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        )}
+                        { isEditing ? (
+                            <div className="flex gap-2.5">
+                                <button type="submit"
+                                    className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
+                                >Save and Update</button>
+                                <div onClick={() => setIsEditing(false)} 
+                                className="flex w-full justify-center rounded-md bg-red-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
+                                >Cancel</div>
+                            </div>
+                        ) : (
+                            <div onClick={() => setIsEditing(true)}
+                            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
+                            >Edit</div>
+                        )}
+                    </form>
+                </div>
+            </div>
+        </div>
     )
 }
 
 function PasswordReset() {
+    const form = useForm();
+    const { register, control, handleSubmit, formState, watch, reset, setValue, trigger } = form;
+    const { errors } = formState;
+    const [isPending, setIsPending] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
+    const onSubmit = async (data) => {
+
+    }
+
     return (
-        <>
-        
-        </>
+        <div className="flex flex-col gap-1.5 mx-1.5">
+            <div className="flex justify-center p-5 bg-slate-50 rounded-lg dark:bg-slate-700 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
+                <div className="flex flex-col items-center gap-5 min-w-full rounded-lg rounded-t-none text-sm lg:text-base dark:text-slate-100">
+                    <h2 className="text-2xl">Reset Password</h2>
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
+                        <div>
+                            <div>
+                                <label htmlFor="password" className="text-sm leading-6 font-bold dark:text-white">Password</label>
+                                <input type={showPassword ? "text" : "password"} id="password" autoComplete="current-password" required
+                                    {...register("password", {
+                                        required: "Password is required",
+                                        minLength: {
+                                            value: 8,
+                                            message: "Password must be at least eight (8) characters long"
+                                        },
+                                        pattern: {
+                                            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                                            message: "Must contain: uppercase, lowercase, number, and special character"
+                                        },
+                                    })}
+                                    className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"/>
+                                <span className="text-xs font-bold text-red-700 dark:text-red-400">
+                                    <p>{errors.password?.message}</p>
+                                </span>
+                            </div>
+                            <div>
+                                <label htmlFor="confPassword" className="text-sm leading-6 font-bold dark:text-white">Confirm Password</label>
+                                <div className="flex items-center gap-1">
+                                    <input type={showPassword ? "text" : "password"} id="confPassword" required
+                                        {...register("confPassword", {
+                                            required: "Please confirm your password",
+                                            validate: {
+                                                passwordMatch: (fieldValue) => {
+                                                    return (
+                                                        fieldValue == watch("password") || "Passwords do not match"
+                                                    )
+                                                }
+                                            }
+                                        })}
+                                        className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700"/>
+                                        { showPassword ? (
+                                        <EyeIcon onClick={() => setShowPassword(!showPassword)} className="h-6 cursor-pointer dark:fill-slate-100 hover:fill-indigo-600 transition-all" />
+                                        ) : (
+                                            <EyeSlashIcon onClick={() => setShowPassword(!showPassword)} className="h-6 cursor-pointer dark:fill-slate-100 hover:fill-indigo-600 transition-all" />
+                                        )}
+                                </div>
+                                <span className="text-xs font-bold text-red-700 dark:text-red-400">
+                                    <p>{errors.confPassword?.message}</p>
+                                </span>
+                            </div>
+                        </div>
+                        <button type="submit"
+                            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
+                        >Save and Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     )
 }
