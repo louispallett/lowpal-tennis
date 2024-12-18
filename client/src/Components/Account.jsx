@@ -261,7 +261,7 @@ function PasswordReset() {
                 <div className="flex flex-col items-center gap-5 min-w-full rounded-lg rounded-t-none text-sm lg:text-base dark:text-slate-100">
                     <h2 className="text-2xl">Reset Password</h2>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
-                        <div>
+                        <div className="md:flex gap-2.5">
                             <div>
                                 <label htmlFor="password" className="text-sm leading-6 font-bold dark:text-white">Password</label>
                                 <input type={showPassword ? "text" : "password"} id="password" autoComplete="current-password" required
