@@ -9,17 +9,8 @@
  *  - email address
  *  - reset password
  *
- * They cannot directly edit:
- *
- *  - gender
- *  - categories
- *
- * Obviously we'll want to check this on the backend too. But, in addition to this, we also want to 
- * check whether the new password they have entered is the same as their current one.
+ * The last two will trigger the server to send a message to their email address.
  */
-
-// TODO: Add details
-// TODO: Reset password feature
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -67,7 +58,6 @@ export default function Account() {
             }
         }
         getUser();
-        console.log(userData)
     }, []);
 
     return (
@@ -116,7 +106,14 @@ function UserPhoto({ userData }) {
 }
 
 function UserDetails({ userData }) {
-    const form = useForm();
+    const form = useForm({
+        defaultValues: {
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            email: userData.email,
+            mobile: userData.mobile
+        }
+    });
     const { register, control, handleSubmit, formState, watch, reset, setValue, trigger } = form;
     const { errors } = formState;
     const countryCodesArray = Object.entries(countryCodes.customList('countryCode', '+{countryCallingCode}'));
@@ -125,7 +122,8 @@ function UserDetails({ userData }) {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     const onSubmit = async (data) => {
-
+        console.log(data);
+        setIsEditing(false);
     }
 
     return (
@@ -134,45 +132,45 @@ function UserDetails({ userData }) {
                 <div className="flex flex-col items-center gap-5 min-w-full rounded-lg rounded-t-none text-sm lg:text-base dark:text-slate-100">
                     <h2 className="text-2xl">Account Details</h2>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
-                    <div className="grid grid-cols-2 gap-2.5">
-                        <div>
+                        <div className="grid grid-cols-2 gap-2.5">
                             <div>
-                                <label htmlFor="firstName" className="text-sm leading-6 font-bold dark:text-white">First Name</label>
-                                <input required disabled={!isEditing} id="firstName" value={userData.firstName} {...register("firstName", {
-                                    required: "First Name is required",
-                                    maxLength: {
-                                        value: 50,
-                                        message: "First name cannot be longer than a fifty (50) characters long!"
-                                    },
-                                })}
-                                    className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700" />
+                                <div>
+                                    <label htmlFor="firstName" className="text-sm leading-6 font-bold dark:text-white">First Name</label>
+                                    <input required disabled={!isEditing} id="firstName" {...register("firstName", {
+                                        required: "First Name is required",
+                                        maxLength: {
+                                            value: 50,
+                                            message: "First name cannot be longer than a fifty (50) characters long!"
+                                        },
+                                    })}
+                                        className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700" />
+                                </div>
+                                <span className="text-xs font-bold text-red-700 dark:text-red-400">
+                                    <p>{errors.firstName?.message}</p>
+                                </span>
                             </div>
-                            <span className="text-xs font-bold text-red-700 dark:text-red-400">
-                                <p>{errors.firstName?.message}</p>
-                            </span>
-                        </div>
-                        <div>
                             <div>
-                                <label htmlFor="lastName" className="text-sm leading-6 font-bold dark:text-white">Last Name</label>
-                                <input required disabled={!isEditing} id="lastName" value={userData.lastName} {...register("lastName", {
-                                    required: "Last Name is required",
-                                    maxLength: {
-                                        value: 50,
-                                        message: "Last name cannot be longer than a fifty (50) characters long!"
-                                    },
-                                })}
-                                    className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700" />
+                                <div>
+                                    <label htmlFor="lastName" className="text-sm leading-6 font-bold dark:text-white">Last Name</label>
+                                    <input required disabled={!isEditing} id="lastName" {...register("lastName", {
+                                        required: "Last Name is required",
+                                        maxLength: {
+                                            value: 50,
+                                            message: "Last name cannot be longer than a fifty (50) characters long!"
+                                        },
+                                    })}
+                                        className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700" />
+                                </div>
+                                <span className="text-xs font-bold text-red-700 dark:text-red-400">
+                                    <p>{errors.lastName?.message}</p>
+                                </span>
                             </div>
-                            <span className="text-xs font-bold text-red-700 dark:text-red-400">
-                                <p>{errors.lastName?.message}</p>
-                            </span>
                         </div>
-                    </div>
-                    <div className="flex flex-col lg:grid grid-cols-2 gap-2.5">
+                        <div className="flex flex-col lg:grid grid-cols-2 gap-2.5">
                             <div>
                                 <div>
                                     <label htmlFor="email" className="text-sm leading-6 font-bold dark:text-white">Email</label>
-                                    <input required disabled={!isEditing} autoComplete="email" type="email" id="email" value={userData.email} {...register("email", {
+                                    <input required disabled={!isEditing} autoComplete="email" type="email" id="email" {...register("email", {
                                         required: "Email is required",
                                         maxLength: {
                                             value: 100,
@@ -193,19 +191,19 @@ function UserDetails({ userData }) {
                                         {...register("phoneCode")}
                                         className="rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700">
                                             {countryCodesArray.map(([code, label]) => (
-                                                <option key={code} value={label}>
+                                                <option key={code} defaultValue={label}>
                                                     {label}
                                                 </option>
                                             ))}
                                         </select>
-                                        <input required disabled={!isEditing} id="mobile" type="tel" value={userData.mobile} {...register("mobile", {
+                                        <input required disabled={!isEditing} id="mobile" type="tel" {...register("mobile", {
                                             required: "Mobile is required",
                                         })}
                                             className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700" />
                                     </div>
                                 </div>
                                 <span className="text-xs font-bold text-red-700 dark:text-red-400">
-                                    <p>{errors.email?.message}</p>
+                                    <p>{errors.mobile?.message}</p>
                                 </span>
                             </div>
                         </div>
