@@ -23,7 +23,6 @@ export default function SignUp() {
     const onSubmit = async (data) => {
         setIsPending(true);
         data.gender = gender;
-        data.mobile = `${data.phoneCode} ${data.mobile}`;
         data.categories = categories;
         if (data.seeded) data.seeded = true;
         axios.post("/api/users/sign-up", data)
@@ -121,7 +120,7 @@ export default function SignUp() {
                                     <label htmlFor="mobile" className="text-sm leading-6 font-bold dark:text-white">Mobile</label>
                                     <div className="flex gap-1.5">
                                         <select name="countryCode" id="countryCode" defaultValue="+44"
-                                        {...register("phoneCode")}
+                                        {...register("mobCode")}
                                         className="rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700">
                                             {countryCodesArray.map(([code, label]) => (
                                                 <option key={code} value={label}>

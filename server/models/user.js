@@ -9,6 +9,7 @@ const User = new Schema({
     categories: [{ type: Schema.Types.ObjectId, ref: "Category", required: true }],
     seeded: { type: Boolean, required: true },
     password: { type: String, required: true },
+    mobCode: { type: String, required: true },
     mobile: { type: String, required: true },
     ranking: { type: Number, required: true },
     host: { type: Boolean },

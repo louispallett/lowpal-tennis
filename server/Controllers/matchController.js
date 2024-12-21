@@ -42,21 +42,40 @@ exports.get_contact_details = asyncHandler(async (req, res, next) => {
         let isUser = await User.findById(match.participants[0].id);
         const data = [];
         if (isUser) {
-            data.push({ name: `${isUser.firstName[0]}. ${isUser.lastName}`, mobile: isUser.mobile });
+            data.push({ 
+                name: `${isUser.firstName[0]}. ${isUser.lastName}`, 
+                mobCode: isUser.mobCode, 
+                mobile: isUser.mobile 
+            });
             let user2;
             if (match.participants.length > 1) {
                 user2 = await User.findById(match.participants[1].id);
-                data.push({ name: `${user2.firstName[0]}. ${user2.lastName}`, mobile: user2.mobile });
+                data.push({ name: `${user2.firstName[0]}. ${user2.lastName}`, 
+                    mobCode: user2.mobCode, 
+                    mobile: user2.mobile 
+                });
             }
         } else {
             const team1 = await Team.findById(match.participants[0].id).populate({ path: "players", select: "mobile firstName lastName" });
-            data.push({ name: `${team1.players[0].firstName[0]}. ${team1.players[0].lastName}`, mobile: team1.players[0].mobile });
-            data.push({ name: `${team1.players[1].firstName[0]}. ${team1.players[1].lastName}`, mobile: team1.players[1].mobile });
+            data.push({ name: `${team1.players[0].firstName[0]}. ${team1.players[0].lastName}`, 
+                mobCode: team1.players[0].mobCode,
+                mobile: team1.players[0].mobile 
+            });
+            data.push({ name: `${team1.players[1].firstName[0]}. ${team1.players[1].lastName}`, 
+                mobCode: team1.players[1].mobCode,
+                mobile: team1.players[1].mobile 
+            });
             let team2;
             if (match.participants.length > 1) {
                 team2 = await Team.findById(match.participants[1].id).populate({ path: "players", select: "mobile firstName lastName" });
-                data.push({ name: `${team2.players[0].firstName[0]}. ${team2.players[0].lastName}`, mobile: team2.players[0].mobile });
-                data.push({ name: `${team2.players[1].firstName[0]}. ${team2.players[1].lastName}`, mobile: team2.players[1].mobile });
+                data.push({ name: `${team2.players[0].firstName[0]}. ${team2.players[0].lastName}`, 
+                    mobCode: team2.players[0].mobCode,
+                    mobile: team2.players[0].mobile 
+                });
+                data.push({ name: `${team2.players[1].firstName[0]}. ${team2.players[1].lastName}`, 
+                    mobCode: team2.players[1].mobCode,
+                    mobile: team2.players[1].mobile 
+                });
             }
         }
         res.json({ data })

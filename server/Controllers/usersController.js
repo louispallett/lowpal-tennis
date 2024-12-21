@@ -78,6 +78,9 @@ exports.signUp = [
         .trim()
         .isEmail().withMessage("Email needs to be a valid email")
         .escape(),
+    body("mobCode")
+        .trim()
+        .escape(),
     body("mobile")
         .trim()
         .custom(value => value.replace(/\s*/g, "")
@@ -107,6 +110,7 @@ exports.signUp = [
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
                     email: req.body.email.toLowerCase(),
+                    mobCode: req.body.mobCode,
                     mobile: req.body.mobile,
                     male: req.body.gender == "male" ? true : false,
                     // As this is a required field, we don't need to check for it's type before converting it into an array
@@ -119,7 +123,7 @@ exports.signUp = [
                 await addUserToCategories(newUser._id, newUser.categories)
                 const newUserCategories = await User.findById(newUser._id).populate({ path: "categories", select: "name -_id" });
                 const categoryNames = newUserCategories.categories.map(category => category.name).join('\n');                
-                sendConfirmationEmail(user, categoryNames); 
+                // sendConfirmationEmail(user, categoryNames); 
                 res.sendStatus(200);
             });
         } catch (err) {
@@ -243,6 +247,9 @@ exports.updateEmail = [
 ];
 
 exports.updateMob = [
+    body("mobCode")
+        .trim()
+        .escape(),
     body("mobile")
     .trim()
     .custom(value => value.replace(/\s*/g, "")
@@ -266,7 +273,7 @@ exports.updateMob = [
 
             await User.updateOne(
                 { _id: user.id },
-                { $set: { mobile: req.body.mobile }}
+                { $set: { mobCode: req.body.mobCode, mobile: req.body.mobile }}
             );
 
             res.sendStatus(201);

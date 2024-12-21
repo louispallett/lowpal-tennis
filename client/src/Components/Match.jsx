@@ -170,7 +170,7 @@ function PlayerContactDetails({ matchId }) {
                         { contactData && React.Children.toArray(contactData.map((item, index) => (
                             <>
                                 <p>{item.name}</p>
-                                <p>{item.mobile}</p>
+                                <p>{item.mobCode} {item.mobile}</p>
                             </>
                         )))}
                     </div>

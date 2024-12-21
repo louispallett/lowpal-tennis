@@ -111,6 +111,7 @@ function UserDetails({ userData }) {
             firstName: userData.firstName,
             lastName: userData.lastName,
             email: userData.email,
+            mobCode: userData.mobCode,
             mobile: userData.mobile
         }
     });
@@ -188,7 +189,7 @@ function UserDetails({ userData }) {
                                     <label htmlFor="mobile" className="text-sm leading-6 font-bold dark:text-white">Mobile</label>
                                     <div className="flex gap-1.5">
                                         <select disabled={!isEditing} name="countryCode" id="countryCode" defaultValue="+44"
-                                        {...register("phoneCode")}
+                                        {...register("mobCode")}
                                         className="rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700">
                                             {countryCodesArray.map(([code, label]) => (
                                                 <option key={code} defaultValue={label}>
