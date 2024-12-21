@@ -194,19 +194,21 @@ exports.updatePersonalDetails = [
         .match(/([1-6][0-9]{8,10}|7[0-9]{9})$/)).withMessage("Please enter a valid phone number"),
 
     asyncHandler(async (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            console.log(errors.array());
+            res.status(400).json({ message: "Validation Error", errors: errors.array() });
+            return;
+        }
+        
         try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                console.log(errors.array());
-                res.status(400).json({ message: "Validation Error", errors: errors.array() });
-                return;
-            }
-
+            console.log(req.body.id);
             const user = await User.findById(req.body.id);
 
             if (!user) {
                 console.log(`User ${req.body.id} not found!`);
                 res.status(500).json({ error: "Account not found. Code UC####"});
+                return;
             }
 
             await User.updateOne(

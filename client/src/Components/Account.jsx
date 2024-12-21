@@ -10,11 +10,16 @@
  *  - reset password
  *
  * The last two will trigger the server to send a message to their email address.
+ * 
+ * ~ Updates Needed ~
+ * 
+ * TODO: Update is submitted to appropriate annimation
+ * FIXME: Fix error handling when submitting forms - currently just loops
  */
 
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom"
 import countryCodes from "country-codes-list";
 import { EyeIcon, EyeSlashIcon, UserCircleIcon } from "@heroicons/react/16/solid";
 
@@ -118,13 +123,32 @@ function UserDetails({ userData }) {
     const { register, control, handleSubmit, formState, watch, reset, setValue, trigger } = form;
     const { errors } = formState;
     const countryCodesArray = Object.entries(countryCodes.customList('countryCode', '+{countryCallingCode}'));
+    const [error, setError] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [isPending, setIsPending] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     const onSubmit = async (data) => {
-        console.log(data);
-        setIsEditing(false);
+        setIsPending(true);
+        data.id = userData.userId;
+        axios.post("/api/users/update-personal-details", data)
+            .then(() => {
+                setIsPending(false);
+                setIsSubmitted(true);
+                setTimeout(() => {
+                    setIsSubmitted(false);
+                }, 3000);
+                setIsEditing(false);
+            }).catch((err) => {
+                console.log(err);
+                console.log(err.response.data.errors[0].msg);
+                if (err.response.data.errors) {
+                    setError(err.response.data.errors);
+                } else {
+                    setError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
+                }
+                setIsPending(false);
+            });
     }
 
     return (
@@ -221,20 +245,24 @@ function UserDetails({ userData }) {
                             </div>
                         </div>
                         )}
-                        { isEditing ? (
-                            <div className="flex gap-2.5">
-                                <button type="submit"
-                                    className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
-                                >Save and Update</button>
-                                <div onClick={() => setIsEditing(false)} 
-                                className="flex w-full justify-center rounded-md bg-red-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
-                                >Cancel</div>
-                            </div>
-                        ) : (
-                            <div onClick={() => setIsEditing(true)}
-                            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
-                            >Edit</div>
-                        )}
+                        { isSubmitted ? (
+                            // Temp
+                            <p>Submitted!</p>
+                        ) : isEditing ? (
+                                <div className="flex gap-2.5">
+                                    <button type="submit"
+                                        className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
+                                    >Save and Update</button>
+                                    <div onClick={() => setIsEditing(false)} 
+                                    className="flex w-full justify-center rounded-md bg-red-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
+                                    >Cancel</div>
+                                </div>
+                            ) : (
+                                <div onClick={() => setIsEditing(true)}
+                                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
+                                >Edit</div>
+                            )
+                        }
                     </form>
                 </div>
             </div>
@@ -246,12 +274,31 @@ function PasswordReset() {
     const form = useForm();
     const { register, control, handleSubmit, formState, watch, reset, setValue, trigger } = form;
     const { errors } = formState;
+    const [error, setError] = useState(null);
     const [isPending, setIsPending] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
     const onSubmit = async (data) => {
-
+        setIsPending(true);
+        data.id = userData.userId;
+        axios.post("/api/users/update-password", data)
+            .then(() => {
+                setIsPending(false);
+                setIsSubmitted(true);
+                setTimeout(() => {
+                    setIsSubmitted(false);
+                }, 3000);
+            }).catch((err) => {
+                console.log(err);
+                console.log(err.response.data.errors[0].msg);
+                if (err.response.data.errors) {
+                    setError(err.response.data.errors);
+                } else {
+                    setError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
+                }
+                setIsPending(false);
+            });
     }
 
     return (
@@ -306,9 +353,14 @@ function PasswordReset() {
                                 </span>
                             </div>
                         </div>
-                        <button type="submit"
-                            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
-                        >Save and Update</button>
+                        { isSubmitted ? (
+                            // Temp
+                            <p>Submitted</p>
+                        ) : (
+                            <button type="submit"
+                                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
+                            >Save and Update</button>
+                        )}
                     </form>
                 </div>
             </div>
