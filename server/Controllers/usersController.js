@@ -11,13 +11,6 @@
  *   	- password
  * - verifying the user's jsonwebtoken
  *
- * # Updates needed #
- *
- * TODO: Add proper error handling, returning messages to the client
- * TODO: Restructure this file to ideally ONLY contain POST and GET requests, moving auxillary 
- * functions to seperate files. This includes:
- * 	- email confirmation functions
- * 	- adding user to categories
  * Note that adding user to categories may be bad design. We should probably restructure how we design 
  * this so that adding user to the categories is ultimately unnecessary.
  * ----------------------------------------------------------------------------------------------------
@@ -33,7 +26,12 @@ const { body, validationResult } = require("express-validator");
 const verifyUser = require("../config/verifyUser");
 const User = require("../models/user");
 
-const { sendConfirmationEmail, addUserToCategories, sendResetPasswordEmail, sendUpdateEmailEmail, sendUpdatePasswordEmail } = require("../public/scripts/userAuxillary");
+const { sendConfirmationEmail, 
+    addUserToCategories, 
+    sendResetPasswordEmail, 
+    sendUpdateEmailEmail, 
+    sendUpdatePasswordEmail 
+} = require("../public/scripts/userAuxillary");
 
 exports.signIn = [
     body("email", "Email needs to be a valid email")
@@ -172,118 +170,69 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     }
 });
 
-exports.updateName = [
+exports.updatePersonalDetails = [
     body("firstName")
-    .trim()
-    .escape()
-    .isLength({ min: 1 }).withMessage("First name must be at least 1 character")
-    .isLength({ max: 50 }).withMessage("First name cannot be more than 50 characters"),
+        .trim()
+        .escape()
+        .isLength({ min: 1 }).withMessage("First name must be at least 1 character")
+        .isLength({ max: 50 }).withMessage("First name cannot be more than 50 characters"),
     body("lastName")
-    .trim()
-    .escape()
-    .isLength({ min: 1 }).withMessage("Last name must be at least 1 character")
-    .isLength({ max: 50 }).withMessage("Last name cannot be more than 50 characters"),
-
-    asyncHandler(async (req, res, next) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            res.status(400).json({ message: "Validation Failed", errors: errors.array() })
-            return;
-        }
-
-        try {
-            let user = await User.findById(req.body.id);
-            if (!user) {
-                res.status(500).json({ error: "Account not found. Code UC####"});
-                return;
-            }
-
-            await User.updateOne(
-                { _id: user.id },
-                { $set: { firstName: req.body.firstName, lastName: req.body.lastName } }
-            );
-            
-            res.sendStatus(200);
-        } catch (err) {
-            console.log(err);
-            res.status(500).json({ message: err });
-        }
-    })
-];
-
-exports.updateEmail = [
+        .trim()
+        .escape()
+        .isLength({ min: 1 }).withMessage("Last name must be at least 1 character")
+        .isLength({ max: 50 }).withMessage("Last name cannot be more than 50 characters"),
     body("email")
-    .trim()
-    .isEmail().withMessage("Email needs to be a valid email")
-    .escape(),
-
-    asyncHandler(async (req, res, next) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            res.status(400).json({ message: "Validation Failed", errors: errors.array() });
-            return;
-        }
-
-        try {
-            let user = await User.findById(req.body.id);
-            if (!user) {
-                res.status(500).json({ error: "Account not found. Code UC####"});
-                return;
-            }
-
-            await User.updateOne(
-                { _id: user.id },
-                { $set: { email: req.body.email }}
-            );
-
-            sendUpdateEmailEmail(user, req.body.email);
-
-            res.sendStatus(200);
-        } catch (err) {
-            console.log(err);
-            res.status(500).json({ message: err });
-        }
-    })
-];
-
-exports.updateMob = [
+        .trim()
+        .isEmail().withMessage("Email needs to be a valid email")
+        .escape(),
     body("mobCode")
         .trim()
         .escape(),
     body("mobile")
-    .trim()
-    .custom(value => value.replace(/\s*/g, "")
-    .match(/([1-6][0-9]{8,10}|7[0-9]{9})$/)).withMessage("Please enter a valid phone number"),
+        .trim()
+        .custom(value => value.replace(/\s*/g, "")
+        .match(/([1-6][0-9]{8,10}|7[0-9]{9})$/)).withMessage("Please enter a valid phone number"),
 
     asyncHandler(async (req, res, next) => {
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 console.log(errors.array());
-                res.status(400).json({ message: "Validation Error", errors: errors.array()});
+                res.status(400).json({ message: "Validation Error", errors: errors.array() });
                 return;
             }
 
-            let user = await User.findById(req.body.id);
-            
+            const user = await User.findById(req.body.id);
+
             if (!user) {
+                console.log(`User ${req.body.id} not found!`);
                 res.status(500).json({ error: "Account not found. Code UC####"});
-                return;
             }
 
             await User.updateOne(
                 { _id: user.id },
-                { $set: { mobCode: req.body.mobCode, mobile: req.body.mobile }}
+                { $set: { 
+                    firstName: req.body.firstName, 
+                    lastName: req.body.lastName,
+                    email: req.body.email.toLowerCase(),
+                    mobCode: req.body.mobCode,
+                    mobile: req.body.mobile
+                }}
             );
 
+            // Only send update email if email submitted does not match user email
+            // (done last in case of any database errors which may stop this)
+            if (user.email !== req.body.email.toLowerCase()) {
+                // sendUpdateEmailEmail(user, req.body.email);
+            }
             res.sendStatus(201);
-
         } catch (err) {
             console.log(err);
-            res.status(500).json({ message: err });
+            res.status(500).json({ error: "Code UC####: " + err});
         }
     })
-];
+
+]
 
 exports.updatePassword = [
     body("password")
@@ -315,7 +264,7 @@ exports.updatePassword = [
                 );
             });
             
-            sendUpdatePasswordEmail(user);
+            // sendUpdatePasswordEmail(user);
             res.sendStatus(200);
         } catch (err) {
             console.log(err);
