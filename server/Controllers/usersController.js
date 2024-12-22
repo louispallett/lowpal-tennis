@@ -55,7 +55,7 @@ exports.signIn = [
                 res.json({ error: info.message });
             } else {
                 req.login(user, next); // Note that this assigns req.user to user. It is also a req, so we need a response in this line (otherwise we receive an error)
-                jwt.sign({ user }, process.env.USER_KEY, { expiresIn: "10h" }, (err, token) => {
+                jwt.sign({ user }, process.env.USER_KEY, { expiresIn: "24h" }, (err, token) => {
                     res.json({ token }); // We send this to the front end and save it in local storage
                 });
             }

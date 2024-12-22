@@ -141,12 +141,12 @@ function UserDetails({ userData }) {
                 setIsEditing(false);
             }).catch((err) => {
                 console.log(err);
-                console.log(err.response.data.errors[0].msg);
-                if (err.response.data.errors) {
-                    setError(err.response.data.errors);
-                } else {
-                    setError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
-                }
+                // console.log(err.response.data.errors[0].msg);
+                // if (err.response.data.errors) {
+                //     setError(err.response.data.errors);
+                // } else {
+                //     setError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
+                // }
                 setIsPending(false);
             });
     }
@@ -203,7 +203,7 @@ function UserDetails({ userData }) {
                                         },
                                     })}
                                         className="w-full rounded-md border-0 py-1.5 px-2 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 dark:text-white dark:bg-slate-700" />
-                                </div                                >
+                                </div>
                                 <span className="text-xs font-bold text-red-700 dark:text-red-400">
                                     <p>{errors.email?.message}</p>
                                 </span>
@@ -232,37 +232,37 @@ function UserDetails({ userData }) {
                                 </span>
                             </div>
                         </div>
-                        { isPending && (
-                        <div className="flex justify-center items-center">
-                            <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                        { isPending ? (
+                            <div className="flex justify-center items-center">
                                 <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
                                     <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
                                         <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
-                                            <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner"></div>
+                                            <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                                                <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        )}
-                        { isSubmitted ? (
-                            // Temp
-                            <p>Submitted!</p>
-                        ) : isEditing ? (
-                                <div className="flex gap-2.5">
-                                    <button type="submit"
-                                        className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
-                                    >Save and Update</button>
-                                    <div onClick={() => setIsEditing(false)} 
-                                    className="flex w-full justify-center rounded-md bg-red-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
-                                    >Cancel</div>
+                        ) : ( isSubmitted ? (
+                                <div className="flex justify-center rounded-md bg-green-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                    <p>Submitted!</p>
                                 </div>
-                            ) : (
-                                <div onClick={() => setIsEditing(true)}
-                                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
-                                >Edit</div>
-                            )
-                        }
+                        ) : isEditing ? (
+                            <div className="flex gap-2.5">
+                                <button type="submit"
+                                    className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
+                                >Save and Update</button>
+                                <div onClick={() => setIsEditing(false)} 
+                                    className="flex cursor-pointer w-full justify-center rounded-md bg-red-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
+                                >Cancel</div>
+                            </div>
+                        ) : (
+                            <div onClick={() => setIsEditing(true)}
+                                className="flex cursor-pointer justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            >Edit</div>
+                        )
+                    )}
                     </form>
                 </div>
             </div>
@@ -290,6 +290,7 @@ function PasswordReset() {
                     setIsSubmitted(false);
                 }, 3000);
             }).catch((err) => {
+                setIsPending(false);
                 console.log(err);
                 console.log(err.response.data.errors[0].msg);
                 if (err.response.data.errors) {
@@ -297,7 +298,6 @@ function PasswordReset() {
                 } else {
                     setError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
                 }
-                setIsPending(false);
             });
     }
 
