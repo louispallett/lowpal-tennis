@@ -16,7 +16,7 @@ const sendConfirmationEmail = (user, categoryNames) => {
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log(error);
-            throw new Error(error);
+            throw new Error("Send mail error: Code UA0001: " + error);
         } else {
             console.log("Email sent: " + info.response);
         }
@@ -34,7 +34,7 @@ const addUserToCategories = async (userId, userCategories) => {
         }
     } catch (error) {
         console.log(error);
-        throw new Error(error);
+        throw new Error("Code UA0001: " + error);
     }
 }
 
@@ -52,7 +52,7 @@ const sendResetPasswordEmail = (user, newPassword) => {
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log(error)
-            throw new Error(error);
+            throw new Error("Send mail error: Code UA0001: " + error);
         } else {
             console.log("Email sent: " + info.response);
         }
@@ -77,7 +77,7 @@ const sendUpdateEmailEmail = (user, newEmail) => {
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log(error);
-            throw new Error(error);
+            throw new Error("Send mail error: Code UA0001: " + error);
         } else {
             console.log("Email send: " + info.response);
         }
@@ -97,7 +97,7 @@ const sendUpdatePasswordEmail = (user) => {
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log(error);
-            throw new Error(error);
+            throw new Error("Send mail error: Code UA0001: " + error);
         } else {
             console.log("Email sent: " + info.response);
         }

@@ -103,6 +103,7 @@ exports.signUp = [
             bcrypt.hash(req.body.password, 15, async (err, hashedPassword) => {
                 if (err) {
                     console.log(err);
+                    throw new Error(`Hashing error. Code UC0001- ${err}`);
                 }
                 const user = new User({
                     firstName: req.body.firstName,
@@ -117,16 +118,20 @@ exports.signUp = [
                     password: hashedPassword,
                     ranking: 0,
                 });
+                
                 const newUser = await user.save();
                 await addUserToCategories(newUser._id, newUser.categories)
+                
                 const newUserCategories = await User.findById(newUser._id).populate({ path: "categories", select: "name -_id" });
                 const categoryNames = newUserCategories.categories.map(category => category.name).join('\n');                
-                // sendConfirmationEmail(user, categoryNames); 
+                
+                sendConfirmationEmail(user, categoryNames); 
+                
                 res.sendStatus(200);
             });
         } catch (err) {
             console.log(err);
-            return next(err);
+            res.status(500).json({ error: "Catch UC00SU: " + err});
         }
     })
 ];
@@ -137,8 +142,8 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
         user = user[0];
         console.log(user);
         if (!user) {
-            res.json({ error: "Account not found" });
-            return;
+            console.log(`User ${req.body.id} not found!`);
+            throw new Error("Account not found. Code UC0001");
         }
         const newPassword = generator.generate({
             length: 15,
@@ -150,9 +155,8 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
         bcrypt.hash(newPassword, 15, async (err, hashedPassword) => {
             if (err) {
-                console.log(err)
-                res.json({ error: "Server error. CODE UF100." });
-                return;
+                console.log(err);
+                throw new Error(`Code UC0002 - ${err}`);
             }
             await User.updateOne(
                 { _id: user._id },
@@ -165,8 +169,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
         
     } catch (err) {
         console.log(err);
-        res.json({ error: "Server error. CODE UF100." });
-        return;
+        res.status(500).json({ error: "Catch UC00FP: " + err});
     }
 });
 
@@ -202,13 +205,11 @@ exports.updatePersonalDetails = [
         }
         
         try {
-            console.log(req.body.id);
             const user = await User.findById(req.body.id);
 
             if (!user) {
                 console.log(`User ${req.body.id} not found!`);
-                res.status(500).json({ error: "Account not found. Code UC####"});
-                return;
+                throw new Error("Account not found. Code UC0001");
             }
 
             await User.updateOne(
@@ -225,12 +226,12 @@ exports.updatePersonalDetails = [
             // Only send update email if email submitted does not match user email
             // (done last in case of any database errors which may stop this)
             if (user.email !== req.body.email.toLowerCase()) {
-                // sendUpdateEmailEmail(user, req.body.email);
+                sendUpdateEmailEmail(user, req.body.email);
             }
             res.sendStatus(201);
         } catch (err) {
             console.log(err);
-            res.status(500).json({ error: "Code UC####: " + err});
+            res.status(500).json({ error: "Catch UC0UPD: " + err});
         }
     })
 
@@ -250,14 +251,14 @@ exports.updatePassword = [
         try {
             let user = await User.findById(req.body.id);
             if (!user) {
-                res.status(500).json({ error: "Account not found. Code UC####"});
-                return;
+                console.log(`User ${req.body.id} not found!`);
+                throw new Error("Account not found. Code UC0001");
             }
 
             bcrypt.hash(req.body.password, 15, async (err, hashedPassword) => {
                 if (err) {
                     console.log(err);
-                    res.status(500).json({ message: "Hash error. Code UC####.", error: err });
+                    throw new Error(`Code UC0002 - ${err}`);
                 }
 
                 await User.updateOne(
@@ -266,11 +267,11 @@ exports.updatePassword = [
                 );
             });
             
-            // sendUpdatePasswordEmail(user);
+            sendUpdatePasswordEmail(user);
             res.sendStatus(200);
         } catch (err) {
             console.log(err);
-            res.status(500).json({ error: "Code UC####: " + err});
+            res.status(500).json({ error: "Catch UC00UP: " + err});
         }
 
     })

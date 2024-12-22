@@ -11,10 +11,17 @@
  *
  * The last two will trigger the server to send a message to their email address.
  * 
- * ~ Updates Needed ~
+ *  
+ *  FIXME: When we change any personal details and submit it, if we go to another page and then return 
+ * here, it still displays the old data - i.e.:
  * 
- * TODO: Update is submitted to appropriate annimation
- * FIXME: Fix error handling when submitting forms - currently just loops
+ *  - Change email from a@b.com to a@c.com
+ *  - Successfully submits and shows as changed
+ *  - Go to another page
+ *  - Return to this page and the email address is showing as a@b.com (i.e. the original, unchanged email)
+ * 
+ * Note that the email address HAS changed on the database. Even reloading the page doesn't work, but logging out 
+ * and logging back in does make it change... so it must be something to do with that.
  */
 
 import axios from "axios";
@@ -82,7 +89,7 @@ export default function Account() {
                     <UserPhoto userData={userData} loading={loading} />
                     <div className="flex flex-col flex-1 justify-between gap-2.5">
                         <UserDetails userData={userData} />
-                        <PasswordReset />
+                        <PasswordReset userData={userData} />
                     </div>
                 </div>
             )}
@@ -139,14 +146,17 @@ function UserDetails({ userData }) {
                     setIsSubmitted(false);
                 }, 3000);
                 setIsEditing(false);
+                setError(null);
             }).catch((err) => {
-                console.log(err);
-                // console.log(err.response.data.errors[0].msg);
-                // if (err.response.data.errors) {
-                //     setError(err.response.data.errors);
-                // } else {
-                //     setError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
-                // }
+                console.log(err.response.status);
+                console.log(err.response.statusText);
+                console.log(err.response.data.error);
+                
+                setError({ 
+                    statusCode: err.response.status, 
+                    message: err.response.statusText,
+                    details: err.response.data.error
+                });
                 setIsPending(false);
             });
     }
@@ -245,8 +255,8 @@ function UserDetails({ userData }) {
                                 </div>
                             </div>
                         ) : ( isSubmitted ? (
-                                <div className="flex justify-center rounded-md bg-green-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                    <p>Submitted!</p>
+                                <div className="flex justify-center rounded-md bg-green-700 px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm">
+                                    <p>Details Updated!</p>
                                 </div>
                         ) : isEditing ? (
                             <div className="flex gap-2.5">
@@ -263,6 +273,13 @@ function UserDetails({ userData }) {
                             >Edit</div>
                         )
                     )}
+                    { error && (
+                        <div className="px-2.5 py-1.5 rounded-md bg-slate-300 text-slate-950">
+                            <p className="text-center">Apologies, an error has occured.</p>
+                            <p className="text-red-700"><b>{error.statusCode}</b>: {error.message} </p>
+                            <p><b>Details: </b>{error.details}</p>
+                        </div>
+                    )}
                     </form>
                 </div>
             </div>
@@ -270,7 +287,7 @@ function UserDetails({ userData }) {
     )
 }
 
-function PasswordReset() {
+function PasswordReset({ userData }) {
     const form = useForm();
     const { register, control, handleSubmit, formState, watch, reset, setValue, trigger } = form;
     const { errors } = formState;
@@ -290,24 +307,26 @@ function PasswordReset() {
                     setIsSubmitted(false);
                 }, 3000);
             }).catch((err) => {
+                console.log(err.response.status);
+                console.log(err.response.statusText);
+                console.log(err.response.data.error);
+                
+                setError({ 
+                    statusCode: err.response.status, 
+                    message: err.response.statusText,
+                    details: err.response.data.error
+                });
                 setIsPending(false);
-                console.log(err);
-                console.log(err.response.data.errors[0].msg);
-                if (err.response.data.errors) {
-                    setError(err.response.data.errors);
-                } else {
-                    setError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
-                }
             });
     }
 
     return (
         <div className="flex flex-col gap-1.5 mx-1.5">
             <div className="flex justify-center p-5 bg-slate-50 rounded-lg dark:bg-slate-700 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.2)]">
-                <div className="flex flex-col items-center gap-5 min-w-full rounded-lg rounded-t-none text-sm lg:text-base dark:text-slate-100">
+                <div className="flex flex-col gap-5 min-w-full rounded-lg rounded-t-none text-sm lg:text-base dark:text-slate-100">
                     <h2 className="text-2xl">Reset Password</h2>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
-                        <div className="md:flex gap-2.5">
+                        <div className="flex flex-col md:flex-row gap-2.5">
                             <div>
                                 <label htmlFor="password" className="text-sm leading-6 font-bold dark:text-white">Password</label>
                                 <input type={showPassword ? "text" : "password"} id="password" autoComplete="current-password" required
@@ -353,13 +372,35 @@ function PasswordReset() {
                                 </span>
                             </div>
                         </div>
-                        { isSubmitted ? (
-                            // Temp
-                            <p>Submitted</p>
+                        { isPending ? (
+                            <div className="flex justify-center items-center">
+                                <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                                    <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                                        <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                                            <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner">
+                                                <div className="p-1 border-t border-indigo-400 rounded-full" id="spinner"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         ) : (
-                            <button type="submit"
-                                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
-                            >Save and Update</button>
+                            isSubmitted ? (
+                                <div className="flex justify-center rounded-md bg-green-700 px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm">
+                                    <p>Password changed!</p>
+                                </div>
+                           ) : (
+                               <button type="submit"
+                                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all"
+                               >Save and Update</button>
+                           )
+                        )}
+                        { error && (
+                            <div className="px-2.5 py-1.5 rounded-md bg-slate-300 text-slate-950">
+                                <p className="text-center">Apologies, an error has occured.</p>
+                                <p className="text-red-700"><b>{error.statusCode}</b>: {error.message} </p>
+                                <p><b>Details: </b>{error.details}</p>
+                            </div>
                         )}
                     </form>
                 </div>
