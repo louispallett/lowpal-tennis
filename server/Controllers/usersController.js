@@ -84,7 +84,15 @@ exports.signUp = [
         .custom(value => value.replace(/\s*/g, "")
         .match(/([1-6][0-9]{8,10}|7[0-9]{9})$/)).withMessage("Please enter a valid phone number"),
     body("password")
-        .trim(),
+        .trim()
+        .isStrongPassword({
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1,
+            returnScore: false
+        }).withMessage("Password not strong enough"),
 
     asyncHandler(async (req, res, next) => {
         const userExists = await User.findOne({ email: req.body.email.toLowerCase() }, "email").exec();
@@ -239,7 +247,15 @@ exports.updatePersonalDetails = [
 
 exports.updatePassword = [
     body("password")
-        .trim(),
+        .trim()
+        .isStrongPassword({
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1,
+            returnScore: false
+        }).withMessage("Password not strong enough"),
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
