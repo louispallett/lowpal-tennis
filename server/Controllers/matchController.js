@@ -96,7 +96,10 @@ exports.create_matches = asyncHandler(async (req, res, next) => {
         Category.findOne({ name: "Mixed Doubles" }).exec(),
         Category.find({ name: { $in: ["Mens Singles", "Womens Singles"] }}).exec()
     ]);
-    if (!isMixed || !singles) res.status(500).json({ error: "Server error: categories not found" })
+    
+    if (!isMixed || !singles) {
+        res.status(500).json({ error: "Server error: categories not found" });
+    }
 
     const isSinglesMatch = singles.some(single => single._id.toString() === req.body.category); 
 
@@ -104,11 +107,18 @@ exports.create_matches = asyncHandler(async (req, res, next) => {
         // In this instance we can just create the matches using the current Users
         try {
             const teams = await User.find({ categories: req.body.category }, { firstName: 1, lastName: 1, seeded: 1, ranking: 1 }).sort({ ranking: 1 });
+            
+            if (teams.length < 4) {
+                throw new Error("Number of players must be at least four (4).");
+            }
+            
             const matches = generateMatchesForTournament(req.body.category, teams).flat();
+           
             for (let i = 0; i < matches.length; i++) {
                 const match = new Match(matches[i]);
                 await match.save();
             }
+           
             res.status(200).json({ matches });
         } catch (err) {
             console.log(err);
@@ -120,15 +130,28 @@ exports.create_matches = asyncHandler(async (req, res, next) => {
         if (req.body.category == isMixed._id) {
             try {
                 const category = await Category.findById(req.body.category).populate({ path: "players", select: "firstName male lastName seeded ranking" }).exec();
-                if (!category) throw new Error("Category not found");
                 
-                const teamsAlreadyExit = await Team.find({ category: req.body.category }).exec();
-                if (teamsAlreadyExit.length > 0) res.status(401).json({ error: `Teams for ${req.body.category} already exist`});
+                if (!category) {
+                    throw new Error("Category not found");
+                }
+
+                if (category.players.length < 8) {
+                    throw new Error("Number of players must be at least 8 (creating 4 teams of doubles)");
+                }
+                
+                const teamsAlreadyExist = await Team.find({ category: req.body.category }).exec();
+                
+                if (teamsAlreadyExist.length > 0) {
+                    throw new Error(`Teams for ${req.body.category} already exist`);
+                }
+                
                 const teams = createMixedTeams(category);
+                
                 for (let i = 0; i < teams.length; i++) {
                     const team = new Team(teams[i]);
                     await team.save();
                 }
+
             } catch (err) {
                 console.log(err);
                 res.status(401).json({ message: `Error (team creation): ${err}` });
@@ -136,11 +159,23 @@ exports.create_matches = asyncHandler(async (req, res, next) => {
         } else {
             try {
                 const category = await Category.findById(req.body.category).populate({ path: "players", select: "firstName lastName seeded ranking" }).exec();
-                if (!category) throw new Error("Category not found");
                 
-                const teamsAlreadyExit = await Team.find({ category: req.body.category }).exec();
-                if (teamsAlreadyExit.length > 0) res.status(401).json({ error: `Teams for ${req.body.category} already exist`});
+                if (!category) {
+                    throw new Error("Category not found");
+                }
+
+                if (category.players.length < 8) {
+                    throw new Error("Number of players must be at least 8 (creating 4 teams of doubles)");
+                }
+                
+                const teamsAlreadyExist = await Team.find({ category: req.body.category }).exec();
+                
+                if (teamsAlreadyExist.length > 0) {
+                    res.status(401).json({ error: `Teams for ${req.body.category} already exist`});
+                }
+
                 const teams = createTeams(category);
+
                 for (let i = 0; i < teams.length; i++) {
                     const team = new Team(teams[i]);
                     await team.save();
@@ -178,6 +213,12 @@ exports.post_match_results = [
         .trim()
         .escape(),
     asyncHandler(async (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(401).json({ error: "Validation error", msg: errors });
+            return;
+        }
+
         try {
             const match = await Match.findById(req.params.matchId);
             if (match.updateNumber > 0) {
