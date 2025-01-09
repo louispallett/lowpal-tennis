@@ -15,7 +15,7 @@ export default function Home() {
             const token = localStorage.getItem("Authorization");
             if (!token) window.location.assign("/users/sign-in");
             try {
-                const response = await fetch("/api/match/matches", {
+                const response = await fetch("https://lowpal-tennis-server.fly.dev/api/match/matches", {
                     mode: "cors",
                     headers: { Authorization: token }
                 });

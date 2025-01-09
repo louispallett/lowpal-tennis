@@ -18,7 +18,7 @@ export default function SignIn() {
 
     const onSubmit = async (data) => {
         setIsPending(true)
-        axios.post("/api/users/sign-in", data)
+        axios.post("https://lowpal-tennis-server.fly.dev/api/users/sign-in", data)
             .then(response => {
                 const token = response.data.token;
                 if (!token) {

@@ -14,7 +14,7 @@ export default function ForgotPassword() {
 
     const onSubmit = async (data) => {
         setIsPending(true)
-        axios.post("/api/users/forgot-password", data)
+        axios.post("https://lowpal-tennis-server.fly.dev/api/users/forgot-password", data)
             .then(response => {
                 if (!response.data.msg) {
                     setIsPending(false);

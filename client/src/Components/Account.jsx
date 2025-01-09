@@ -44,7 +44,7 @@ export default function Account() {
                 return;
             }
             try {
-                const response = await fetch(`/api/users/verify`, { 
+                const response = await fetch(`https://lowpal-tennis-server.fly.dev/api/users/verify`, { 
                     mode: "cors",
                     headers: { "Authorization": token }
                 });
@@ -138,7 +138,7 @@ function UserDetails({ userData }) {
     const onSubmit = async (data) => {
         setIsPending(true);
         data.id = userData.userId;
-        axios.post("/api/users/update-personal-details", data)
+        axios.post("https://lowpal-tennis-server.fly.dev/api/users/update-personal-details", data)
             .then(() => {
                 setIsPending(false);
                 setIsSubmitted(true);
@@ -299,7 +299,7 @@ function PasswordReset({ userData }) {
     const onSubmit = async (data) => {
         setIsPending(true);
         data.id = userData.userId;
-        axios.post("/api/users/update-password", data)
+        axios.post("https://lowpal-tennis-server.fly.dev/api/users/update-password", data)
             .then(() => {
                 setIsPending(false);
                 setIsSubmitted(true);

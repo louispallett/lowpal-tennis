@@ -16,7 +16,7 @@ export default function Bracket() {
     useEffect(() => {
         const getMatch = async () => {
             try {
-                const response = await fetch(`/api/brackets/${categoryId}`, { mode: "cors" });
+                const response = await fetch(`https://lowpal-tennis-server.fly.dev/api/brackets/${categoryId}`, { mode: "cors" });
                 if (!response.ok) throw new Error(response.status);
                 const actualData = await response.json();
                 setMatchData(actualData.matches);
