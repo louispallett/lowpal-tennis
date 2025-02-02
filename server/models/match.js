@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const { DateTime } = require("luxon");
 
 const Match = new Schema({
+    tournament: { type: Schema.Types.ObjectId, ref: "Tournament", required: true },
     category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
     nextMatchId: { type: Schema.Types.ObjectId, ref: "Match", default: null },
     previousMatchId: [{ type: Schema.Types.ObjectId, ref: "Match" }],
@@ -14,7 +15,7 @@ const Match = new Schema({
     qualifyingMatch: { type: Boolean }
 });
 
-Match.virtual("startTime").get(function() {
+Match.virtual("deadline").get(function() {
     return DateTime.fromJSDate(this.date).toLocaleString(DateTime.DATE_MED);
 });
 

@@ -1,25 +1,33 @@
-import { Outlet } from "react-router-dom"
-import tennisBall from "/assets/images/tennis-ball.svg";
-import { BackgroundContainerCentre, UsersContainer } from "../tailwind_components/tailwind-containers";
+import { Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 
+import racketRed from "/assets/images/racket-red.svg";
+import racketBlue from "/assets/images/racket-blue.svg";
 
 export default function Users() {
     return (
-        <BackgroundContainerCentre>
-            <UsersContainer>
-                <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 max-sm:px-0">
-                    <div className="sm:mx-auto sm:w-full sm:max-w-lg">
-                        <div className="flex justify-center gap-5 items-center">
-                            <img src={tennisBall} alt="" className="h-10" id="spinner" />
-                            <h1 className="font-sedan text-3xl font-bold tracking-tight text-nowrap max-sm:text-wrap dark:text-white">Saltford Lawn Tennis Club</h1>
-                        </div>
-                        <h2 className="font-sedan text-center text-xl leading-9 tracking-tight text-gray-900 dark:text-white">2024 In-House Tournament</h2>
+        <div className="flex-1 w-full">
+            <div className="max-w-7xl mx-auto px-4 py-8">
+                <div className="mb-24">
+                    <div className="relative w-full mx-auto flex flex-col">
+                        <Link to="/">
+                            <h1 className="main-title">
+                                LowPal Tennis
+                            </h1>
+                        </Link>
+                        {/* <div className="mt-5 text-slate-700 text-lg">
+                            <p>Welcome to LowPal Tennis!</p>
+                        </div> */}
+                        <img src={racketRed} alt="" className="hidden lg:block transform -scale-x-100 w-16 lg:w-36 h-auto lg:absolute flex-shrink-0 -left-20 top-36 z-30" />
+                        <img src={racketBlue} alt="" className="hidden lg:block w-16 lg:w-36 h-auto lg:absolute flex-shrink-0 -right-20 top-36 z-30" />
                     </div>
-                    <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-lg">
+                </div>
+                <div className="relative">
+                    <div className="rounded-xl relative z-20 p-4 sm:p-8 border-[3px] border-gray-900 bg-lime-300 shadow-[5px_5px_0px_0px_#000000]">
                         <Outlet />
                     </div>
                 </div>
-            </UsersContainer>
-        </BackgroundContainerCentre>
+            </div>
+        </div>
     )
 }
