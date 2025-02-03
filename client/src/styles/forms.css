@@ -8,6 +8,12 @@
     gap: 1.25rem; 
 }
 
+.form-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}  
+
 .form-input,
 .tournament-button {
 	border: 3px solid #000000;

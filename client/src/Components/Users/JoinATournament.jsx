@@ -43,9 +43,25 @@ function SignUpCode({ setValidCode }) {
     const form = useForm();
     const { register, control, handleSubmit, formState, watch, reset, setValue, trigger } = form;
     const { errors } = formState;
+    const [isPending, setIsPending] = useState(false);
+    const [response, setResponse] = useState(null);
+    const [error, setError] = useState(null);
 
     const onSubmit = async (data) => {
-
+        // setIsPending(true);
+        // axios.post("/api/tournaments/is-valid", data)
+        //     .then((response) => {
+        //         console.log(response.data.valid);
+        //         if (response.data.valid) {
+        //             setValidCode(true);
+        //         } else {
+        //             setResponse("Invalid Code");
+        //         }
+        //     }).catch((err) => {
+        //         setError(err.response.statusText);
+        //     });
+        //     setIsPending(false);
+        setValidCode(true);
     }
 
     return (
@@ -213,6 +229,9 @@ function SignUpForm({ tournamentCode }) {
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                         </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
+                            <ChevronDownIcon className="h-6 w-6" />
+                        </div>
                     </div>
                     {/* <span className="text-xs font-bold text-red-700 dark:text-red-400">
                         <p>{errors.gender?.message}</p>
