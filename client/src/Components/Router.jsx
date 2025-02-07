@@ -7,6 +7,9 @@ import Users from "./Users/Users";
 import HostATournament from "./Users/Host";
 import JoinATournament from "./Users/JoinATournament";
 import SignIn from "./Users/SignIn";
+import Main from "./Main/Main";
+import Dashboard from "./Main/Dashboard";
+import Match from "./Main/Match";
 
 export default function Router() {
     const router = createBrowserRouter([
@@ -44,20 +47,20 @@ export default function Router() {
                         // },                     
                     ]
                 },
-                // {
-                //     path: "/dashboard",
-                //     element: <Main />,
-                //     children: [
-                //         {
-                //             index: true,
-                //             element: <Dashboard />
-                //         },
-                //         {
-                //             path: "match/:matchId",
-                //             element: <Match />
-                //         }
-                //     ]
-                // }
+            ]
+        },
+        {
+            path: "/dashboard",
+            element: <Main />,
+            children: [
+                {
+                    index: true,
+                    element: <Dashboard />
+                },
+                {
+                    path: "match/:matchId",
+                    element: <Match />
+                }
             ]
         }
     ]);
