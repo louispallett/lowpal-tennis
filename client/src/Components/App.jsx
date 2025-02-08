@@ -18,10 +18,10 @@ function Header() {
     return (
         <section className="header">
             <div className="header-inner">
-                <div className="font-semibold p-2.5 px-5">
+                <div className="font-semibold px-5">
                     <Link to="/" >
                         <div className="flex flex-col">
-                            <h3 className="font-popcorn text-right sm:text-2xl">LowPal Tennis</h3>
+                            <h3 className="hidden font-popcorn text-right sm:text-2xl md:block">LowPal Tennis</h3>
                         </div>
                     </Link>
                 </div>

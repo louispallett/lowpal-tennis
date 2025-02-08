@@ -21,7 +21,7 @@ function Header() {
                 <div className="font-semibold p-2.5 px-5">
                     <Link to="/" >
                         <div className="flex flex-col">
-                            <h3 className="font-popcorn text-right sm:text-2xl">LowPal Tennis</h3>
+                            <h3 className="hidden font-mania text-right sm:text-2xl md:block">LowPal Tennis</h3>
                         </div>
                     </Link>
                 </div>
