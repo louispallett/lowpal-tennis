@@ -54,7 +54,7 @@ exports.createTournament = [
                 tournamentCode = generator.generate({
                     length: 15,
                     numbers: true,
-                    symbols: true,
+                    symbols: false,
                     exclude: "'\"`;_@,.-{}[]~#\\|¬",
                     strict: true
                 });
@@ -114,6 +114,42 @@ exports.assignTournamentHost = [
         } catch (err) {
             console.log(err);
             res.status(500).json({ error: "Catch TC0ATH: " + err });
+        }
+    })
+];
+
+exports.isValidCode = [
+    body("tournamentCode")
+        .trim()
+        .escape()
+        .isLength({ min: 11 }).withMessage("Tournament Code must be a minimum of 11 characters. Please check the code and try again."),
+
+    asyncHandler(async (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            console.log(errors.array())
+            res.status(400).json({ message: "Validation Failed", errors: errors.array() })
+            return;
+        }
+
+        try {
+            const tournamentExists = await Tournament.findOne({ tournamentCode: req.body.tournamentCode })
+                .populate("host", "firstName lastName").exec();
+            if (tournamentExists) {
+                
+                console.log(tournamentExists.host.firstName + " " + tournamentExists.host.lastName);
+                res.status(200).json({ 
+                    tournamentId: tournamentExists._id, 
+                    name: tournamentExists.name,
+                    hostName: tournamentExists.host.firstName + " " + tournamentExists.host.lastName
+                });
+                return;
+            }
+            console.log("Invalid Code");
+            res.status(400).json( { error: "Tournament code is not valid" });
+        } catch (err) {
+            console.log("Server error TC0IVC " + err);
+            res.status(500).json({ error: "Catch TC0IVC: " + err });
         }
     })
 ];

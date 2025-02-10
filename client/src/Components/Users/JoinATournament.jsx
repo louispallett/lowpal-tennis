@@ -31,7 +31,7 @@ function SignUpParent() {
     return (
         <>
             {validCode ? (
-                <SignUpForm tournamentCode={validCode} />
+                <SignUpForm validTournament={validCode} />
             ) : (
                 <SignUpCode setValidCode={setValidCode}/>
             )}
@@ -48,20 +48,18 @@ function SignUpCode({ setValidCode }) {
     const [error, setError] = useState(null);
 
     const onSubmit = async (data) => {
-        // setIsPending(true);
-        // axios.post("/api/tournaments/is-valid", data)
-        //     .then((response) => {
-        //         console.log(response.data.valid);
-        //         if (response.data.valid) {
-        //             setValidCode(true);
-        //         } else {
-        //             setResponse("Invalid Code");
-        //         }
-        //     }).catch((err) => {
-        //         setError(err.response.statusText);
-        //     });
-        //     setIsPending(false);
-        setValidCode(true);
+        setIsPending(true);
+        axios.post("/api/tournaments/is-valid-code", data)
+            .then((response) => {
+                if (response) {
+                    setValidCode(response.data);
+                } else {
+                    setResponse("Invalid Code");
+                }
+            }).catch((err) => {
+                setError(err.response.statusText);
+            });
+            setIsPending(false);
     }
 
     return (
@@ -80,7 +78,7 @@ function SignUpCode({ setValidCode }) {
     )
 }
 
-function SignUpForm({ tournamentCode }) {
+function SignUpForm({ validTournament }) {
     const form = useForm();
     const { register, control, handleSubmit, formState, watch, reset, setValue, trigger } = form;
     const { errors } = formState;
@@ -107,26 +105,32 @@ function SignUpForm({ tournamentCode }) {
     };
 
     const onSubmit = async (data) => {
+        setIsPending(true);
+        
         for (let option in checkedState) {
-            if (checkedState[option]) console.log(option);
+            if (checkedState[option]) {
+                data.categories.push(option);
+            }
         }
-        // setIsPending(true);
-        // data.gender = gender;
-        // data.categories = categories;
-        // if (data.seeded) data.seeded = true;
-        // axios.post("api/users/sign-up", data)
-        //     .then(() => {
-        //         setIsPending(false);
-        //         setIsSubmitted(true);
-        //     }).catch((err) => {
-        //         console.log(err.response.data.errors[0].msg);
-        //         if (err.response.data.errors) {
-        //             setSignupError(err.response.data.errors);
-        //         } else {
-        //             setSignupError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
-        //         }
-        //         setIsPending(false);
-        //     });
+        
+        data.tournamentId = validTournament.tournamentId;
+        data.gender = gender;
+        if (data.seeded) data.seeded = true;
+
+        axios.post("/api/users/sign-up", data)
+            .then(() => {
+                setIsPending(false);
+                setIsSubmitted(true);
+            }).catch((err) => {
+                console.log(err);
+                // console.log(err.response.data.errors[0].msg);
+                // if (err.response.data.errors) {
+                //     setSignupError(err.response.data.errors);
+                // } else {
+                //     setSignupError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
+                // }
+                setIsPending(false);
+            });
     }
 
     const [gender, setGender] = useState("");
@@ -151,13 +155,16 @@ function SignUpForm({ tournamentCode }) {
     return (
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="form">
             <div className="relative w-full h-full flex flex-col gap-2.5">
-                <div className="grid grid-cols-2 gap-2.5">
-                    <input type="text" className="form-input" value={tournamentCode.code} disabled
-                        {...register ("tournamentCode", {})}
+                <div className="flex flex-col lg:flex-row gap-2.5">
+                    <input type="text" className="hidden form-input bg-indigo-500 text-white" value={validTournament.tournamentId} disabled
+                        {...register ("tournamentId", {})}
                     />
-                    <input type="text" className="form-input" value={tournamentCode.name} disabled
-                        {...register ("tournamentCode", {})}
-                    />
+                    <div type="text" className="form-input bg-indigo-500 text-white">
+                        <p>{validTournament.name}</p>
+                    </div>
+                    <div type="text" className="form-input bg-indigo-500 text-white text-right">
+                        <p>Hosted by: {validTournament.hostName}</p>
+                    </div>
                 </div>
                 <h3 className="font-roboto text-center">Personal Details</h3>
                 <div className="grid grid-cols-2 gap-2.5">

@@ -23,14 +23,14 @@ const sendConfirmationEmail = (user, categoryNames) => {
     })
 }
 
-const addUserToCategories = async (userId, userCategories) => {
+const addUserToCategories = async (userId, tournamentId, userCategories) => {
     try {
         for (const userCategory of userCategories) {
-            await Category.findByIdAndUpdate(
-                userCategory,
-                { $push: { players: userId } },
-                { new: true, useFindAndModify: false } // Ensures we get the updated document back and avoid deprecation warnings
-            );
+            await Category.findOneAndUpdate(
+                { tournament: tournamentId, code: userCategory },
+                { $push: { players: userId }},
+                { upsert: false }
+            )
         }
     } catch (error) {
         console.log(error);

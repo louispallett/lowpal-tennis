@@ -22,7 +22,7 @@ exports.signUp = [
     body("firstName")
     .trim()
     .escape()
-    .isLength({ min: 1, max: 50 }),
+    .isLength({ min: 1, max: 50 }).withMessage("First name cannot be more than 50 characters"),
 body("lastName")
     .trim()
     .escape()
@@ -48,19 +48,20 @@ body("password")
         minSymbols: 1,
         returnScore: false
     }).withMessage("Password not strong enough"),
-body("tournamentCode")
+body("tournamentId")
     .isLength({ min: 1 }),
 
     asyncHandler(async (req, res, next) => {
-        console.log(req.body)
         const userExists = await User.findOne({ email: req.body.email.toLowerCase() }, "email").exec();
         if (userExists) {
+            console.log("User already exists");
             res.status(400).json({ errors: [{ msg: "Email already used for another account" }]});
             return;
         }
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
+            console.log("Validation errors.")
             res.status(400).json({ message: "Validation Failed", errors: errors.array() })
             return;
         }
@@ -68,36 +69,36 @@ body("tournamentCode")
         try {
             bcrypt.hash(req.body.password, 15, async (err, hashedPassword) => {
                 if (err) {
-                    console.log(err);
+                    console.log("bcrypt error: " + err);
                     throw new Error(`Hashing error. Code UC0001- ${err}`);
                 }
                 const user = new User({
-                    tournament: req.body.tournamentCode,
+                    tournaments: [req.body.tournamentId],
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
                     email: req.body.email.toLowerCase(),
                     mobCode: req.body.mobCode,
                     mobile: req.body.mobile,
                     male: req.body.gender == "male" ? true : false,
-                    categories: req.body.categories,
                     seeded: req.body.seeded || false,
                     password: hashedPassword,
-                    ranking: 0,
-                    host: req.body.host || false,
+                    ranking: 0
                 });
                 
                 const newUser = await user.save();
-                await addUserToCategories(newUser._id, newUser.categories)
-                
-                const newUserCategories = await User.findById(newUser._id).populate({ path: "categories", select: "name" });
-                const categoryNames = newUserCategories.categories.map(category => category.name).join('\n');                
+                if (req.body.categories.length > 0) {
+                    await addUserToCategories(newUser._id, req.body.tournamentId, req.body.categories)
+                }
+
+                // const newUserCategories = await User.findById(newUser._id).populate({ path: "categories", select: "name" });
+                // const categoryNames = newUserCategories.categories.map(category => category.name).join('\n');                
                 
                 // sendConfirmationEmail(user, categoryNames); 
                 
-                res.sendStatus(200);
+                res.status(200).json({ userId: newUser._id });
             });
         } catch (err) {
-            console.log(err);
+            console.log("Catch Error" + err);
             res.status(500).json({ error: "Catch UC00SU: " + err});
         }
     })
@@ -280,6 +281,24 @@ exports.updatePassword = [
 
     })
 ];
+
+exports.getTournaments = asyncHandler(async (req, res, next) => {
+    try {
+        const user = await verifyUser(req.headers.authorization);
+        console.log({
+            userId: user.user._id,
+            userTournaments: user.user.tournaments
+        });
+        // res.json({ 
+        //     userId: user.user._id,
+        //     userTournaments: user.user.tournaments 
+        // });
+    } catch (err) {
+        console.log(err);
+        res.status(403).json(err)
+    }
+    
+})
 
 exports.verify = asyncHandler(async (req, res, next) => {
     try {
