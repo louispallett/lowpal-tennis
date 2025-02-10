@@ -10,6 +10,7 @@ import SignIn from "./Users/SignIn";
 import Main from "./Main/Main";
 import Dashboard from "./Main/Dashboard";
 import Match from "./Main/Match";
+import DashboardSelect from "./Main/DashboardSelect.jsx";
 
 export default function Router() {
     const router = createBrowserRouter([
@@ -55,6 +56,10 @@ export default function Router() {
             children: [
                 {
                     index: true,
+                    element: <DashboardSelect />
+                },
+                {
+                    path: ":tournamentId",
                     element: <Dashboard />
                 },
                 {
