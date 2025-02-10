@@ -21,6 +21,8 @@ export default function Host() {
         mixDoubles: false,
     });
     const [gender, setGender] = useState("");
+    const [serverError, setServerError] = useState(null);
+    const [loginError, setLoginError] = useState(null);
 
     const handleGenderChange = (event) => {
         setGender(event.target.value);
@@ -34,7 +36,7 @@ export default function Host() {
     };
 
     const onSubmit = async (data) => {
-        data.tournamentCode = "";
+        data.tournamentId = "";
         setIsPending(true);
         data.categories = [];
         for (let option in checkedState) {
@@ -46,10 +48,11 @@ export default function Host() {
         // console.log(data.categories)
         data.gender = gender;
 
-        await axios.post("/api/tournaments/create-tournament", data)
+        try {
+            await axios.post("/api/tournaments/create-tournament", data)
             .then((response) => {
-                console.log(response.data.tournamentCode);
-                data.tournamentCode = response.data.tournamentCode;
+                console.log(response.data.tournamentId);
+                data.tournamentId = response.data.tournamentId;
             }).catch((err) => {
                 console.log(err.response.data.error);
                 if (err.response.data.errors) {
@@ -58,23 +61,59 @@ export default function Host() {
                     setSignupError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
                 }
                 setIsPending(false);
+                return;
             });
 
-        data.categories = [];
-        data.host = true;
+            data.categories = [];
 
-        axios.post("/api/users/sign-up", data)
-            .then((response) => {
+            await axios.post("/api/users/sign-up", data)
+                .then((response) => {
+                    data.hostId = response.data.userId;
+                }).catch((err) => {
+                    console.log(err.response.data.errors[0].msg);
+                    if (err.response.data.errors) {
+                        setSignupError(err.response.data.errors);
+                    } else {
+                        setSignupError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
+                    }
+                    setIsPending(false);
+                    throw new Error("");
+                });
 
-            }).catch((err) => {
-                console.log(err.response.data.errors[0].msg);
-                if (err.response.data.errors) {
-                    setSignupError(err.response.data.errors);
-                } else {
-                    setSignupError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
-                }
-            })
-            setIsPending(false);
+            await axios.post("/api/tournaments/assign-tournament-host", data)
+                .then((response) => {
+                    console.log("Successfully assigned user to host tournament")
+                }).catch((err) => {
+                    console.log(err.response.data.errors[0].msg);
+                    if (err.response.data.errors) {
+                        setSignupError(err.response.data.errors);
+                    } else {
+                        setSignupError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
+                    }
+                    setIsPending(false);
+                    throw new Error("");
+                });
+
+            await axios.post("/api/users/sign-in", data)
+                .then((response) => {
+                    const token = response.data.token;
+                    if (!token) {
+                        setIsPending(false);
+                        console.log(response);
+                        setLoginError(response.data.error);
+                        console.log(loginError);
+                        throw new Error("");
+                    }
+                    localStorage.setItem("Authorization", token);
+                    // window.location.assign("/dashboard");
+                }).catch((err) => {
+                    console.log(err);
+                    setIsPending(false);
+                    setServerError(err);
+                })
+        } catch (err) {
+            console.log(err);
+        }
     }
     
     return (

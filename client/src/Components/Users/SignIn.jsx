@@ -25,12 +25,12 @@ export default function SignIn() {
                 }
                 localStorage.setItem("Authorization", token);
                 console.log(token);
-                // window.location.assign("/dashboard");
+                window.location.assign("/dashboard");
             }).catch(err => {
                 console.log(err);
                 setIsPending(false);
                 setServerError(err);
-            })
+            });
     }
 
     return (
@@ -47,7 +47,7 @@ export default function SignIn() {
                         })}
                     />
                     <input type="password" className="form-input" placeholder="Password"
-                        {...register ("Password", {
+                        {...register ("password", {
                             required: "Password is required",
                         })}
                     />

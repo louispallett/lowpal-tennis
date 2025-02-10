@@ -27,8 +27,18 @@
     flex: 1;                         
 }
 
-.footer {
-	
+.tournament-grid,
+.tournament-grid-sm {
+	display: grid;
+	gap: 0.625em;
+}
+
+.tournament-grid {
+	grid-template-columns: repeat(auto-fit, minmax(700px, 1fr));
+}
+
+.tournament-grid-sm {
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
 .loading-container {
@@ -61,7 +71,14 @@
 	grid-template-columns: 2.75fr 6fr;
 	gap: 0.5em;
 }
-  
+
+@media (max-width: 750px) {
+	.tournament-grid,
+	.tournament-grid-sm {
+		display: flex;
+		flex-direction: column;
+	}
+}
 	
 @media (min-width: 640px) {
 	.users-container {
