@@ -14,42 +14,41 @@ const { sendConfirmationEmail,
     sendUpdateEmailEmail, 
     sendUpdatePasswordEmail 
 } = require("../public/scripts/userAuxillary");
+const { selectFields } = require("express-validator/lib/field-selection");
 
 // Ideally, we want to have the same sign up method for a host as we do a user... the problem is,
 // how do we account for the initial lack of categories? What we could do is check whether host is true...,
 // if it is, we can accept categories.length being < 1, otherwise, we can't
 exports.signUp = [
     body("firstName")
-    .trim()
-    .escape()
-    .isLength({ min: 1, max: 50 }).withMessage("First name cannot be more than 50 characters"),
-body("lastName")
-    .trim()
-    .escape()
-    .isLength({ min: 1, max: 50 }).withMessage("Last name cannot be more than 50 characters"),
-body("email")
-    .trim()
-    .isEmail().withMessage("Email needs to be a valid email")
-    .escape(),
-body("mobCode")
-    .trim()
-    .escape(),
-body("mobile")
-    .trim()
-    .custom(value => value.replace(/\s*/g, "")
-    .match(/([1-6][0-9]{8,10}|7[0-9]{9})$/)).withMessage("Please enter a valid phone number"),
-body("password")
-    .trim()
-    .isStrongPassword({
-        minLength: 8,
-        minLowercase: 1,
-        minUppercase: 1,
-        minNumbers: 1,
-        minSymbols: 1,
-        returnScore: false
-    }).withMessage("Password not strong enough"),
-body("tournamentId")
-    .isLength({ min: 1 }),
+        .trim()
+        .escape()
+        .isLength({ min: 1, max: 50 }).withMessage("First name cannot be more than 50 characters"),
+    body("lastName")
+        .trim()
+        .escape()
+        .isLength({ min: 1, max: 50 }).withMessage("Last name cannot be more than 50 characters"),
+    body("email")
+        .trim()
+        .isEmail().withMessage("Email needs to be a valid email")
+        .escape(),
+    body("mobCode")
+        .trim()
+        .escape(),
+    body("mobile")
+        .trim()
+        .custom(value => value.replace(/\s*/g, "")
+        .match(/([1-6][0-9]{8,10}|7[0-9]{9})$/)).withMessage("Please enter a valid phone number"),
+    body("password")
+        .trim()
+        .isStrongPassword({
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 1,
+            returnScore: false
+        }).withMessage("Password not strong enough"),
 
     asyncHandler(async (req, res, next) => {
         const userExists = await User.findOne({ email: req.body.email.toLowerCase() }, "email").exec();
@@ -73,7 +72,8 @@ body("tournamentId")
                     throw new Error(`Hashing error. Code UC0001- ${err}`);
                 }
                 const user = new User({
-                    tournaments: [req.body.tournamentId],
+                    tournamentsPlaying: req.body.tournamentPlayingId ? [req.body.tournamentPlayingId] : [],
+                    tournamentsHosting: req.body.tournamentHostingId ? [req.body.tournamentHostingId] : [],
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
                     email: req.body.email.toLowerCase(),
@@ -87,7 +87,7 @@ body("tournamentId")
                 
                 const newUser = await user.save();
                 if (req.body.categories.length > 0) {
-                    await addUserToCategories(newUser._id, req.body.tournamentId, req.body.categories)
+                    await addUserToCategories(newUser._id, req.body.tournamentPlayingId, req.body.categories)
                 }
 
                 // const newUserCategories = await User.findById(newUser._id).populate({ path: "categories", select: "name" });
@@ -282,23 +282,34 @@ exports.updatePassword = [
     })
 ];
 
-exports.getTournaments = asyncHandler(async (req, res, next) => {
+exports.getUserTournaments = asyncHandler(async (req, res, next) => {
     try {
-        const user = await verifyUser(req.headers.authorization);
-        console.log({
-            userId: user.user._id,
-            userTournaments: user.user.tournaments
+        const validateUser = await verifyUser(req.headers.authorization);
+        const user = await User.findById(validateUser.user._id).populate({
+            path: "tournamentsPlaying",
+            populate: {
+                path: "host",
+                select: "firstName lastName"
+            }
+        }).populate({
+            path: "tournamentsHosting",
+            populate: {
+                path: "host",
+                select: "firstName lastName"
+            }
         });
-        // res.json({ 
-        //     userId: user.user._id,
-        //     userTournaments: user.user.tournaments 
-        // });
+
+        res.json({ 
+            userId: user._id,
+            userName: user.firstName,
+            userTournamentsPlaying: user.tournamentsPlaying,
+            userTournamentsHosting: user.tournamentsHosting
+        });
     } catch (err) {
         console.log(err);
         res.status(403).json(err)
-    }
-    
-})
+    };
+});
 
 exports.verify = asyncHandler(async (req, res, next) => {
     try {

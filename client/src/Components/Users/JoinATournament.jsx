@@ -113,7 +113,7 @@ function SignUpForm({ validTournament }) {
             }
         }
         
-        data.tournamentId = validTournament.tournamentId;
+        data.tournamentPlayingId = validTournament.tournamentId;
         data.gender = gender;
         if (data.seeded) data.seeded = true;
 

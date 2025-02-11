@@ -52,7 +52,7 @@ export default function Host() {
             await axios.post("/api/tournaments/create-tournament", data)
             .then((response) => {
                 console.log(response.data.tournamentId);
-                data.tournamentId = response.data.tournamentId;
+                data.tournamentHostingId = response.data.tournamentId;
             }).catch((err) => {
                 console.log(err.response.data.error);
                 if (err.response.data.errors) {
@@ -77,7 +77,7 @@ export default function Host() {
                         setSignupError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
                     }
                     setIsPending(false);
-                    throw new Error("");
+                    throw new Error(err);
                 });
 
             await axios.post("/api/tournaments/assign-tournament-host", data)
@@ -106,11 +106,13 @@ export default function Host() {
                     }
                     localStorage.setItem("Authorization", token);
                     // window.location.assign("/dashboard");
+                    console.log("Success");
                 }).catch((err) => {
                     console.log(err);
                     setIsPending(false);
                     setServerError(err);
                 })
+
         } catch (err) {
             console.log(err);
         }

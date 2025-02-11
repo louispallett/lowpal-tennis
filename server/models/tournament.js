@@ -14,7 +14,7 @@ const Tournament = new Schema({
 });
 
 Tournament.virtual("startDateFormatted").get(function() {
-    return DateTime.fromJSDate(this.date).toLocaleString(DateTime.DATE_MED);
+    return DateTime.fromJSDate(this.startDate).toLocaleString(DateTime.DATE_MED);
 });
 
 Tournament.set('toJSON', { virtuals: true });

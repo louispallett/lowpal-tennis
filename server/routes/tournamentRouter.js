@@ -13,6 +13,6 @@ router.post("/archive-tournament", tournamentController.archiveTournament);
 
 router.post("/delete-tournament", tournamentController.deleteTournament);
 
-router.get("/tournament-get-info", tournamentController.getTournamentInfo);
+router.get("/get-tournament-info", tournamentController.getTournamentInfo);
 
 module.exports = router;

@@ -4,8 +4,8 @@ const generator = require("generate-password");
 
 const Tournament = require("../models/tournament");
 const Category = require("../models/category");
-// const User = require("../models/user");
-// const Match = require("../models/match");
+const User = require("../models/user");
+const Match = require("../models/match");
 
 exports.createTournament = [
     body("tournamentName")
@@ -107,7 +107,7 @@ exports.assignTournamentHost = [
 
         try {
             await Tournament.updateOne(
-                { _id: req.body.tournamentId },
+                { _id: req.body.tournamentHostingId },
                 { $set: { host: req.body.hostId } }
             );
             res.sendStatus(200);
@@ -136,8 +136,6 @@ exports.isValidCode = [
             const tournamentExists = await Tournament.findOne({ tournamentCode: req.body.tournamentCode })
                 .populate("host", "firstName lastName").exec();
             if (tournamentExists) {
-                
-                console.log(tournamentExists.host.firstName + " " + tournamentExists.host.lastName);
                 res.status(200).json({ 
                     tournamentId: tournamentExists._id, 
                     name: tournamentExists.name,
@@ -146,7 +144,7 @@ exports.isValidCode = [
                 return;
             }
             console.log("Invalid Code");
-            res.status(400).json( { error: "Tournament code is not valid" });
+            res.status(400).json({ error: "Tournament code is not valid" });
         } catch (err) {
             console.log("Server error TC0IVC " + err);
             res.status(500).json({ error: "Catch TC0IVC: " + err });
@@ -165,6 +163,18 @@ exports.deleteTournament = [
 ];
 
 exports.getTournamentInfo = asyncHandler(async (req, res, next) => {
-    const tournament = await Tournament.findById(req.body.tournamentId);
-    console.log(tournament);
+    try {
+        const players = await User.find({ tournamentsPlaying: req.headers.tournamentid });
+        const matches = await Match.find({ tournament: req.headers.tournamentid });
+        const activeMatches = matches.filter((x) => x.state === "SCHEDULED");
+        res.status(200).json(
+        { 
+            nOfPlayers: players.length,
+            nOfMatches: matches.length,
+            nOfActiveMatches: activeMatches.length,
+        });
+    } catch (err) {
+        console.log("Server error TC0GTI " + err);
+        res.status(500).json({ error: "Catch TC0GTI: " + err });
+    }
 });
