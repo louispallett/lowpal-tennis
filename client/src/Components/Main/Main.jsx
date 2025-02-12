@@ -15,6 +15,12 @@ export default function Main() {
 }
 
 function Header() {
+
+    const handleLogOut = () => {
+        localStorage.clear();
+        window.location.assign("/users/sign-in")
+    }
+
     return (
         <section className="header">
             <div className="header-inner">
@@ -35,9 +41,9 @@ function Header() {
                     <Link className="menu-link" to="/users/account-settings">
                         <p>Account</p>
                     </Link>
-                    <Link className="menu-link" to="/users/sign-in">
+                    <button className="menu-link" onClick={handleLogOut}>
                         <p>Log Out</p>
-                    </Link>
+                    </button>
                 </div>
             </div>
         </section>
