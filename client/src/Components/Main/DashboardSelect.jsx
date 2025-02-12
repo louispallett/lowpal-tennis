@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import racketRed from "/assets/images/racket-red.svg";
 import racketBlue from "/assets/images/racket-blue.svg";
 import { Link } from "react-router-dom";
+import { CheckIcon } from "@heroicons/react/16/solid";
 
 export default function TournamentSelect() {
     const [userInfo, setUserInfo] = useState(false);
@@ -38,14 +39,16 @@ export default function TournamentSelect() {
             actives: userInfo.userTournamentsPlaying.filter(x => x.stage === "play"),
             finished: userInfo.userTournamentsPlaying.filter(x => x.stage === "finished")
         }
-        // console.log(tournamentsPlaying);
         tournamentsHosting = {
             signUps: userInfo.userTournamentsHosting.filter(x => x.stage === "sign-up"),
             actives: userInfo.userTournamentsHosting.filter(x => x.stage === "play"),
             finished: userInfo.userTournamentsHosting.filter(x => x.stage === "finished")
         }
+        console.log(tournamentsPlaying.signUps);
         isHosting = tournamentsHosting.signUps.length > 0 || tournamentsHosting.actives.length > 0 || tournamentsHosting.finished.length > 0;
+        console.log(isHosting);
         isPlaying = tournamentsPlaying.signUps.length > 0 || tournamentsPlaying.actives.length > 0 || tournamentsPlaying.finished.length > 0;    
+        console.log(isPlaying);
     }
 
     return (
@@ -65,21 +68,21 @@ export default function TournamentSelect() {
                             { tournamentsHosting.signUps.length > 0 && (
                                 <div className="tournament-grid">
                                     { tournamentsHosting.signUps.map((item) => (
-                                        <UserTournament data={item} key={item._id} />
+                                        <UserTournamentHosting data={item} tournamentsPlaying={tournamentsPlaying} key={item._id} />
                                     ))}
                                 </div>
                             )}
                             { tournamentsHosting.actives.length > 0 && (
                                 <div className="tournament-grid">
                                     { tournamentsHosting.actives.map((item) => (
-                                        <UserTournament data={item} key={item._id} />
+                                        <UserTournamentHosting data={item} tournamentsPlaying={tournamentsPlaying} key={item._id} />
                                     ))}
                                 </div>
                             )}
                             { tournamentsHosting.finished.length > 0 && (
                                 <div className="tournament-grid">
                                     { tournamentsHosting.finished.map((item) => (
-                                        <UserTournament data={item} key={item._id} />
+                                        <UserTournamentHosting data={item} tournamentsPlaying={tournamentsPlaying} key={item._id} />
                                     ))}
                                 </div>
                             )}
@@ -87,27 +90,27 @@ export default function TournamentSelect() {
                     )}
                     { isPlaying && (
                         <>
-                            <div className="mt-8 form-input bg-indigo-500 text-white">
-                                <h4 className="italic">Hosting tournaments</h4>
+                            <div className="mt-2.5 form-input bg-indigo-500 text-white">
+                                <h4 className="italic">Joined Tournaments</h4>
                             </div>
                             { tournamentsPlaying.signUps.length > 0 && (
                                 <div className="tournament-grid">
                                     { tournamentsPlaying.signUps.map((item) => (
-                                        <UserTournament data={item} key={item._id} />
+                                        <UserTournamentPlaying data={item} key={item._id} />
                                     ))}
                                 </div>
                             )}
                             { tournamentsPlaying.actives.length > 0 && (
                                 <div className="tournament-grid">
                                     { tournamentsPlaying.actives.map((item) => (
-                                        <UserTournament data={item} key={item._id} />
+                                        <UserTournamentPlaying data={item} key={item._id} />
                                     ))}
                                 </div>
                             )}
                             { tournamentsPlaying.finished.length > 0 && (
                                 <div className="tournament-grid">
                                     { tournamentsPlaying.finished.map((item) => (
-                                        <UserTournament data={item} key={item._id} />
+                                        <UserTournamentPlaying data={item} key={item._id} />
                                     ))}
                                 </div>
                             )}
@@ -116,26 +119,36 @@ export default function TournamentSelect() {
                 </>
             ) : (
                 <>
-                
+                    {/* Add loading here */}
                 </>
             )}
-            {/* <div className="mt-8 form-input bg-indigo-500 text-white">
-                <h4 className="italic">Active Tournaments</h4>
+            <div className="mt-2.5 form-input bg-indigo-500 text-white">
+                <h4 className="italic text-center">Create or join a new tournament</h4>
             </div>
-            <div className="tournament-grid">
+            <div className="flex flex-col md:grid grid-cols-2 gap-2.5">
+                <Link to="/create-tournament" className="tournament-join">
+                    <div className="flex lg:flex-col justify-center items-center gap-2.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#054205" className="size-24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12a7.5 7.5 0 0 0 15 0m-15 0a7.5 7.5 0 1 1 15 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077 1.41-.513m14.095-5.13 1.41-.513M5.106 17.785l1.15-.964m11.49-9.642 1.149-.964M7.501 19.795l.75-1.3m7.5-12.99.75-1.3m-6.063 16.658.26-1.477m2.605-14.772.26-1.477m0 17.726-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205 12 12m6.894 5.785-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495" />
+                    </svg>
 
+                        <p className="text-center">Create a new tournament</p>
+                    </div>
+                </Link>
+                <Link to="/join-existing-tournament" className="tournament-join">
+                    <div className="flex lg:flex-col justify-center items-center gap-2.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#054205" className="size-24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m21 7.5-2.25-1.313M21 7.5v2.25m0-2.25-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3 2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75 2.25-1.313M12 21.75V19.5m0 2.25-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25" />
+                        </svg>
+                        <p className="text-center">Join an existing tournament</p>
+                    </div>
+                </Link>
             </div>
-            <div className="mt-8 form-input bg-indigo-500 text-white">
-                <h4 className="italic">Finished tournaments</h4>
-            </div>
-            <div className="tournament-grid">
-
-            </div> */}
         </div>
     )
 }
 
-function UserTournament({ data }) {
+function UserTournamentPlaying({ data }) {
     const [tournamentInfo, setTournamentInfo] = useState(false);
 
     useEffect(() => {
@@ -150,8 +163,6 @@ function UserTournament({ data }) {
         }
         getTournamentInfo();
     }, []);
-
-    console.log(tournamentInfo);
 
     return (
         <Link to={data._id} className="form-input bg-lime-500 hover:bg-lime-400">
@@ -168,3 +179,57 @@ function UserTournament({ data }) {
     )
 }
 
+function UserTournamentHosting({ data, tournamentsPlaying }) {
+    const [tournamentInfo, setTournamentInfo] = useState(false);
+
+    useEffect(() => {
+        const getTournamentInfo = () => {
+            axios.get("/api/tournaments/get-tournament-info", {
+                headers: { tournamentId: data._id }
+            }).then((response) => {
+                setTournamentInfo(response.data);
+            }).catch ((err) => {
+                console.log(err);
+            });
+        }
+        getTournamentInfo();
+    }, []);
+
+    const joined = tournamentsPlaying.signUps.includes(data._id) || tournamentsPlaying.actives.includes(data._id);
+    const isFinished = data.stage === "finished";
+
+    return (
+        <div className="flex gap-1.5 lg:flex-row flex-col">
+            <Link to={data._id} className="form-input bg-lime-500 hover:bg-lime-400">
+                <h3>{data.name}</h3>
+                <div className="tournament-grid-sm">
+                    <p className="form-input bg-indigo-500 text-white">Host: {data.host["name-long"]}</p>
+                    <p className="form-input bg-indigo-500 text-white">Stage: <i>{data.stage}</i></p>
+                    <p className="form-input bg-indigo-500 text-white">Number of players: {tournamentInfo.nOfPlayers}</p>
+                    <p className="form-input bg-indigo-500 text-white">Total Matches: {tournamentInfo.nOfMatches}</p>
+                    <p className="form-input bg-indigo-500 text-white">Active matches: {tournamentInfo.nOfActiveMatches}</p>
+                    <p className="form-input bg-indigo-500 text-white">Date Created: {data.startDateFormatted}</p>
+                </div>
+            </Link>
+            { joined ? (
+                <div className={isFinished ? "hidden" : "tournament-joined"}>
+                    <div className="flex lg:flex-col justify-center items-center gap-2.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#054205" className="size-24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                        <p className="text-center">Playing in tournament</p>
+                    </div>
+                </div>
+            ) : (
+                <Link to={"/join-existing-tournament" + data._id} className={isFinished ? "hidden" : "tournament-join"}>
+                    <div className="flex lg:flex-col justify-center items-center gap-2.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#054205" className="size-24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m21 7.5-2.25-1.313M21 7.5v2.25m0-2.25-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3 2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75 2.25-1.313M12 21.75V19.5m0 2.25-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25" />
+                        </svg>
+                        <p className="text-center">Join this tournament</p>
+                    </div>
+                </Link>
+            )}
+        </div>
+    )
+}
