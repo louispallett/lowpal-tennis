@@ -11,6 +11,8 @@ const Tournament = new Schema({
     // Start date set at tournament set up. We'll want to organise some sort of auto deletion
     // after a year or so...
     startDate: { type: Date, required: true },
+    showMobile: { type: Boolean, required: true },
+    seededPlayers: { type: Boolean, required: true }
 });
 
 Tournament.virtual("startDateFormatted").get(function() {

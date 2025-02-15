@@ -21,6 +21,13 @@ const getDialogInfo = (reason) => {
 
             }
             break;
+        case "userExists":
+            dialogInfo = {
+                title: "Already signed up",
+                content1: `It looks like you're trying to sign up with an email address which has already been registered to another account. 
+                            If you want to create a new tournament or join an existing tournament, please sign in and scroll to the bottom of 
+                            your dashboard, where you'll be able to select 'Create a tournament' or 'Join an existing tournament'`,
+            }
         default:
             dialogInfo = {
                 title: "",

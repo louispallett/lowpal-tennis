@@ -5,8 +5,6 @@ const tournamentController = require("../Controllers/tournamentController");
 
 router.post("/create-tournament", tournamentController.createTournament);
 
-router.post("/assign-tournament-host", tournamentController.assignTournamentHost);
-
 router.post("/is-valid-code", tournamentController.isValidCode);
 
 router.post("/archive-tournament", tournamentController.archiveTournament);
@@ -14,5 +12,7 @@ router.post("/archive-tournament", tournamentController.archiveTournament);
 router.post("/delete-tournament", tournamentController.deleteTournament);
 
 router.get("/get-tournament-info", tournamentController.getTournamentInfo);
+
+router.get("/get-user-tournaments", tournamentController.getUserTournaments);
 
 module.exports = router;

@@ -2,17 +2,20 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const generator = require("generate-password");
 
+const verifyUser = require("../config/verifyUser");
+
 const Tournament = require("../models/tournament");
 const Category = require("../models/category");
 const User = require("../models/user");
 const Match = require("../models/match");
+const Player = require("../models/player");
 
 exports.createTournament = [
     body("tournamentName")
-        .trim()
-        .escape()
-        .isLength({ min: 1, max: 50 }).withMessage("Tournament name cannot be more than 50 characters"),
-    
+    .trim()
+    .escape()
+    .isLength({ min: 1, max: 50 }).withMessage("Tournament name cannot be more than 50 characters"),
+
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -29,7 +32,7 @@ exports.createTournament = [
                 { code: "wSingles", name: "Women's Singles"},
                 { code: "wDoubles", name: "Women's Doubles"},
                 { code: "mixDoubles", name: "Mixed Doubles"},
-            ]
+            ];
 
             // Create an empty array - this is where we'll store the category IDs.
             const categoryList = [];
@@ -46,7 +49,7 @@ exports.createTournament = [
             });
 
             tournamentCode = req.body.tournamentName.split(" ")[0] + tournamentCode;
-
+            
             // Ensure that tournament code doesn't already exist
             while (true) {
                 const codeExists = await Tournament.findOne({ tournamentCode: tournamentCode });
@@ -63,13 +66,15 @@ exports.createTournament = [
 
             const tournament = new Tournament({
                 name: req.body.tournamentName,
-                tournamentCode: tournamentCode,
-                host: null,
                 stage: "sign-up",
-                startDate: new Date()
+                host: req.body.userId,
+                tournamentCode: tournamentCode,
+                startDate: new Date(),
+                showMobile: req.body.showMobile,
+                seededPlayers: req.body.seededPlayers,
             });
             const newTournament = await tournament.save();
-            
+
             // Loop through the filtered categories and create category instances
             for (let category of categories) {
                 const newCategory = new Category({
@@ -78,45 +83,65 @@ exports.createTournament = [
                     tournament: newTournament._id,
                     players: []
                 });
-                const savedCategory = await newCategory.save();
-                // Then push the category _id to categoryList array
-                categoryList.push(savedCategory._id);
+                await newCategory.save();
             }
 
-            res.json({ tournamentId: newTournament._id, tournamentCode: newTournament.tournamentCode });
+            res.status(200).json({ tournamentId: newTournament._id });
         } catch (err) {
-            console.log(err);
+            console.log("Catch TC00CT: " + err);
             res.status(500).json({ error: "Catch TC00CT: " + err});
         }
     })
 ];
 
-exports.assignTournamentHost = [
-    body("hostId")
-        .trim()
-        .escape()
-        .isLength({ min: 1 }),
-    
-    asyncHandler(async (req, res, next) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            console.log(errors.array())
-            res.status(400).json({ message: "Validation Failed", errors: errors.array() })
-            return;
+exports.getUserTournaments = asyncHandler(async (req, res, next) => {
+    try {
+        const validateUser = await verifyUser(req.headers.authorization);
+        const tournamentsHosting = await Tournament.find({ host: validateUser.user._id })
+            .populate({
+                path: "host",
+                select: "firstName lastName"
+            });
+        const players = await Player.find({ user: validateUser.userId });
+        const tournamentsPlaying = [];
+        for (let player of players) {
+            const tournament = await Tournament.findById(player.tournamentId);
+            tournamentsPlaying.push(tournament);
         }
 
-        try {
-            await Tournament.updateOne(
-                { _id: req.body.tournamentHostingId },
-                { $set: { host: req.body.hostId } }
-            );
-            res.sendStatus(200);
-        } catch (err) {
-            console.log(err);
-            res.status(500).json({ error: "Catch TC0ATH: " + err });
-        }
-    })
-];
+        res.status(200).json({ tournamentsHosting, tournamentsPlaying })
+
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+// exports.assignTournamentHost = [
+//     body("hostId")
+//         .trim()
+//         .escape()
+//         .isLength({ min: 1 }),
+    
+//     asyncHandler(async (req, res, next) => {
+//         const errors = validationResult(req);
+//         if (!errors.isEmpty()) {
+//             console.log(errors.array())
+//             res.status(400).json({ message: "Validation Failed", errors: errors.array() })
+//             return;
+//         }
+
+//         try {
+//             await Tournament.updateOne(
+//                 { _id: req.body.tournamentHostingId },
+//                 { $set: { host: req.body.hostId } }
+//             );
+//             res.sendStatus(200);
+//         } catch (err) {
+//             console.log(err);
+//             res.status(500).json({ error: "Catch TC0ATH: " + err });
+//         }
+//     })
+// ];
 
 exports.isValidCode = [
     body("tournamentCode")

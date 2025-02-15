@@ -20,10 +20,16 @@ export default function Home() {
                     <img src={racketBlue} alt="" className="hidden lg:block w-16 lg:w-36 h-auto lg:absolute flex-shrink-0 -right-20 top-36 z-30" />
                 </div>
             </div>
-            <div className="relative">
+            <div className="flex flex-col gap-2.5">
                 <div className="md:grid grid-cols-2 flex flex-col gap-2.5 justify-center">
                     <Host />
                     <Join />
+                </div>
+                <div className="flex justify-center items-center mt-5 text-lg">
+                    <p>Already Signed Up?&nbsp;</p>
+                    <Link to="/users/sign-in">
+                        <span className="text-click">Click here to login</span>
+                    </Link>
                 </div>
             </div>
         </div>
@@ -46,7 +52,7 @@ function Host() {
                     <p>We'll give you a detailed tutorial during registration - start now by clicking the button below:</p>
                 </div>
             </div>
-            <Link to="/users/host-a-tournament">
+            <Link to="/users/sign-up">
                 <button type="none" 
                         className="submit bg-lime-300 text-black hover:bg-lime-500"
                 >Host a tournament</button>
@@ -76,7 +82,7 @@ function Join() {
                 </ul>
                 <p>Happy playing! Click below to start:</p>
             </div>
-            <Link to="/users/join-a-tournament">
+            <Link to="/users/sign-up">
                 <button type="none" 
                         className="submit"
                 >Join a tournament</button>

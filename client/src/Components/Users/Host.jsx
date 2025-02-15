@@ -1,7 +1,7 @@
 import axios from "axios";
 import countryCodes from "country-codes-list";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 export default function Host() {
@@ -10,8 +10,6 @@ export default function Host() {
     const { errors } = formState;
     const [isPending, setIsPending] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const countryCodesArray = Object.entries(countryCodes.customList('countryCode', '{countryCode}: +{countryCallingCode}'));
-    const [showPassword, setShowPassword] = useState(false);
     const [signupError, setSignupError] = useState(null);
     const [checkedState, setCheckedState] = useState({
         mSingles: false,
@@ -19,14 +17,11 @@ export default function Host() {
         wSingles: false, 
         wDoubles: false,
         mixDoubles: false,
+        seeded: false,
+        mobile: false,
     });
-    const [gender, setGender] = useState("");
     const [serverError, setServerError] = useState(null);
-    const [loginError, setLoginError] = useState(null);
-
-    const handleGenderChange = (event) => {
-        setGender(event.target.value);
-    }
+    const [userId, setUserId] = useState(null);
 
     const handleCheckboxChange = (option) => {
         setCheckedState((prevState) => ({
@@ -35,9 +30,26 @@ export default function Host() {
         }));
     };
 
+    useEffect(() => {
+        const getuserInfo = () => {
+            const token = localStorage.getItem("Authorization");
+            if (!token) window.location.assign("/");
+            axios.get("/api/users/verify", {
+                    headers: { Authorization: token }
+                }).then((response) => {
+                    setUserId(response.data.userId);
+                }).catch((err) => {
+                    console.log(err);
+                });
+        }
+
+        getuserInfo();
+    }, []);
+
     const onSubmit = async (data) => {
-        data.tournamentId = "";
         setIsPending(true);
+        data.userId = userId;
+        console.log(data.userId)
         data.categories = [];
         for (let option in checkedState) {
             if (checkedState[option]) {
@@ -45,14 +57,13 @@ export default function Host() {
                 data.categories.push(option);
             }
         }
-        // console.log(data.categories)
-        data.gender = gender;
+        data.seededPlayers = checkedState.seeded;
+        data.showMobile = checkedState.mobile;
 
         try {
             await axios.post("/api/tournaments/create-tournament", data)
             .then((response) => {
                 console.log(response.data.tournamentId);
-                data.tournamentHostingId = response.data.tournamentId;
             }).catch((err) => {
                 console.log(err.response.data.error);
                 if (err.response.data.errors) {
@@ -64,55 +75,6 @@ export default function Host() {
                 return;
             });
 
-            data.categories = [];
-
-            await axios.post("/api/users/sign-up", data)
-                .then((response) => {
-                    data.hostId = response.data.userId;
-                }).catch((err) => {
-                    console.log(err.response.data.errors[0].msg);
-                    if (err.response.data.errors) {
-                        setSignupError(err.response.data.errors);
-                    } else {
-                        setSignupError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
-                    }
-                    setIsPending(false);
-                    throw new Error(err);
-                });
-
-            await axios.post("/api/tournaments/assign-tournament-host", data)
-                .then((response) => {
-                    console.log("Successfully assigned user to host tournament")
-                }).catch((err) => {
-                    console.log(err.response.data.errors[0].msg);
-                    if (err.response.data.errors) {
-                        setSignupError(err.response.data.errors);
-                    } else {
-                        setSignupError(`${err.response.statusText}. Sorry, a server error occured. Please contact the administrator.`);
-                    }
-                    setIsPending(false);
-                    throw new Error("");
-                });
-
-            await axios.post("/api/users/sign-in", data)
-                .then((response) => {
-                    const token = response.data.token;
-                    if (!token) {
-                        setIsPending(false);
-                        console.log(response);
-                        setLoginError(response.data.error);
-                        console.log(loginError);
-                        throw new Error("");
-                    }
-                    localStorage.setItem("Authorization", token);
-                    // window.location.assign("/dashboard");
-                    console.log("Success");
-                }).catch((err) => {
-                    console.log(err);
-                    setIsPending(false);
-                    setServerError(err);
-                })
-
         } catch (err) {
             console.log(err);
         }
@@ -121,89 +83,18 @@ export default function Host() {
     return (
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="form">
             <div className="relative w-full h-full flex flex-col gap-2.5">
-                <h3 className="font-roboto text-center">Host Details</h3>
-                <div className="grid grid-cols-2 gap-2.5">
-                    <input type="text" placeholder="First Name" className="form-input" 
-                        required id="firstName" {...register("firstName", {
-                            required: "First Name is required",
-                            maxLength: {
-                                value: 50,
-                                message: "First name cannot be longer than a fifty (50) characters long!"
-                            },
-                        })}
-                    />
-                    {/* <span className="text-xs font-bold text-red-700 dark:text-red-400">
-                        <p>{errors.firstName?.message}</p>
-                    </span> */}
-                    <input type="text" placeholder="Last Name" className="form-input" 
-                        {...register("lastName", {
-                            required: "Last Name is required",
-                            maxLength: {
-                                value: 50,
-                                message: "Last name cannot be longer than a fifty (50) characters long!"
-                            },
-                        })}
-                    />
-                    {/* <span className="text-xs font-bold text-red-700 dark:text-red-400">
-                        <p>{errors.lastName?.message}</p>
-                    </span> */}
-                </div>
-                <div className="grid grid-cols-2 gap-2.5">
-                    <input type="email" placeholder="Email" className="form-input" 
-                        required id="email" {...register("email", {
-                            required: "Email is required",
-                            maxLength: {
-                                value: 100,
-                                message: "Email cannot be longer than a hundred (100) characters long!"
-                            },
-                        })}
-                    />
-                    {/* <span className="text-xs font-bold text-red-700 dark:text-red-400">
-                        <p>{errors.email?.message}</p>
-                    </span> */}
-                    <div className="mobile-wrapper">
-                        <select name="countryCode" id="countryCode" defaultValue="GB: +44" 
-                            required
-                            {...register("mobCode")}
-                            className="form-input"
-                        >
-                            {countryCodesArray.map(([code, label]) => (
-                                <option key={code} value={label}>
-                                    {label}
-                                </option>
-                            ))}
-                        </select>
-                        <input type="tel" placeholder="Mobile" className="form-input" 
-                            {...register("mobile", {
-                                required: "Mobile is required",
-                            })}
-                        />
-                        {/* <span className="text-xs font-bold text-red-700 dark:text-red-400">
-                            <p>{errors.mobile?.message}</p>
-                        </span> */}
-                    </div>
-                </div>
-                <div>
-                    <div className="relative">
-                        <select name="gender" id="gender" required value={gender} onChange={handleGenderChange}
-                            className="form-input">
-                            <option value="">- &gt; Gender &lt; -</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </select>
-                    </div>
-                    {/* <span className="text-xs font-bold text-red-700 dark:text-red-400">
-                        <p>{errors.gender?.message}</p>
-                    </span> */}
-                </div>
-                <div id="tournaments-wrapper">
                     <h3 className="text-center mt-2.5">Tournament Details</h3>
                     <input type="text" className="form-input my-2.5" placeholder="Tournament Name" 
                         {...register("tournamentName", {
                             required: "Tournament Name is required"
                         })}
                     />
-                    <h4 className="text-center">Select categories you want to include</h4>
+                <div className="form-input bg-slate-100">
+                    <h4>Categories</h4>
+                    <p className="text-sm mb-2.5">
+                        Please select the categories you wish to include in your tournament. Invited users will be able to sign up these 
+                        categories. This cannot be changed.
+                    </p>
                     <div className="flex flex-col gap-2.5">
                         <div className="flex gap-2.5">
                             <label className={`tournament-button ${checkedState.mSingles ? "checked" : ""}`}>
@@ -261,54 +152,46 @@ export default function Host() {
                         </label>
                     </div>
                 </div>
-                <h3 className="font-roboto text-center mt-2.5">Account Password</h3>
-                <div className="grid grid-cols-2 gap-2.5">
-                    <div>
-                        <input type={showPassword ? "text" : "password"} id="password" autoComplete="current-password" required placeholder="Password"
-                            {...register("password", {
-                                required: "Password is required",
-                                minLength: {
-                                    value: 8,
-                                    message: "Password must be at least eight (8) characters long"
-                                },
-                                pattern: {
-                                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                                    message: "Must contain: uppercase, lowercase, number, and special character"
-                                },
-                            })}
-                            className="form-input"/>
-                        {/* <span className="text-xs font-bold text-red-700 dark:text-red-400">
-                            <p>{errors.password?.message}</p>
-                        </span> */}
-                    </div>
-                    <div>
-                        <div className="flex items-center gap-1">
-                            <input type={showPassword ? "text" : "password"} id="confPassword" required placeholder="Confirm Password"
-                                {...register("confPassword", {
-                                    required: "Please confirm your password",
-                                    validate: {
-                                        passwordMatch: (fieldValue) => {
-                                            return (
-                                                fieldValue == watch("password") || "Passwords do not match"
-                                            )
-                                        }
-                                    }
-                                })}
-                                className="form-input"/>
-                                {/* { showPassword ? (
-                                <EyeIcon onClick={() => setShowPassword(!showPassword)} className="h-6 cursor-pointer dark:fill-slate-100 hover:fill-indigo-600 transition-all" />
-                                ) : (
-                                    <EyeSlashIcon onClick={() => setShowPassword(!showPassword)} className="h-6 cursor-pointer dark:fill-slate-100 hover:fill-indigo-600 transition-all" />
-                                )} */}
-                        </div>
-                        {/* <span className="text-xs font-bold text-red-700 dark:text-red-400">
-                            <p>{errors.confPassword?.message}</p>
-                        </span> */}
-                    </div>
+                <div className="form-input bg-slate-100">
+                    <h4>Seeded Players</h4>
+                    <p className="text-sm mb-2.5">
+                        Seeded players are those which are of a certain level that you don't want them to be matched together in doubles tournaments. 
+                        Selecting this option will give users the choice to declare themselves as a seeded player at sign up (although you as the host 
+                        can also edit their selection later). This simply affects the random selection of teams, ensuring that each seeded player is 
+                        teamed up with a non-seeded player. The remaining seeded players are matched with each other.
+                    </p>
+                    <label className={`tournament-button ${checkedState.seeded ? "checked" : ""}`}>
+                        <p>Seeded Players</p>
+                        <input
+                            type="checkbox"
+                            className="checkbox"
+                            // checkedState={checkedState}
+                            onChange={() => handleCheckboxChange("seeded")}
+                        />
+                        <span className="custom-checkbox"></span>
+                    </label>
+                </div>
+                <div className="form-input bg-slate-100">
+                    <h4>Mobiles Visible</h4>
+                    <p className="text-sm mb-2.5">
+                        Select this option if you want mobile contact details to be visible between players of a match. When matches are assigned, players 
+                        can view their matches and see the contact details of other players. If you do select this option, please ensure that players 
+                        are aware that their mobile numbers are visible to other players. This option can be altered later.
+                    </p>
+                    <label className={`tournament-button ${checkedState.mobile ? "checked" : ""}`}>
+                        <p>Make Mobiles Visible</p>
+                        <input
+                            type="checkbox"
+                            className="checkbox"
+                            // checkedState={checkedState}
+                            onChange={() => handleCheckboxChange("mobile")}
+                        />
+                        <span className="custom-checkbox"></span>
+                    </label>
                 </div>
                 <button type="submit" 
                     className="submit"
-                >Create Tournament and Sign Up</button>
+                >Create Tournament</button>
             </div>
         </form>
     )

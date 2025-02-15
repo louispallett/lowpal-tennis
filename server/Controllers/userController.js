@@ -16,9 +16,6 @@ const { sendConfirmationEmail,
 } = require("../public/scripts/userAuxillary");
 const { selectFields } = require("express-validator/lib/field-selection");
 
-// Ideally, we want to have the same sign up method for a host as we do a user... the problem is,
-// how do we account for the initial lack of categories? What we could do is check whether host is true...,
-// if it is, we can accept categories.length being < 1, otherwise, we can't
 exports.signUp = [
     body("firstName")
         .trim()
@@ -79,16 +76,14 @@ exports.signUp = [
                     email: req.body.email.toLowerCase(),
                     mobCode: req.body.mobCode,
                     mobile: req.body.mobile,
-                    male: req.body.gender == "male" ? true : false,
-                    seeded: req.body.seeded || false,
                     password: hashedPassword,
-                    ranking: 0
                 });
                 
                 const newUser = await user.save();
-                if (req.body.categories.length > 0) {
-                    await addUserToCategories(newUser._id, req.body.tournamentPlayingId, req.body.categories)
-                }
+
+                // if (req.body.categories.length > 0) {
+                //     await addUserToCategories(newUser._id, req.body.tournamentPlayingId, req.body.categories)
+                // }
 
                 // const newUserCategories = await User.findById(newUser._id).populate({ path: "categories", select: "name" });
                 // const categoryNames = newUserCategories.categories.map(category => category.name).join('\n');                
@@ -282,46 +277,14 @@ exports.updatePassword = [
     })
 ];
 
-exports.getUserTournaments = asyncHandler(async (req, res, next) => {
-    try {
-        const validateUser = await verifyUser(req.headers.authorization);
-        const user = await User.findById(validateUser.user._id).populate({
-            path: "tournamentsPlaying",
-            populate: {
-                path: "host",
-                select: "firstName lastName"
-            }
-        }).populate({
-            path: "tournamentsHosting",
-            populate: {
-                path: "host",
-                select: "firstName lastName"
-            }
-        });
-
-        res.json({ 
-            userId: user._id,
-            userName: user.firstName,
-            userTournamentsPlaying: user.tournamentsPlaying,
-            userTournamentsHosting: user.tournamentsHosting
-        });
-    } catch (err) {
-        console.log(err);
-        res.status(403).json(err)
-    };
-});
-
 exports.verify = asyncHandler(async (req, res, next) => {
     try {
         const user = await verifyUser(req.headers.authorization);
         res.json({ 
             userId: user.user._id,
-            userTournament: user.user.tournament,
             email: user.user.email,
             firstName: user.user.firstName,
             lastName: user.user.lastName,
-            mobile: user.user.mobile,
-            categories: user.user.categories
         });
     } catch (err) {
         console.log(err);

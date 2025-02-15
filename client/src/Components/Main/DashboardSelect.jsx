@@ -15,16 +15,14 @@ export default function TournamentSelect() {
         const getuserInfo = () => {
             const token = localStorage.getItem("Authorization");
             if (!token) window.location.assign("/");
-            axios.get("/api/users/get-user-tournaments", {
+            axios.get("/api/tournaments/get-user-tournaments", {
                     headers: { Authorization: token }
-                })
-                .then((response) => {
-                    console.log(response.data)
+                }).then((response) => {
+                    // console.log(response.data);
                     setUserInfo(response.data);
                 }).catch((err) => {
                     console.log(err);
                 });
-            
         }
 
         getuserInfo();
@@ -34,21 +32,22 @@ export default function TournamentSelect() {
     let isPlaying;
 
     if (userInfo) {
+        console.log(userInfo)
         tournamentsPlaying = {
-            signUps: userInfo.userTournamentsPlaying.filter(x => x.stage === "sign-up"),
-            actives: userInfo.userTournamentsPlaying.filter(x => x.stage === "play"),
-            finished: userInfo.userTournamentsPlaying.filter(x => x.stage === "finished")
+            signUps: userInfo.tournamentsPlaying.filter(x => x.stage === "sign-up"),
+            actives: userInfo.tournamentsPlaying.filter(x => x.stage === "play"),
+            finished: userInfo.tournamentsPlaying.filter(x => x.stage === "finished")
         }
         tournamentsHosting = {
-            signUps: userInfo.userTournamentsHosting.filter(x => x.stage === "sign-up"),
-            actives: userInfo.userTournamentsHosting.filter(x => x.stage === "play"),
-            finished: userInfo.userTournamentsHosting.filter(x => x.stage === "finished")
+            signUps: userInfo.tournamentsHosting.filter(x => x.stage === "sign-up"),
+            actives: userInfo.tournamentsHosting.filter(x => x.stage === "play"),
+            finished: userInfo.tournamentsHosting.filter(x => x.stage === "finished")
         }
-        console.log(tournamentsPlaying.signUps);
+        console.log(tournamentsHosting.signUps);
         isHosting = tournamentsHosting.signUps.length > 0 || tournamentsHosting.actives.length > 0 || tournamentsHosting.finished.length > 0;
-        console.log(isHosting);
+        // console.log(isHosting);
         isPlaying = tournamentsPlaying.signUps.length > 0 || tournamentsPlaying.actives.length > 0 || tournamentsPlaying.finished.length > 0;    
-        console.log(isPlaying);
+        // console.log(isPlaying);
     }
 
     return (
@@ -56,7 +55,7 @@ export default function TournamentSelect() {
             <div className="form-input bg-lime-400">
             <img src={racketRed} alt="" className="hidden lg:block transform -scale-x-100 w-16 lg:w-36 h-auto lg:absolute flex-shrink-0 -left-4 -top-8 z-30" />
             <img src={racketBlue} alt="" className="hidden lg:block w-16 lg:w-36 h-auto lg:absolute flex-shrink-0 -right-4 -top-8 z-30" />
-                <h3 className="md:text-center">Select a tournament below:</h3>
+                <h3 className="md:text-center">Dashboard</h3>
             </div>
             { userInfo ? (
                 <>
@@ -66,21 +65,21 @@ export default function TournamentSelect() {
                                 <h4 className="italic">Hosting tournaments</h4>
                             </div>
                             { tournamentsHosting.signUps.length > 0 && (
-                                <div className="tournament-grid">
+                                <div className="flex flex-col gap-2.5">
                                     { tournamentsHosting.signUps.map((item) => (
                                         <UserTournamentHosting data={item} tournamentsPlaying={tournamentsPlaying} key={item._id} />
                                     ))}
                                 </div>
                             )}
                             { tournamentsHosting.actives.length > 0 && (
-                                <div className="tournament-grid">
+                                <div className="flex flex-col gap-2.5">
                                     { tournamentsHosting.actives.map((item) => (
                                         <UserTournamentHosting data={item} tournamentsPlaying={tournamentsPlaying} key={item._id} />
                                     ))}
                                 </div>
                             )}
                             { tournamentsHosting.finished.length > 0 && (
-                                <div className="tournament-grid">
+                                <div className="flex flex-col gap-2.5">
                                     { tournamentsHosting.finished.map((item) => (
                                         <UserTournamentHosting data={item} tournamentsPlaying={tournamentsPlaying} key={item._id} />
                                     ))}
@@ -94,21 +93,21 @@ export default function TournamentSelect() {
                                 <h4 className="italic">Joined Tournaments</h4>
                             </div>
                             { tournamentsPlaying.signUps.length > 0 && (
-                                <div className="tournament-grid">
+                                <div className="flex flex-col gap-2.5">
                                     { tournamentsPlaying.signUps.map((item) => (
                                         <UserTournamentPlaying data={item} key={item._id} />
                                     ))}
                                 </div>
                             )}
                             { tournamentsPlaying.actives.length > 0 && (
-                                <div className="tournament-grid">
+                                <div className="flex flex-col gap-2.5">
                                     { tournamentsPlaying.actives.map((item) => (
                                         <UserTournamentPlaying data={item} key={item._id} />
                                     ))}
                                 </div>
                             )}
                             { tournamentsPlaying.finished.length > 0 && (
-                                <div className="tournament-grid">
+                                <div className="flex flex-col gap-2.5">
                                     { tournamentsPlaying.finished.map((item) => (
                                         <UserTournamentPlaying data={item} key={item._id} />
                                     ))}
@@ -126,7 +125,7 @@ export default function TournamentSelect() {
                 <h4 className="italic text-center">Create or join a new tournament</h4>
             </div>
             <div className="flex flex-col md:grid grid-cols-2 gap-2.5">
-                <Link to="/create-tournament" className="tournament-join">
+                <Link to="/users/create-tournament" className="tournament-join">
                     <div className="flex lg:flex-col justify-center items-center gap-2.5">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#054205" className="size-24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12a7.5 7.5 0 0 0 15 0m-15 0a7.5 7.5 0 1 1 15 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077 1.41-.513m14.095-5.13 1.41-.513M5.106 17.785l1.15-.964m11.49-9.642 1.149-.964M7.501 19.795l.75-1.3m7.5-12.99.75-1.3m-6.063 16.658.26-1.477m2.605-14.772.26-1.477m0 17.726-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205 12 12m6.894 5.785-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495" />
@@ -135,7 +134,7 @@ export default function TournamentSelect() {
                         <p className="text-center">Create a new tournament</p>
                     </div>
                 </Link>
-                <Link to="/join-existing-tournament" className="tournament-join">
+                <Link to="/users/join-existing-tournament" className="tournament-join">
                     <div className="flex lg:flex-col justify-center items-center gap-2.5">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#054205" className="size-24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="m21 7.5-2.25-1.313M21 7.5v2.25m0-2.25-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3 2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75 2.25-1.313M12 21.75V19.5m0 2.25-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25" />

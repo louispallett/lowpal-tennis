@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { createBrowserRouter, Navigate, RouterProvider, Outlet } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import App from "./App";
 import Home from "./Home";
@@ -11,6 +10,7 @@ import Main from "./Main/Main";
 import Dashboard from "./Main/Dashboard";
 import Match from "./Main/Match";
 import DashboardSelect from "./Main/DashboardSelect.jsx";
+import SignUp from "./Users/SignUp.jsx";
 
 export default function Router() {
     const router = createBrowserRouter([
@@ -26,13 +26,17 @@ export default function Router() {
                     path: "/users",
                     element: <Users />,
                     children: [
+                        // {
+                        //     path: "join-a-tournament",
+                        //     element: <JoinATournament />
+                        // },
+                        // {
+                        //     path: "host-a-tournament",
+                        //     element: <HostATournament />
+                        // },
                         {
-                            path: "join-a-tournament",
-                            element: <JoinATournament />
-                        },
-                        {
-                            path: "host-a-tournament",
-                            element: <HostATournament />
+                            path: "sign-up",
+                            element: <SignUp />
                         },
                         {
                             path: "sign-in",
@@ -46,6 +50,14 @@ export default function Router() {
                         //     path: "forgot-password",
                         //     element: <ForgotPassword />
                         // },                     
+                        {
+                            path: "create-tournament",
+                            element: <HostATournament />
+                        },
+                        {
+                            path: "join-existing-tournament",
+                            element: <JoinATournament />
+                        }
                     ]
                 },
             ]
@@ -59,13 +71,15 @@ export default function Router() {
                     element: <DashboardSelect />
                 },
                 {
-                    path: ":tournamentId",
-                    element: <Dashboard />
+                    path: "tournament/:tournamentId",
+                    element: <Dashboard />,
+                    children: [
+                        {
+                            path: "match/:matchId",
+                            element: <Match />
+                        }
+                    ]
                 },
-                {
-                    path: "match/:matchId",
-                    element: <Match />
-                }
             ]
         }
     ]);

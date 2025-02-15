@@ -13,8 +13,6 @@ router.post("/update-personal-details", usersController.updatePersonalDetails);
 
 router.post("/update-password", usersController.updatePassword);
 
-router.get("/get-user-tournaments", usersController.getUserTournaments);
-
 router.get("/verify", usersController.verify);
 
 module.exports = router;
