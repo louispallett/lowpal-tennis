@@ -5,6 +5,7 @@ import Home from "./Home";
 import Users from "./Users/Users";
 import HostATournament from "./Users/Host";
 import JoinATournament from "./Users/JoinATournament";
+import JoinATournamentForm from "./Users/JoinATournamentForm.jsx";
 import SignIn from "./Users/SignIn";
 import Main from "./Main/Main";
 import Dashboard from "./Main/Dashboard";
@@ -26,14 +27,6 @@ export default function Router() {
                     path: "/users",
                     element: <Users />,
                     children: [
-                        // {
-                        //     path: "join-a-tournament",
-                        //     element: <JoinATournament />
-                        // },
-                        // {
-                        //     path: "host-a-tournament",
-                        //     element: <HostATournament />
-                        // },
                         {
                             path: "sign-up",
                             element: <SignUp />
@@ -41,23 +34,7 @@ export default function Router() {
                         {
                             path: "sign-in",
                             element: <SignIn />
-                        },
-                        // {
-                        //     path: "account",
-                        //     element: <Account />
-                        // },
-                        // {
-                        //     path: "forgot-password",
-                        //     element: <ForgotPassword />
-                        // },                     
-                        {
-                            path: "create-tournament",
-                            element: <HostATournament />
-                        },
-                        {
-                            path: "join-existing-tournament",
-                            element: <JoinATournament />
-                        }
+                        },                
                     ]
                 },
             ]
@@ -69,6 +46,24 @@ export default function Router() {
                 {
                     index: true,
                     element: <DashboardSelect />
+                },
+                {
+                    path: "users",
+                    element: <Users />,
+                    children: [
+                        {
+                            path: "create-tournament",
+                            element: <HostATournament />
+                        },
+                        {
+                            path: "join-existing-tournament",
+                            element: <JoinATournament />
+                        },
+                        {
+                            path: "join-existing-tournament-form",
+                            element: <JoinATournamentForm />
+                        },                        
+                    ]
                 },
                 {
                     path: "tournament/:tournamentId",

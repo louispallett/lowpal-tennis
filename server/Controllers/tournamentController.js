@@ -163,9 +163,11 @@ exports.isValidCode = [
                 .populate("host", "firstName lastName").exec();
             if (tournamentExists) {
                 res.status(200).json({ 
-                    tournamentId: tournamentExists._id, 
+                    _id: tournamentExists._id, 
                     name: tournamentExists.name,
-                    hostName: tournamentExists.host.firstName + " " + tournamentExists.host.lastName
+                    host: {
+                        "name-long": tournamentExists.host.firstName + " " + tournamentExists.host.lastName
+                    }
                 });
                 return;
             }

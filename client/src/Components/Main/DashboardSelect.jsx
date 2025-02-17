@@ -121,28 +121,7 @@ export default function TournamentSelect() {
                     {/* Add loading here */}
                 </>
             )}
-            <div className="mt-2.5 form-input bg-indigo-500 text-white">
-                <h4 className="italic text-center">Create or join a new tournament</h4>
-            </div>
-            <div className="flex flex-col md:grid grid-cols-2 gap-2.5">
-                <Link to="/users/create-tournament" className="tournament-join">
-                    <div className="flex lg:flex-col justify-center items-center gap-2.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#054205" className="size-24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12a7.5 7.5 0 0 0 15 0m-15 0a7.5 7.5 0 1 1 15 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077 1.41-.513m14.095-5.13 1.41-.513M5.106 17.785l1.15-.964m11.49-9.642 1.149-.964M7.501 19.795l.75-1.3m7.5-12.99.75-1.3m-6.063 16.658.26-1.477m2.605-14.772.26-1.477m0 17.726-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205 12 12m6.894 5.785-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495" />
-                    </svg>
-
-                        <p className="text-center">Create a new tournament</p>
-                    </div>
-                </Link>
-                <Link to="/users/join-existing-tournament" className="tournament-join">
-                    <div className="flex lg:flex-col justify-center items-center gap-2.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#054205" className="size-24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="m21 7.5-2.25-1.313M21 7.5v2.25m0-2.25-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3 2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75 2.25-1.313M12 21.75V19.5m0 2.25-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25" />
-                        </svg>
-                        <p className="text-center">Join an existing tournament</p>
-                    </div>
-                </Link>
-            </div>
+            <CreateORJoin />
         </div>
     )
 }
@@ -220,7 +199,7 @@ function UserTournamentHosting({ data, tournamentsPlaying }) {
                     </div>
                 </div>
             ) : (
-                <Link to={"/join-existing-tournament" + data._id} className={isFinished ? "hidden" : "tournament-join"}>
+                <Link to="users/join-existing-tournament-form" state={{ data }} className={isFinished ? "hidden" : "tournament-join"}>
                     <div className="flex lg:flex-col justify-center items-center gap-2.5">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#054205" className="size-24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="m21 7.5-2.25-1.313M21 7.5v2.25m0-2.25-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3 2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75 2.25-1.313M12 21.75V19.5m0 2.25-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25" />
@@ -230,5 +209,34 @@ function UserTournamentHosting({ data, tournamentsPlaying }) {
                 </Link>
             )}
         </div>
+    )
+}
+
+function CreateORJoin() {
+    return (
+        <>
+            <div className="mt-2.5 form-input bg-indigo-500 text-white">
+                <h4 className="italic text-center">Create or join a new tournament</h4>
+            </div>
+            <div className="flex flex-col md:grid grid-cols-2 gap-2.5">
+                <Link to="users/create-tournament" className="tournament-join">
+                    <div className="flex lg:flex-col justify-center items-center gap-2.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#054205" className="size-24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12a7.5 7.5 0 0 0 15 0m-15 0a7.5 7.5 0 1 1 15 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077 1.41-.513m14.095-5.13 1.41-.513M5.106 17.785l1.15-.964m11.49-9.642 1.149-.964M7.501 19.795l.75-1.3m7.5-12.99.75-1.3m-6.063 16.658.26-1.477m2.605-14.772.26-1.477m0 17.726-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205 12 12m6.894 5.785-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495" />
+                    </svg>
+
+                        <p className="text-center">Create a new tournament</p>
+                    </div>
+                </Link>
+                <Link to="users/join-existing-tournament" className="tournament-join">
+                    <div className="flex lg:flex-col justify-center items-center gap-2.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#054205" className="size-24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m21 7.5-2.25-1.313M21 7.5v2.25m0-2.25-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3 2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75 2.25-1.313M12 21.75V19.5m0 2.25-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25" />
+                        </svg>
+                        <p className="text-center">Join an existing tournament</p>
+                    </div>
+                </Link>
+            </div>
+        </>
     )
 }
