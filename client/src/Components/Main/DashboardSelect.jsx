@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import racketRed from "/assets/images/racket-red.svg";
 import racketBlue from "/assets/images/racket-blue.svg";
 import { Link } from "react-router-dom";
-import { CheckIcon } from "@heroicons/react/16/solid";
 
 export default function TournamentSelect() {
     const [userInfo, setUserInfo] = useState(false);
+    const [serverError, setServerError] = useState(false);
     let tournamentsPlaying = {}, tournamentsHosting = {}
 
     useEffect(() => {
@@ -18,21 +18,24 @@ export default function TournamentSelect() {
             axios.get("/api/tournaments/get-user-tournaments", {
                     headers: { Authorization: token }
                 }).then((response) => {
-                    // console.log(response.data);
                     setUserInfo(response.data);
                 }).catch((err) => {
-                    console.log(err);
+                    if (err.response.status === 403) {
+                        localStorage.removeItem("Authorization");
+                        window.location.assign("/");
+                    } else {
+                        console.log(err);
+                        setServerError({ status: err.response.status, statusText: err.response.statusText });
+                    }
                 });
         }
-
         getuserInfo();
     }, []);
-
+    
     let isHosting;
     let isPlaying;
 
     if (userInfo) {
-        console.log(userInfo)
         tournamentsPlaying = {
             signUps: userInfo.tournamentsPlaying.filter(x => x.stage === "sign-up"),
             actives: userInfo.tournamentsPlaying.filter(x => x.stage === "play"),
@@ -43,11 +46,8 @@ export default function TournamentSelect() {
             actives: userInfo.tournamentsHosting.filter(x => x.stage === "play"),
             finished: userInfo.tournamentsHosting.filter(x => x.stage === "finished")
         }
-        console.log(tournamentsHosting.signUps);
         isHosting = tournamentsHosting.signUps.length > 0 || tournamentsHosting.actives.length > 0 || tournamentsHosting.finished.length > 0;
-        // console.log(isHosting);
         isPlaying = tournamentsPlaying.signUps.length > 0 || tournamentsPlaying.actives.length > 0 || tournamentsPlaying.finished.length > 0;    
-        // console.log(isPlaying);
     }
 
     return (
