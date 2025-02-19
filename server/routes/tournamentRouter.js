@@ -5,6 +5,8 @@ const tournamentController = require("../Controllers/tournamentController");
 
 router.post("/create-tournament", tournamentController.createTournament);
 
+router.post("/join-tournament", tournamentController.joinTournament);
+
 router.post("/is-valid-code", tournamentController.isValidCode);
 
 router.post("/archive-tournament", tournamentController.archiveTournament);

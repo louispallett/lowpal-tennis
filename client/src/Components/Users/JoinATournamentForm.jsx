@@ -11,7 +11,7 @@ export default function JoinTournamentForm({ validTournament }) {
     if (!validTournament) {
         validTournament = location.state?.data;
     }
-    console.log(validTournament);
+    // console.log(validTournament);
 
     const form = useForm();
     const { register, control, handleSubmit, formState, watch, reset, setValue, trigger } = form;
@@ -39,17 +39,21 @@ export default function JoinTournamentForm({ validTournament }) {
     const onSubmit = async (data) => {
         setIsPending(true);
         
+        data.tournamentId = validTournament._id;
+        data.gender = gender;
+        data.seeded = checkedState.seeded;
+        delete checkedState.seeded;
+
         for (let option in checkedState) {
             if (checkedState[option]) {
                 data.categories.push(option);
             }
         }
         
-        data.tournamentPlayingId = validTournament.tournamentId;
-        data.gender = gender;
-        if (data.seeded) data.seeded = true;
-
-        axios.post("/api/users/sign-up", data)
+        const token = localStorage.getItem("Authorization")
+        axios.post("/api/tournaments/join-tournament", data, 
+            { headers: { Authorization: token }}
+        )
             .then(() => {
                 setIsPending(false);
                 setIsSubmitted(true);
@@ -109,7 +113,7 @@ export default function JoinTournamentForm({ validTournament }) {
                     <div className="relative w-full h-full flex flex-col gap-2.5">
                         <h3 className="text-center">Tournament Details</h3>
                         <div className="flex flex-col lg:flex-row gap-2.5">
-                            <input type="text" className="hidden form-input bg-indigo-500 text-white" value={validTournament._id} disabled
+                            <input type="text" className="hidden form-input bg-indigo-500 text-white" defaultValue={validTournament._id} disabled
                                 {...register ("tournamentId", {})}
                             />
                             <div type="text" className="form-input bg-indigo-500 text-white">

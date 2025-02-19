@@ -32,10 +32,8 @@ const Schema = mongoose.Schema;
 const Player = new Schema({
     tournament: { type: Schema.Types.ObjectId, ref: "Tournament", required: true },
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    name: { type: String, required: true },
     male: { type: Boolean, immuntable: true, required: true },
-    mobCode: { type: String, required: true },
-    mobile: { type: String, required: true },
+    categories: [{ type: Schema.Types.ObjectId, ref: "Category", required: true }],
     seeded: { type: Boolean },
     ranking: { type: Number },
 });

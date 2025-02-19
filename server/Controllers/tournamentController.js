@@ -81,7 +81,6 @@ exports.createTournament = [
                     name: category.name,
                     code: category.code,
                     tournament: newTournament._id,
-                    players: []
                 });
                 await newCategory.save();
             }
@@ -94,6 +93,60 @@ exports.createTournament = [
     })
 ];
 
+exports.joinTournament = [
+    body("tournamentId")
+        .trim()
+        .escape()
+        .isLength({ min: 1 }).withMessage("ERROR: Tournament ID not found"),
+
+    asyncHandler(async (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            console.log(errors.array())
+            res.status(400).json({ message: "Validation Failed", errors: errors.array() })
+            return;
+        }
+
+        
+        try {
+            const userInfo = await verifyUser(req.headers.authorization);
+            const playerExists = await Player.findOne({ 
+                tournament: req.body.tournamentId,
+                userId: userInfo.user._id
+            });
+            if (playerExists) {
+                const error = `User (${userInfo.user.firstName} ${userInfo.user.lastName}) already signed up for tournament`;
+                console.log(error);
+                res.status(400).json({ error });
+                return;
+            }
+            const userCategories = [];
+            console.log(req.body.categories);
+            for (let category of req.body.categories) {
+                const databaseCategory = await Category.findOne({ 
+                    tournament: req.body.tournamentId,
+                    code: category
+                });
+                console.log(databaseCategory);
+                userCategories.push(databaseCategory._id);
+            }
+
+            const player = new Player({
+                tournament: req.body.tournamentId,
+                userId: userInfo.user._id,
+                male: req.body.gender === "male",
+                categories: userCategories,
+                seeded: req.body.seeded,
+                ranking: 0,
+            });
+            await player.save();
+            res.sendStatus(200);
+        } catch (err) {
+            console.log(err);
+        }
+    })
+]
+
 exports.getUserTournaments = asyncHandler(async (req, res, next) => {
     try {
         const validateUser = await verifyUser(req.headers.authorization);
@@ -105,7 +158,11 @@ exports.getUserTournaments = asyncHandler(async (req, res, next) => {
         const players = await Player.find({ user: validateUser.userId });
         const tournamentsPlaying = [];
         for (let player of players) {
-            const tournament = await Tournament.findById(player.tournamentId);
+            const tournament = await Tournament.findById(player.tournament)
+                .populate({
+                    path: "host",
+                    select: "firstName lastName"
+                });
             tournamentsPlaying.push(tournament);
         }
 
@@ -116,33 +173,6 @@ exports.getUserTournaments = asyncHandler(async (req, res, next) => {
         res.sendStatus(403);
     }
 });
-
-// exports.assignTournamentHost = [
-//     body("hostId")
-//         .trim()
-//         .escape()
-//         .isLength({ min: 1 }),
-    
-//     asyncHandler(async (req, res, next) => {
-//         const errors = validationResult(req);
-//         if (!errors.isEmpty()) {
-//             console.log(errors.array())
-//             res.status(400).json({ message: "Validation Failed", errors: errors.array() })
-//             return;
-//         }
-
-//         try {
-//             await Tournament.updateOne(
-//                 { _id: req.body.tournamentHostingId },
-//                 { $set: { host: req.body.hostId } }
-//             );
-//             res.sendStatus(200);
-//         } catch (err) {
-//             console.log(err);
-//             res.status(500).json({ error: "Catch TC0ATH: " + err });
-//         }
-//     })
-// ];
 
 exports.isValidCode = [
     body("tournamentCode")

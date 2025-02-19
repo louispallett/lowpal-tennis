@@ -5,7 +5,6 @@ const Category = new Schema({
     tournament: { type: Schema.Types.ObjectId, ref: "Tournament", required: true },
     name: { type: String, required: true },
     code: { type: String, required: true },
-    players: [{ type: Schema.Types.ObjectId, ref: "User", required: true }]
 });
 
 module.exports = mongoose.model("Category", Category);
