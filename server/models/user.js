@@ -2,8 +2,6 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const User = new Schema({
-    tournamentsPlaying: [{ type: Schema.Types.ObjectId, ref: "Tournament", required: true }],
-    tournamentsHosting: [{ type: Schema.Types.ObjectId, ref: "Tournament", required: true }],
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: { type: String, required: true },
