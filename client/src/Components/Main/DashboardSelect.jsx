@@ -130,7 +130,7 @@ export default function TournamentSelect() {
 
 function UserTournamentPlaying({ data }) {
     return (
-        <Link to={data._id} className="form-input bg-lime-500 hover:bg-lime-400">
+        <Link to={"tournament/" + data._id} className="form-input bg-lime-500 hover:bg-lime-400">
             <h3>{data.name}</h3>
             <div className="tournament-grid-sm">
                 <p className="form-input bg-indigo-500 text-white">Host: {data.host["name-long"]}</p>
@@ -148,7 +148,7 @@ function UserTournamentHosting({ data, tournamentsPlaying }) {
 
     return (
         <div className="flex gap-1.5 lg:flex-row flex-col">
-            <Link to={data._id} className="form-input bg-lime-500 hover:bg-lime-400">
+            <Link to={"tournament/" + data._id} className="form-input bg-lime-500 hover:bg-lime-400">
                 <h3>{data.name}</h3>
                 <div className="tournament-grid-sm">
                     <p className="form-input bg-indigo-500 text-white">Host: {data.host["name-long"]}</p>

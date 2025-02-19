@@ -59,94 +59,116 @@
  *
 */
 
+import axios from "axios";
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom";
+
 export default function Dashboard() {
+    const { tournamentId } = useParams();
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        const getData = () => {
+            const token = localStorage.getItem("Authorization");
+            if (!token) window.location.assign("/");
+            axios.get("/api/tournaments/get-tournament-info", {
+                headers: { 
+                    Authorization: token,
+                    TournamentId: tournamentId
+                }
+            }).then((response) => {
+                console.log(response.data);
+                setData(response.data);
+            }).catch((err) => {
+                console.log(err);
+            })
+        }
+        getData();
+    }, []);
+
     return (
-        <div className="flex flex-col gap-2.5 mx-5">
-            <div className="form-input bg-lime-400">
-                <h3>Tournament Name</h3>
-            </div>
-            <div className="form-input bg-lime-400">
-                <h4>Next Matches</h4>
-            </div>
-            <UserMatches />
-            <div className="form-input bg-lime-400">
-                Tournament Name Results
-            </div>
-            <TournamentResult />
+        <div className="flex flex-col gap-5 mx-5">
+            { data ? (
+                <>
+                    <TournamentInfo data={data} />
+                    { data.host && (
+                        <HostSection data={data} />
+                    )}
+                    {/* <div className="form-input bg-lime-400">
+                        <h4>Next Matches</h4>
+                    </div>
+                    <UserMatches />
+                    <div className="form-input bg-lime-400">
+                        Tournament Name Results
+                    </div>
+                    <TournamentResult /> */}
+                </>
+            ) : (
+                <></>
+            )}
         </div>
     )
 }
 
-function UserMatches() {
+function TournamentInfo({ data }) {
     return (
-        <div className="flex flex-col gap-2.5">
-            <div className="form-input bg-indigo-500 text-white">
-                <p className="text-center">Men's Singles</p>
-                <hr className="my-2.5"/>
-                <div className="grid grid-cols-3 text-center">
-                    <p>John Smith</p>
-                    <p>vs</p>
-                    <p>Dave Doe</p>
-                </div>
-                <hr className="my-2.5"/>
-            </div>
-            <div className="form-input bg-indigo-500 text-white">
-                <p className="text-center">Men's Doubles</p>
-                <hr className="my-2.5"/>
-                <div className="grid grid-cols-3 text-center">
-                    <p>John Smith and Rueben Plaice</p>
-                    <p>vs</p>
-                    <p>Dave Doe and Simon Rentkins</p>
-                </div>
-                <hr className="my-2.5"/>
-            </div>
-            <div className="form-input bg-indigo-500 text-white">
-                <p className="text-center">Mixed Doubles</p>
-                <hr className="my-2.5"/>
-                <div className="grid grid-cols-3 text-center">
-                    <p>John Smith and Jane Rageon-Puton</p>
-                    <p>vs</p>
-                    <p>Rueben Plaice and Sasha Roman-Polanski</p>
-                </div>
-                <hr className="my-2.5"/>
+        <div className="form-input bg-lime-400">
+            <h3>{data.tournament.name}</h3>
+            <div className="tournament-grid-sm">
+                <p className="form-input bg-indigo-500 text-white">Code: {data.tournament.tournamentCode}</p>
+                <p className="form-input bg-indigo-500 text-white">Host: {data.tournament.host["name-long"]}</p>
+                <p className="form-input bg-indigo-500 text-white">Stage: <i>{data.tournament.stage}</i></p>
+                <p className="form-input bg-indigo-500 text-white">Date Created: {data.tournament.startDateFormatted}</p>
+                <p className="form-input bg-indigo-500 text-white">Number of players: {data.allPlayers}</p>
+                <p className="form-input bg-indigo-500 text-white">Number of active matches: {data.tournamentMatches.filter(match => match.state === "SCHEDULED").length}</p>
             </div>
         </div>
     )
 }
 
-function TournamentResult() {
+function HostSection({ data }) {
+    // If matches have already been created for a match, category.locked will be TRUE, so filter these out
+    const openCategories = data.categories.filter(category => !category.locked);
+    console.log(openCategories)
     return (
-        <div className="flex flex-col gap-2.5">
-            <div className="form-input bg-indigo-500 text-white">
-                <p>Men's Singles</p>
-            </div>
-            <div className="form-input">
+        <div className="form-input bg-slate-100 flex flex-col gap-2.5">
+            <h4>Host Section</h4>
+            <p>Hi {data.firstName}! Welcome to your host section. Here you can make unique operations and changes to the tournament reserved only for you (as host).</p>
+            { data.tournament.stage === "sign-up" && (
+                <>
+                    <p><i>Closing registration</i></p>
+                    <p>
+                        Currently, the tournament is in it's 'sign-up' stage, meaning users with the right code can join. Once you wish to close registration, click the 
+                        button below. Then you can use our tool to create the teams and matches.
+                    </p>
+                    <button
+                        className="submit"
+                    >
+                        Close registration
+                    </button>
+                </>
+            )}
+            { data.tournament.stage === "play" && (
+                <div className="tournament-grid-sm">
+                    { openCategories.map(item => (
+                        <CategoryFunctions data={item} key={item._id} />
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
 
-            </div>
-            <div className="form-input bg-indigo-500 text-white">
-                <p>Women's Singles</p>
-            </div>
-            <div className="form-input">
-                
-            </div>
-            <div className="form-input bg-indigo-500 text-white">
-                <p>Men's Doubles</p>
-            </div>
-            <div className="form-input">
-                
-            </div>
-            <div className="form-input bg-indigo-500 text-white">
-                <p>Women's Doubles</p>
-            </div>
-            <div className="form-input">
-                
-            </div>
-            <div className="form-input bg-indigo-500 text-white">
-                <p>Mixed Doubles</p>
-            </div>
-            <div className="form-input">
-                
-            </div>
+function CategoryFunctions({ data }) {
+    return (
+        <div className="form-input">
+            <p>{data.name}</p>
+            <p className="text-sm">Click below to create the matches for this category.</p>
+            <button
+                className="submit bg-lime-300 text-black hover:bg-lime-500"
+            >
+                Create Matches
+            </button>
         </div>
     )
 }

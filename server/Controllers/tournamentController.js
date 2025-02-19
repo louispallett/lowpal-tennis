@@ -9,6 +9,7 @@ const Category = require("../models/category");
 const User = require("../models/user");
 const Match = require("../models/match");
 const Player = require("../models/player");
+const user = require("../models/user");
 
 exports.createTournament = [
     body("tournamentName")
@@ -234,14 +235,27 @@ exports.deleteTournament = [
 
 exports.getTournamentInfo = asyncHandler(async (req, res, next) => {
     try {
-        const players = await Player.find({ tournament: req.headers.tournamentid });
-        const matches = await Match.find({ tournament: req.headers.tournamentid });
-        const activeMatches = matches.filter((x) => x.state === "SCHEDULED");
-        res.status(200).json(
-        { 
-            nOfPlayers: players.length,
-            nOfMatches: matches.length,
-            nOfActiveMatches: activeMatches.length,
+        const validateUser = await verifyUser(req.headers.authorization);
+        const tournament = await Tournament.findById(req.headers.tournamentid)
+            .populate({
+                path: "host",
+                select: "firstName lastName"
+            });
+        const tournamentMatches = await Match.find({ tournament: req.headers.tournamentid });
+        const categories = await Category.find({ tournament: req.headers.tournamentid });
+        const allPlayers = await Player.find({ tournament: req.headers.tournamentid });
+        
+        // Do later...
+        // const matches = await Match.find({ })
+
+        res.json({ 
+            firstName: validateUser.user.firstName,
+            lastName: validateUser.user.lastName,
+            tournament,
+            categories,
+            host: validateUser.user._id == tournament.host._id,
+            tournamentMatches,
+            allPlayers: allPlayers.length,
         });
     } catch (err) {
         console.log("Server error TC0GTI " + err);
