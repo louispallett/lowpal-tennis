@@ -47,7 +47,9 @@ export default function TournamentSelect() {
             finished: userInfo.tournamentsHosting.filter(x => x.stage === "finished")
         }
         isHosting = tournamentsHosting.signUps.length > 0 || tournamentsHosting.actives.length > 0 || tournamentsHosting.finished.length > 0;
-        isPlaying = tournamentsPlaying.signUps.length > 0 || tournamentsPlaying.actives.length > 0 || tournamentsPlaying.finished.length > 0;    
+        isPlaying = tournamentsPlaying.signUps.length > 0 || tournamentsPlaying.actives.length > 0 || tournamentsPlaying.finished.length > 0;
+
+        // We want to write some code here to REMOVE any matches from isPlaying if they exist in isHosting...
     }
 
     return (
@@ -127,30 +129,12 @@ export default function TournamentSelect() {
 }
 
 function UserTournamentPlaying({ data }) {
-    const [tournamentInfo, setTournamentInfo] = useState(false);
-
-    useEffect(() => {
-        const getTournamentInfo = () => {
-            axios.get("/api/tournaments/get-tournament-info", {
-                headers: { tournamentId: data._id }
-            }).then((response) => {
-                setTournamentInfo(response.data);
-            }).catch ((err) => {
-                console.log(err);
-            });
-        }
-        getTournamentInfo();
-    }, []);
-
     return (
         <Link to={data._id} className="form-input bg-lime-500 hover:bg-lime-400">
             <h3>{data.name}</h3>
             <div className="tournament-grid-sm">
                 <p className="form-input bg-indigo-500 text-white">Host: {data.host["name-long"]}</p>
                 <p className="form-input bg-indigo-500 text-white">Stage: <i>{data.stage}</i></p>
-                <p className="form-input bg-indigo-500 text-white">Number of players: {tournamentInfo.nOfPlayers}</p>
-                <p className="form-input bg-indigo-500 text-white">Total Matches: {tournamentInfo.nOfMatches}</p>
-                <p className="form-input bg-indigo-500 text-white">Active matches: {tournamentInfo.nOfActiveMatches}</p>
                 <p className="form-input bg-indigo-500 text-white">Date Created: {data.startDateFormatted}</p>
             </div>
         </Link>
@@ -158,20 +142,7 @@ function UserTournamentPlaying({ data }) {
 }
 
 function UserTournamentHosting({ data, tournamentsPlaying }) {
-    const [tournamentInfo, setTournamentInfo] = useState(false);
-
-    useEffect(() => {
-        const getTournamentInfo = () => {
-            axios.get("/api/tournaments/get-tournament-info", {
-                headers: { tournamentId: data._id }
-            }).then((response) => {
-                setTournamentInfo(response.data);
-            }).catch ((err) => {
-                console.log(err);
-            });
-        }
-        getTournamentInfo();
-    }, []);
+    console.log(data);
     const joined = tournamentsPlaying.signUps.some(item => item._id === data._id) || tournamentsPlaying.actives.some(item => item._id === data._id);
     const isFinished = data.stage === "finished";
 
@@ -182,9 +153,6 @@ function UserTournamentHosting({ data, tournamentsPlaying }) {
                 <div className="tournament-grid-sm">
                     <p className="form-input bg-indigo-500 text-white">Host: {data.host["name-long"]}</p>
                     <p className="form-input bg-indigo-500 text-white">Stage: <i>{data.stage}</i></p>
-                    <p className="form-input bg-indigo-500 text-white">Number of players: {tournamentInfo.nOfPlayers}</p>
-                    <p className="form-input bg-indigo-500 text-white">Total Matches: {tournamentInfo.nOfMatches}</p>
-                    <p className="form-input bg-indigo-500 text-white">Active matches: {tournamentInfo.nOfActiveMatches}</p>
                     <p className="form-input bg-indigo-500 text-white">Date Created: {data.startDateFormatted}</p>
                 </div>
             </Link>
