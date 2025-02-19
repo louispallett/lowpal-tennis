@@ -11,7 +11,7 @@ export default function JoinTournamentForm({ validTournament }) {
     if (!validTournament) {
         validTournament = location.state?.data;
     }
-    // console.log(validTournament);
+    console.log(validTournament)
 
     const form = useForm();
     const { register, control, handleSubmit, formState, watch, reset, setValue, trigger } = form;
@@ -69,22 +69,19 @@ export default function JoinTournamentForm({ validTournament }) {
             });
     }
 
-    const [userInfo, setUserInfo] = useState(null);
+    const [tournamentCategories, setTournamentCategories] = useState(null);
 
     useEffect(() => {
-        const getUserInfo = () => {
-            const token = localStorage.getItem("Authorization");
-            if (!token) window.location.assign("/");
-            axios.get("/api/users/verify", {
-                headers: { Authorization: token }
+        const getCategories = () => {
+            axios.get("/api/tournaments/get-tournament-categories", {
+                headers: { tournamentId: validTournament._id }
             }).then((response) => {
-                setUserInfo(response.data);
+                setTournamentCategories(response.data.categories);
             }).catch((err) => {
                 console.log(err);
             });
         }
-
-        getUserInfo();
+        getCategories();
     }, [])
 
     const [gender, setGender] = useState("");
@@ -140,88 +137,96 @@ export default function JoinTournamentForm({ validTournament }) {
                                 <p>{errors.gender?.message}</p>
                             </span> */}
                         </div>
-                        <div id="tournaments-wrapper" className={tournamentsVisible ? '' : 'hidden'}>
-                            <h3 className="font-roboto text-center mt-2.5">Categories</h3>
-                            <h4>Select at least one category you wish to play</h4>
-                            <div className="flex flex-col gap-2.5">
-                                <div className="flex gap-2.5">
-                                    { gender == "male" ? (
-                                        <>
-                                            <label className={`tournament-button ${checkedState.mSingles ? "checked" : ""}`}>
-                                                <p>Men's Singles</p>
-                                                <input
-                                                    type="checkbox"
-                                                    className="checkbox"
-                                                    // checkedState={checkedState}
-                                                    onChange={() => handleCheckboxChange("mSingles")}
-                                                />
-                                                <span className="custom-checkbox"></span>
-                                            </label>
-                                            <label className={`tournament-button ${checkedState.mDoubles ? "checked" : ""}`}>
-                                                <p>Men's Doubles</p>
-                                                <input
-                                                    type="checkbox"
-                                                    className="checkbox"
-                                                    // checkedState={checkedState}
-                                                    onChange={() => handleCheckboxChange("mDoubles")}
-                                                />
-                                                <span className="custom-checkbox"></span>
-                                            </label>
-                                        </>
+                        { tournamentCategories && (
+                            <div id="tournaments-wrapper" className={tournamentsVisible ? '' : 'hidden'}>
+                                <h3 className="font-roboto text-center mt-2.5">Categories</h3>
+                                <h4>Select at least one category you wish to play</h4>
+                                <div className="flex flex-col gap-2.5">
+                                    <div className="flex gap-2.5">
+                                        { gender == "male" ? (
+                                            <>
+                                                { tournamentCategories.includes("mSingles") && (
+                                                    <label className={`tournament-button ${checkedState.mSingles ? "checked" : ""}`}>
+                                                        <p>Men's Singles</p>
+                                                        <input
+                                                            type="checkbox"
+                                                            className="checkbox"
+                                                            onChange={() => handleCheckboxChange("mSingles")}
+                                                        />
+                                                        <span className="custom-checkbox"></span>
+                                                    </label>
+                                                )}
+                                                { tournamentCategories.includes("mDoubles") && (
+                                                    <label className={`tournament-button ${checkedState.mDoubles ? "checked" : ""}`}>
+                                                        <p>Men's Doubles</p>
+                                                        <input
+                                                            type="checkbox"
+                                                            className="checkbox"
+                                                            onChange={() => handleCheckboxChange("mDoubles")}
+                                                        />
+                                                        <span className="custom-checkbox"></span>
+                                                    </label>
+                                                )}
+                                            </>
 
-                                    ) : (
-                                        <>
-                                            <label className={`tournament-button ${checkedState.wSingles ? "checked" : ""}`}>
-                                                <p>Women's Singles</p>
+                                        ) : (
+                                            <>
+                                                { tournamentCategories.includes("wSingles") && (
+                                                    <label className={`tournament-button ${checkedState.wSingles ? "checked" : ""}`}>
+                                                        <p>Women's Singles</p>
+                                                        <input
+                                                            type="checkbox"
+                                                            className="checkbox"
+                                                            onChange={() => handleCheckboxChange("wSingles")}
+                                                        />
+                                                        <span className="custom-checkbox"></span>
+                                                    </label>
+                                                )}
+                                                { tournamentCategories.includes("wDoubles") && (
+                                                    <label className={`tournament-button ${checkedState.wDoubles ? "checked" : ""}`}>
+                                                        <p>Women's Doubles</p>
+                                                        <input
+                                                            type="checkbox"
+                                                            className="checkbox"
+                                                            onChange={() => handleCheckboxChange("wDoubles")}
+                                                        />
+                                                        <span className="custom-checkbox"></span>
+                                                    </label>
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
+                                    { tournamentCategories.includes("mixDoubles") && (
+                                        <label className={`tournament-button ${checkedState.mixDoubles ? "checked" : ""}`}>
+                                            <p>Mixed Doubles</p>
+                                            <input
+                                                type="checkbox"
+                                                className="checkbox"
+                                                onChange={() => handleCheckboxChange("mixDoubles")}
+                                            />
+                                            <span className="custom-checkbox"></span>
+                                        </label>
+                                    )}
+                                    { validTournament.seededPlayers && (
+                                        <div>
+                                            <div className="flex items-center gap-1.5">
+                                                <h4>Seeded player</h4>
+                                                <span className="text-detail-click" onClick={() => setIsOpen("seeded")}>What's this?</span>
+                                            </div>
+                                            <label className={`tournament-button ${checkedState.seeded ? "checked" : ""}`}>
+                                                <p>I am a seeded player</p>
                                                 <input
                                                     type="checkbox"
                                                     className="checkbox"
-                                                    // checkedState={checkedState}
-                                                    onChange={() => handleCheckboxChange("wSingles")}
+                                                    onChange={() => handleCheckboxChange("seeded")}
                                                 />
                                                 <span className="custom-checkbox"></span>
                                             </label>
-                                            <label className={`tournament-button ${checkedState.wDoubles ? "checked" : ""}`}>
-                                                <p>Women's Doubles</p>
-                                                <input
-                                                    type="checkbox"
-                                                    className="checkbox"
-                                                    // checkedState={checkedState}
-                                                    onChange={() => handleCheckboxChange("wDoubles")}
-                                                />
-                                                <span className="custom-checkbox"></span>
-                                            </label>
-                                        </>
+                                        </div>
                                     )}
                                 </div>
-                                <label className={`tournament-button ${checkedState.mixDoubles ? "checked" : ""}`}>
-                                    <p>Mixed Doubles</p>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox"
-                                        // checkedState={checkedState}
-                                        onChange={() => handleCheckboxChange("mixDoubles")}
-                                    />
-                                    <span className="custom-checkbox"></span>
-                                </label>
-                                <div>
-                                    <div className="flex gap-1.5">
-                                        <h4>Seeded player</h4>
-                                        <span className="text-detail-click" onClick={() => setIsOpen("seeded")}>What's this?</span>
-                                    </div>
-                                    <label className={`tournament-button ${checkedState.seeded ? "checked" : ""}`}>
-                                        <p>I am a seeded player</p>
-                                        <input
-                                            type="checkbox"
-                                            className="checkbox"
-                                            // checkedState={checkedState}
-                                            onChange={() => handleCheckboxChange("seeded")}
-                                        />
-                                        <span className="custom-checkbox"></span>
-                                    </label>
-                                </div>
                             </div>
-                        </div>
+                        )}
                         <button type="submit" 
                             className="submit"
                         >Join Tournament</button>

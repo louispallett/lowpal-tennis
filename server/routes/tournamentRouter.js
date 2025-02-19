@@ -9,6 +9,8 @@ router.post("/join-tournament", tournamentController.joinTournament);
 
 router.post("/is-valid-code", tournamentController.isValidCode);
 
+router.get("/get-tournament-categories", tournamentController.getTournamentCategories);
+
 router.post("/archive-tournament", tournamentController.archiveTournament);
 
 router.post("/delete-tournament", tournamentController.deleteTournament);

@@ -25,7 +25,7 @@ function Header() {
         <section className="header">
             <div className="header-inner">
                 <div className="font-semibold p-2.5 px-5">
-                    <Link to="/" >
+                    <Link to="/dashboard" >
                         <div className="flex flex-col">
                             <h3 className="hidden font-mania text-right sm:text-2xl md:block">LowPal Tennis</h3>
                         </div>

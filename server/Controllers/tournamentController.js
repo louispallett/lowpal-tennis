@@ -155,7 +155,9 @@ exports.getUserTournaments = asyncHandler(async (req, res, next) => {
                 path: "host",
                 select: "firstName lastName"
             });
-        const players = await Player.find({ user: validateUser.userId });
+        const players = await Player.find({ userId: validateUser.userId });
+        console.log(validateUser.user._id)
+        console.log(players);
         const tournamentsPlaying = [];
         for (let player of players) {
             const tournament = await Tournament.findById(player.tournament)
@@ -209,6 +211,20 @@ exports.isValidCode = [
         }
     })
 ];
+
+exports.getTournamentCategories = asyncHandler(async (req, res, next) => {
+    try {
+        const tournamentCategories = await Category.find({ tournament: req.headers.tournamentid });
+        const categories = [];
+        for (let obj of tournamentCategories) {
+            categories.push(obj.code);
+        }
+
+        res.status(200).json({ categories });
+    } catch (err) {
+
+    }
+});
 
 // We could run this to END a tournament
 exports.archiveTournament = [
