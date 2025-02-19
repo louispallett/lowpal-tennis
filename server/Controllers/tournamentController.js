@@ -121,7 +121,6 @@ exports.joinTournament = [
                 return;
             }
             const userCategories = [];
-            console.log(req.body.categories);
             for (let category of req.body.categories) {
                 const databaseCategory = await Category.findOne({ 
                     tournament: req.body.tournamentId,
@@ -155,9 +154,7 @@ exports.getUserTournaments = asyncHandler(async (req, res, next) => {
                 path: "host",
                 select: "firstName lastName"
             });
-        const players = await Player.find({ userId: validateUser.userId });
-        console.log(validateUser.user._id)
-        console.log(players);
+        const players = await Player.find({ userId: validateUser.user._id });
         const tournamentsPlaying = [];
         for (let player of players) {
             const tournament = await Tournament.findById(player.tournament)
@@ -167,7 +164,6 @@ exports.getUserTournaments = asyncHandler(async (req, res, next) => {
                 });
             tournamentsPlaying.push(tournament);
         }
-
         res.status(200).json({ tournamentsHosting, tournamentsPlaying })
 
     } catch (err) {
@@ -222,7 +218,7 @@ exports.getTournamentCategories = asyncHandler(async (req, res, next) => {
 
         res.status(200).json({ categories });
     } catch (err) {
-
+        console.log(err);
     }
 });
 
@@ -238,7 +234,7 @@ exports.deleteTournament = [
 
 exports.getTournamentInfo = asyncHandler(async (req, res, next) => {
     try {
-        const players = await User.find({ tournamentsPlaying: req.headers.tournamentid });
+        const players = await Player.find({ tournament: req.headers.tournamentid });
         const matches = await Match.find({ tournament: req.headers.tournamentid });
         const activeMatches = matches.filter((x) => x.state === "SCHEDULED");
         res.status(200).json(

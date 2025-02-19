@@ -172,8 +172,7 @@ function UserTournamentHosting({ data, tournamentsPlaying }) {
         }
         getTournamentInfo();
     }, []);
-
-    const joined = tournamentsPlaying.signUps.includes(data._id) || tournamentsPlaying.actives.includes(data._id);
+    const joined = tournamentsPlaying.signUps.some(item => item._id === data._id) || tournamentsPlaying.actives.some(item => item._id === data._id);
     const isFinished = data.stage === "finished";
 
     return (
