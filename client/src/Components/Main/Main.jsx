@@ -25,14 +25,14 @@ function Header() {
         <section className="header">
             <div className="header-inner">
                 <div className="font-semibold p-2.5 px-5">
-                    <Link to="/dashboard" >
+                    <Link to="/main" >
                         <div className="flex flex-col">
                             <h3 className="hidden font-mania text-right sm:text-2xl md:block">LowPal Tennis</h3>
                         </div>
                     </Link>
                 </div>
                 <div className="flex h-full justify-end font-semibold">
-                    <Link className="menu-link" to="/dashboard">
+                    <Link className="menu-link" to="/main">
                         <p>Dashboard</p>
                     </Link>
                     <Link className="menu-link" to="/about">

@@ -51,7 +51,7 @@ export default function SignUp() {
                     throw new Error("");
                 }
                 localStorage.setItem("Authorization", token);
-                window.location.assign("/dashboard");
+                window.location.assign("/main");
                 console.log("Success");
             }).catch((err) => {
                 console.log(err);

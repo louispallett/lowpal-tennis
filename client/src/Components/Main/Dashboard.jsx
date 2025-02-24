@@ -61,7 +61,7 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 export default function Dashboard() {
     const { tournamentId } = useParams();
@@ -132,7 +132,7 @@ function HostSection({ data }) {
     console.log(openCategories)
     return (
         <div className="form-input bg-slate-100 flex flex-col gap-2.5">
-            <h4>Host Section</h4>
+            <h3>Host Section</h3>
             <p>Hi {data.firstName}! Welcome to your host section. Here you can make unique operations and changes to the tournament reserved only for you (as host).</p>
             { data.tournament.stage === "sign-up" && (
                 <>
@@ -148,12 +148,25 @@ function HostSection({ data }) {
                     </button>
                 </>
             )}
-            { data.tournament.stage === "play" && (
+            <h4>Categories</h4>
+            <p>
+                Below you'll see each category for your tournament. You can click on each individual category to find out information about the category and create the matches
+                for each category in your tournament.
+            </p>
+            <div className="tournament-grid-sm">
+                { openCategories.map(item => (
+                    <CategoryFunctions data={item} key={item._id} />
+                ))}
+            </div>
+            { data.tournament.stage === "finished" && (
                 <div className="tournament-grid-sm">
                     { openCategories.map(item => (
                         <CategoryFunctions data={item} key={item._id} />
                     ))}
                 </div>
+            )}
+            { data.tournament.stage === "sign-up" || data.tournament.stage === "play" && (
+                <EditSettings data={data}/>
             )}
         </div>
     )
@@ -161,14 +174,20 @@ function HostSection({ data }) {
 
 function CategoryFunctions({ data }) {
     return (
-        <div className="form-input">
-            <p>{data.name}</p>
-            <p className="text-sm">Click below to create the matches for this category.</p>
-            <button
-                className="submit bg-lime-300 text-black hover:bg-lime-500"
-            >
-                Create Matches
-            </button>
-        </div>
+            <Link to={"category/" + data._id}>
+                <button
+                    className="submit text-center"
+                >
+                    {data.name}
+                </button>
+            </Link>
+    )
+}
+
+function EditSettings({ data }) {
+    return (
+        <>
+
+        </>
     )
 }

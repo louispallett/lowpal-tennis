@@ -31,7 +31,7 @@ const Schema = mongoose.Schema;
 
 const Player = new Schema({
     tournament: { type: Schema.Types.ObjectId, ref: "Tournament", required: true },
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     male: { type: Boolean, immuntable: true, required: true },
     categories: [{ type: Schema.Types.ObjectId, ref: "Category", required: true }],
     seeded: { type: Boolean },

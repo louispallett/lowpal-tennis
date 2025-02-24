@@ -9,6 +9,7 @@ import JoinATournamentForm from "./Users/JoinATournamentForm.jsx";
 import SignIn from "./Users/SignIn";
 import Main from "./Main/Main";
 import Dashboard from "./Main/Dashboard";
+import Category from "./Main/Category.jsx";
 import Match from "./Main/Match";
 import DashboardSelect from "./Main/DashboardSelect.jsx";
 import SignUp from "./Users/SignUp.jsx";
@@ -40,7 +41,7 @@ export default function Router() {
             ]
         },
         {
-            path: "/dashboard",
+            path: "/main",
             element: <Main />,
             children: [
                 {
@@ -67,8 +68,15 @@ export default function Router() {
                 },
                 {
                     path: "tournament/:tournamentId",
-                    element: <Dashboard />,
                     children: [
+                        {
+                            index: true,
+                            element: <Dashboard />
+                        },
+                        {
+                            path: "category/:categoryId",
+                            element: <Category />
+                        },
                         {
                             path: "match/:matchId",
                             element: <Match />

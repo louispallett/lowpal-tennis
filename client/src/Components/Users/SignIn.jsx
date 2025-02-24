@@ -25,7 +25,7 @@ export default function SignIn() {
                 }
                 localStorage.setItem("Authorization", token);
                 console.log(token);
-                window.location.assign("/dashboard");
+                window.location.assign("/main");
             }).catch(err => {
                 console.log(err);
                 setIsPending(false);

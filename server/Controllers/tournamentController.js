@@ -113,7 +113,7 @@ exports.joinTournament = [
             const userInfo = await verifyUser(req.headers.authorization);
             const playerExists = await Player.findOne({ 
                 tournament: req.body.tournamentId,
-                userId: userInfo.user._id
+                user: userInfo.user._id
             });
             if (playerExists) {
                 const error = `User (${userInfo.user.firstName} ${userInfo.user.lastName}) already signed up for tournament`;
@@ -133,7 +133,7 @@ exports.joinTournament = [
 
             const player = new Player({
                 tournament: req.body.tournamentId,
-                userId: userInfo.user._id,
+                user: userInfo.user._id,
                 male: req.body.gender === "male",
                 categories: userCategories,
                 seeded: req.body.seeded,
@@ -155,7 +155,7 @@ exports.getUserTournaments = asyncHandler(async (req, res, next) => {
                 path: "host",
                 select: "firstName lastName"
             });
-        const players = await Player.find({ userId: validateUser.user._id });
+        const players = await Player.find({ user: validateUser.user._id });
         const tournamentsPlaying = [];
         for (let player of players) {
             const tournament = await Tournament.findById(player.tournament)
@@ -191,13 +191,18 @@ exports.isValidCode = [
             const tournamentExists = await Tournament.findOne({ tournamentCode: req.body.tournamentCode })
                 .populate("host", "firstName lastName").exec();
             if (tournamentExists) {
-                res.status(200).json({ 
-                    _id: tournamentExists._id, 
-                    name: tournamentExists.name,
-                    host: {
-                        "name-long": tournamentExists.host.firstName + " " + tournamentExists.host.lastName
-                    }
-                });
+                if (tournamentExists.stage === "sign-up") {
+                    res.status(200).json({ 
+                        _id: tournamentExists._id, 
+                        name: tournamentExists.name,
+                        host: {
+                            "name-long": tournamentExists.host.firstName + " " + tournamentExists.host.lastName
+                        }
+                    });
+                } else {
+                    console.log("Tournament " + tournamentExists._id + " is closed for registration.");
+                    res.status(400).json({ error: `${tournamentExists.name} is closed for registration.` });
+                }
                 return;
             }
             console.log("Invalid Code");

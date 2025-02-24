@@ -5,7 +5,8 @@ const Category = new Schema({
     tournament: { type: Schema.Types.ObjectId, ref: "Tournament", required: true },
     name: { type: String, required: true },
     code: { type: String, required: true },
-    locked: { type: Boolean, required: true, default: false }
+    locked: { type: Boolean, required: true, default: false },
+    doubles: { type: Boolean, required: true }
 });
 
 module.exports = mongoose.model("Category", Category);
