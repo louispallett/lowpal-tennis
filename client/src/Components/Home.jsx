@@ -16,12 +16,12 @@ export default function Home() {
                             join an existing tournament now!
                         </p>
                     </div>
-                    <img src={racketRed} alt="" className="hidden lg:block transform -scale-x-100 w-16 lg:w-36 h-auto lg:absolute flex-shrink-0 -left-20 top-36 z-30" />
-                    <img src={racketBlue} alt="" className="hidden lg:block w-16 lg:w-36 h-auto lg:absolute flex-shrink-0 -right-20 top-36 z-30" />
                 </div>
             </div>
-            <div className="flex flex-col gap-2.5">
+            <div className="flex flex-col gap-2.5 lg:mx-10">
                 <div className="md:grid grid-cols-2 flex flex-col gap-2.5 justify-center">
+                    <img src={racketRed} alt="" className="hidden lg:block transform -scale-x-100 w-16 lg:w-36 h-auto lg:absolute flex-shrink-0 -left-0 top-64 z-30" />
+                    <img src={racketBlue} alt="" className="hidden lg:block w-16 lg:w-36 h-auto lg:absolute flex-shrink-0 -right-0 top-64 z-30" />
                     <Host />
                     <Join />
                 </div>
