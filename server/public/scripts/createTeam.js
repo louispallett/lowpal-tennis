@@ -1,39 +1,3 @@
-/*
-- - START OF SIGN UP - -
-User signs up
-    categories get added to USER
-    user gets added to categories
-
-- - END OF SIGN UP - -
-
-- - START OF TEAM MATCHING - - 
-# For doubles only
-
-By (doubles) category
-    Seeded players in one array
-    Everyone else in another
-        Randomize both objects
-        Match 1 seeded with 1 non seeded until seeded.length == 0
-        Match the remaining seeded with each other
-
-- - END TEAM MATCHING - - 
-
-- - START MATCH MAKING - -
-
-# The way matches work is that we create them immediately after the team picker - we can use createTournament() to return the matches of the first round and 
-# pass it again with null values for the next round. Each Match needs a 'pointer' to the next round apart from the final which is null. This is how we build the
-# match array and I don't think it needs to be in any particular order.
-# Each match does need a CATEGORY though, so we can filter them.
-# In order to really understand them, it may just be better to work on the front end to visualize them!
-
-Create match objects by category
-    Fetch category and populate users (first name, last name)
-    Get first round matches
-    Get second round matches
-    Map out and create matches (this may have to be done manually for the moment)
-
-
-*/
 const mongoose = require("mongoose");
 
 const createMixedTeams = (category) => {

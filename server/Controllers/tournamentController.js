@@ -82,6 +82,7 @@ exports.createTournament = [
                     name: category.name,
                     code: category.code,
                     tournament: newTournament._id,
+                    doubles: category.code === "mDoubles" || category.code === "wDoubles" || category.code === "mixDoubles",
                 });
                 await newCategory.save();
             }

@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import tennisBall from "/assets/images/tennis-ball.svg";
 
 export default function Category() {
-    const [data, setData] = useState(null);
+    const [tournamentInfo, setTournamentInfo] = useState(null);
     const { categoryId } = useParams();
+
     useEffect(() => {
         const getCategoryDetails = () => {
             axios.get("/api/categories/get-category-detail", {
@@ -14,8 +16,7 @@ export default function Category() {
                     categoryId
                 }}
             ).then((response) => {
-                console.log(response.data);
-                setData(response.data);
+                setTournamentInfo(response.data);
             }).catch((err) => {
                 console.log(err);
             })
@@ -23,47 +24,48 @@ export default function Category() {
         getCategoryDetails();
     }, [])
     return (
-        <div className="flex flex-col gap-5 mx-5">
-            { data ? (
+        <div className="flex flex-col gap-5 mx-1.5 md:mx-5">
+            { tournamentInfo ? (
                 <>
                     <div className="form-input bg-lime-400">
-                        <h3>{data.category.name}</h3>
+                        <h3>{tournamentInfo.category.name}</h3>
                     </div>
-                    <CategoryInfo data={data} />
-                    <Actions data={data} />
+                    <CategoryInfo tournamentInfo={tournamentInfo} />
+                    <Actions tournamentInfo={tournamentInfo} />
                 </>
             ) : (
                 <></>
             )}
+            {/* <Link to={"/main/" + tournamentId}></Link> */}
         </div>
     )
 }
 
-function CategoryInfo({ data }) {
-    const noOfMales = data.players.filter(player => player.male).length;
-    const seeded = data.players.filter(player => player.seeded).length;
+function CategoryInfo({ tournamentInfo }) {
+    const noOfMales = tournamentInfo.players.filter(player => player.male).length;
+    const seeded = tournamentInfo.players.filter(player => player.seeded).length;
 
     return (
         <div className="form-input bg-slate-100 flex flex-col gap-2.5">
             <h3>Category Information</h3>
             <div className="tournament-grid-sm">
-                <p className="form-input">Number of players: {data.players.length}</p>
-                <p className="form-input">Number of active matches: {data.matches.filter(match => match.state === "SCHEDULED").length}</p>
+                <p className="form-input">Number of players: {tournamentInfo.players.length}</p>
+                <p className="form-input">Number of active matches: {tournamentInfo.matches.filter(match => match.state === "SCHEDULED").length}</p>
                 <p className="form-input">Males: {noOfMales}</p>
-                <p className="form-input">Females: {data.players.length - noOfMales}</p>
+                <p className="form-input">Females: {tournamentInfo.players.length - noOfMales}</p>
                 <p className="form-input">Seeded: {seeded}</p>
-                <p className="form-input">Non-Seeded: {data.players.length - seeded}</p>
+                <p className="form-input">Non-Seeded: {tournamentInfo.players.length - seeded}</p>
             </div>
             <div className="form-input bg-indigo-500">
                 <h4 className="text-white">Players</h4>
-                { data.players.length < 1 ? (
+                { tournamentInfo.players.length < 1 ? (
                     <div className="form-input bg-slate-100 flex gap-2.5 justify-center items-center">
                         <img src={tennisBall} className="h-16" id="spinner" alt="" />
                         <h4>No players yet!</h4>
                     </div>
                 ) : (
                     <div className="tournament-grid-sm">
-                        { data.players.map((player) => (
+                        { tournamentInfo.players.map((player) => (
                             <div className="form-input bg-slate-100">
                                 <p>{player.user.firstName} {player.user.lastName}</p>
                                 <p>Gender: {player.male ? "male" : "female"}</p>
@@ -78,29 +80,41 @@ function CategoryInfo({ data }) {
     )
 }
 
-function Actions({ data }) {
+function Actions({ tournamentInfo }) {
     return (
         <div className="form-input bg-slate-100 flex flex-col gap-2.5">
             <h3>Category Operations</h3>
-            { data.category.tournament.stage === "finished" ? (
+            { tournamentInfo.category.tournament.stage === "finished" ? (
                 <p>Finished</p>
             ) : (
                 <>
-                    { data.category.tournament.stage === "sign-up" && !data.category.locked ? (
+                    { tournamentInfo.category.tournament.stage === "sign-up" && !tournamentInfo.category.locked ? (
                         <>
-                            <h4>Creating Matches</h4>
-                            <p>
-                                Now that registration for this tournament is closed, you can create the matches and teams. You will only be able to create teams if this 
-                                is a doubles category.
-                            </p>
-                            <div className="flex gap-2.5">
-                                { data.category.doubles && (
-                                    <div className="flex items-center gap-2.5">
-                                        <CreateTeam data={data} />
-                                        <p className="w-64"> -&gt; and then -&gt;</p>
-                                    </div>
+                            <h4>Creating Matches & Teams</h4>
+                            <p>Now that registration for this tournament is closed, you can create the matches and teams.</p>
+                            <div>
+                                { tournamentInfo.category.doubles ? (
+                                    <>
+                                        { tournamentInfo.teams && (
+                                            <>
+                                                { tournamentInfo.teams.length < 1 ? (
+                                                    <>
+                                                        <p className="mb-2.5">
+                                                            Since this is a doubles category, you'll first need to create the teams. This works by randomizing the players and then pairing them together.
+                                                            If this category has seeded players, each seeded player will be matched with a non-seeded player until there are none left, and the remaining 
+                                                            non-seeded players will be matched together.
+                                                        </p>
+                                                        <CreateTeam players={tournamentInfo.players} />
+                                                    </>
+                                                ) : (
+                                                    <CreateMatches tournamentInfo={tournamentInfo} />
+                                                )}
+                                            </>
+                                        )}
+                                    </>
+                                ) : (
+                                    <CreateMatches tournamentInfo={tournamentInfo} />
                                 )}
-                                <CreateMatches data={data} />
                             </div>
                         </>
                     ) : (
@@ -123,22 +137,62 @@ function Actions({ data }) {
     )
 }
 
-function CreateTeam({ data }) {
+function CreateTeam({ players }) {
     return (
-        <button
-            className="submit text-center"
-        >
-            Create teams
-        </button>
+        <>
+            { players.length < 8 ? (
+                <div className="button-disabled">
+                    <p className="text-center">There must be at least 8 players in a doubles category before you create teams.</p>
+                </div>
+            ) : (
+                <Link to="create-teams">
+                    <button
+                        className="submit text-center"
+                    >
+                        Create teams
+                    </button>
+                </Link>
+            )}
+        </>
     )
 }
 
-function CreateMatches({ data }) {
+function CreateMatches({ tournamentInfo }) {
     return (
-        <button
-            className="submit text-center"
-        >
-            Create matches
-        </button>
+        <>
+            { tournamentInfo.category.doubles ? (
+                <>
+                    { tournamentInfo.teams.length < 1 ? (
+                        <div className="button-disabled">
+                            <p className="text-center">You must have at least 4 teams in this category to create matches.</p>
+                        </div>
+                    ) : (
+                        <Link to="create-matches">
+                            <button
+                                className="submit text-center"
+                            >
+                                Create matches
+                            </button>
+                        </Link>
+                    )}
+                </>
+            ) : (
+                <>
+                    { tournamentInfo.players.length < 4 ? (
+                        <div className="button-disabled">
+                            <p className="text-center">You must have at least 4 players in this category to create matches.</p>
+                        </div>
+                    ) : (
+                        <Link to="create-matches">
+                            <button
+                                className="submit text-center"
+                            >
+                                Create matches
+                            </button>
+                        </Link>
+                    )}
+                </>
+            )}
+        </>
     )
 } 

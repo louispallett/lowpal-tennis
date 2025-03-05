@@ -15,6 +15,8 @@ const session = require("express-session");
 const usersRouter = require("./routes/usersRouter");
 const tournamentRouter = require("./routes/tournamentRouter");
 const categoryRouter = require("./routes/categoryRouter.js");
+const teamRouter = require("./routes/teamRouter.js");
+const playerRouter = require("./routes/playerRouter.js");
 
 require('dotenv').config();
 
@@ -66,6 +68,8 @@ app.use(passport.session());
 app.use("/api/users", usersRouter);
 app.use("/api/tournaments", tournamentRouter)
 app.use("/api/categories", categoryRouter);
+app.use("/api/teams", teamRouter);
+app.use("/api/players", playerRouter);
 // app.use("/api/match", matchRouter);
 
 const PORT = process.env.PORT || 3000;
