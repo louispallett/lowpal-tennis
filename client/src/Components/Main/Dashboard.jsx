@@ -102,6 +102,11 @@ export default function Dashboard() {
                         Tournament Name Results
                     </div>
                     <TournamentResult /> */}
+                    <Link to="/main">
+                        <button className="submit">
+                            Back to Tournament Selection Page
+                        </button>
+                    </Link>
                 </>
             ) : (
                 <></>
@@ -141,11 +146,7 @@ function HostSection({ data }) {
                         Currently, the tournament is in it's 'sign-up' stage, meaning users with the right code can join. Once you wish to close registration, click the 
                         button below. Then you can use our tool to create the teams and matches.
                     </p>
-                    <button
-                        className="submit"
-                    >
-                        Close registration
-                    </button>
+                    <CloseRegistration />
                 </>
             )}
             <h4>Categories</h4>
@@ -169,6 +170,31 @@ function HostSection({ data }) {
                 <EditSettings data={data}/>
             )}
         </div>
+    )
+}
+
+function CloseRegistration() {
+    const { tournamentId } = useParams();
+
+    const closeRegistration = () => {
+        axios.post("/api/tournaments/close-tournament", {}, {
+            headers: { tournamentId }
+        }).then((response) => {
+            if (!response) {
+                console.log("Error");
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+
+    return (
+        <button
+            className="submit"
+            onClick={closeRegistration}
+        >
+            Close registration
+        </button>
     )
 }
 

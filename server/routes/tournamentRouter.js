@@ -19,4 +19,8 @@ router.get("/get-tournament-info", tournamentController.getTournamentInfo);
 
 router.get("/get-user-tournaments", tournamentController.getUserTournaments);
 
+router.post("/close-tournament", tournamentController.closeRegistration);
+
+router.post("/close-tournament", tournamentController.endTournament);
+
 module.exports = router;

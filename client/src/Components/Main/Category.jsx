@@ -7,7 +7,7 @@ import tennisBall from "/assets/images/tennis-ball.svg";
 
 export default function Category() {
     const [tournamentInfo, setTournamentInfo] = useState(null);
-    const { categoryId } = useParams();
+    const { tournamentId, categoryId } = useParams();
 
     useEffect(() => {
         const getCategoryDetails = () => {
@@ -36,7 +36,11 @@ export default function Category() {
             ) : (
                 <></>
             )}
-            {/* <Link to={"/main/" + tournamentId}></Link> */}
+            <Link to={"/main/tournament/" + tournamentId}>
+                <button className="submit">
+                    Back to Tournament Page
+                </button>
+            </Link>
         </div>
     )
 }
@@ -66,16 +70,46 @@ function CategoryInfo({ tournamentInfo }) {
                 ) : (
                     <div className="tournament-grid-sm">
                         { tournamentInfo.players.map((player) => (
-                            <div className="form-input bg-slate-100">
-                                <p>{player.user.firstName} {player.user.lastName}</p>
-                                <p>Gender: {player.male ? "male" : "female"}</p>
-                                <p>Seeded: {player.seeded ? "true" : "false"}</p>
-                                <p>Ranking: {player.ranking === 0 ? "Not assigned" : player.ranking}</p>
-                            </div>
+                            <PlayerCard info={player} key={player._id} />
                         ))}
                     </div>
                 )}
             </div>
+            { tournamentInfo.category.doubles && (
+                <>
+                    { tournamentInfo.teams.length > 0 && (
+                        <div className="form-input bg-indigo-500">
+                            <h4 className="text-white">Teams</h4>
+                            <div className="tournament-grid-sm">
+                                { tournamentInfo.teams.map((team) => (
+                                    <TeamCard info={team} key={team._id} />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </>
+            )}
+        </div>
+    )
+}
+
+function PlayerCard({ info }) {
+    return (
+        <div className="form-input bg-slate-100">
+            <p>{info.user.firstName} {info.user.lastName}</p>
+            <p>Gender: {info.male ? "male" : "female"}</p>
+            <p>Seeded: {info.seeded ? "true" : "false"}</p>
+            <p>Ranking: {info.ranking === 0 ? "Not assigned" : info.ranking}</p>
+        </div>
+    )
+}
+
+function TeamCard({ info }) {
+    return (
+        <div className="form-input bg-slate-100">
+            <p>{info.players[0].firstName} {info.players[0].lastName}</p>
+            <p>{info.players[1].firstName} {info.players[1].lastName}</p>
+            <p>Ranking: {info.ranking === 0 ? "Not assigned" : info.ranking}</p>
         </div>
     )
 }
@@ -88,7 +122,7 @@ function Actions({ tournamentInfo }) {
                 <p>Finished</p>
             ) : (
                 <>
-                    { tournamentInfo.category.tournament.stage === "sign-up" && !tournamentInfo.category.locked ? (
+                    { tournamentInfo.category.tournament.stage === "play" && !tournamentInfo.category.locked ? (
                         <>
                             <h4>Creating Matches & Teams</h4>
                             <p>Now that registration for this tournament is closed, you can create the matches and teams.</p>
@@ -129,9 +163,7 @@ function Actions({ tournamentInfo }) {
                             </p>
                         </>
                     )}
-
                 </>
-
             )}
         </div>
     )

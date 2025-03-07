@@ -6,10 +6,8 @@ const verifyUser = require("../config/verifyUser");
 
 const Tournament = require("../models/tournament");
 const Category = require("../models/category");
-const User = require("../models/user");
 const Match = require("../models/match");
 const Player = require("../models/player");
-const user = require("../models/user");
 
 exports.createTournament = [
     body("tournamentName")
@@ -109,26 +107,32 @@ exports.joinTournament = [
             return;
         }
 
-        
         try {
+            const tournament = await Tournament.findById(req.body.tournamentId);
+            if (tournament.stage != "sign-up") {
+                res.status(401).json({ error: "Registration for this tournament has now closed." });
+            }
+
             const userInfo = await verifyUser(req.headers.authorization);
             const playerExists = await Player.findOne({ 
                 tournament: req.body.tournamentId,
                 user: userInfo.user._id
             });
+
             if (playerExists) {
                 const error = `User (${userInfo.user.firstName} ${userInfo.user.lastName}) already signed up for tournament`;
                 console.log(error);
                 res.status(400).json({ error });
                 return;
             }
+
             const userCategories = [];
+            
             for (let category of req.body.categories) {
                 const databaseCategory = await Category.findOne({ 
                     tournament: req.body.tournamentId,
                     code: category
                 });
-                console.log(databaseCategory);
                 userCategories.push(databaseCategory._id);
             }
 
@@ -140,7 +144,9 @@ exports.joinTournament = [
                 seeded: req.body.seeded,
                 ranking: 0,
             });
+
             await player.save();
+            
             res.sendStatus(200);
         } catch (err) {
             console.log(err);
@@ -266,5 +272,29 @@ exports.getTournamentInfo = asyncHandler(async (req, res, next) => {
     } catch (err) {
         console.log("Server error TC0GTI " + err);
         res.status(500).json({ error: "Catch TC0GTI: " + err });
+    }
+});
+
+exports.closeRegistration = asyncHandler(async (req, res, next) => {
+    try {
+        await Tournament.updateOne(
+            { _id: req.headers.tournamentid },
+            { $set: { stage: "play" }}
+        );
+        res.sendStatus(200);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+exports.endTournament = asyncHandler(async (req, res, next) => {
+    try {
+        await Tournament.updateOne(
+            { _id: req.headers.tournamentid },
+            { $set: { stage: "finished" }}
+        );
+        res.sendStatus(200);
+    } catch (err) {
+        console.log(err);
     }
 });

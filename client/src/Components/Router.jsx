@@ -88,7 +88,7 @@ export default function Router() {
                                 },
                                 {
                                     element: <CreateMatch />,
-                                    path: "create-match"
+                                    path: "create-matches"
                                 }
                             ]
                         },
