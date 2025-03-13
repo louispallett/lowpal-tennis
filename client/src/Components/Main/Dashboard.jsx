@@ -63,6 +63,8 @@ import axios from "axios";
 import { useEffect, useState } from "react"
 import { useParams, Link } from "react-router-dom";
 
+import Dog from "../Auxiliary/Dog.jsx";
+
 export default function Dashboard() {
     const { tournamentId } = useParams();
     const [data, setData] = useState(null);
@@ -77,7 +79,6 @@ export default function Dashboard() {
                     TournamentId: tournamentId
                 }
             }).then((response) => {
-                console.log(response.data);
                 setData(response.data);
             }).catch((err) => {
                 console.log(err);
@@ -86,22 +87,21 @@ export default function Dashboard() {
         getData();
     }, []);
 
+    console.log(data)
+
     return (
-        <div className="flex flex-col gap-5 mx-5">
+        <div className="flex flex-col gap-5 mx-1.5 sm:mx-5">
             { data ? (
                 <>
                     <TournamentInfo data={data} />
                     { data.host && (
                         <HostSection data={data} />
                     )}
-                    {/* <div className="form-input bg-lime-400">
-                        <h4>Next Matches</h4>
-                    </div>
-                    <UserMatches />
-                    <div className="form-input bg-lime-400">
-                        Tournament Name Results
-                    </div>
-                    <TournamentResult /> */}
+                    { data.teams.length > 0 && (
+                        <UserTeams teams={data.teams} />
+                    )}
+                    <UserMatches matches={data.matches} />
+                    <TournamentResults matches={data.matches} />
                     <Link to="/main">
                         <button className="submit">
                             Back to Tournament Selection Page
@@ -134,7 +134,6 @@ function TournamentInfo({ data }) {
 function HostSection({ data }) {
     // If matches have already been created for a match, category.locked will be TRUE, so filter these out
     const openCategories = data.categories.filter(category => !category.locked);
-    console.log(openCategories)
     return (
         <div className="form-input bg-slate-100 flex flex-col gap-2.5">
             <h3>Host Section</h3>
@@ -216,4 +215,58 @@ function EditSettings({ data }) {
 
         </>
     )
+}
+
+function UserTeams({ teams }) {
+    return (
+        <p>{teams[0].ranking}</p>
+    )
+}
+
+function UserMatches({ matches }) {
+    return (
+        <div className="form-input bg-slate-100 flex flex-col gap-2.5 z-0">
+            <h3>Your Matches</h3>
+            { matches.length > 0 ? (
+                <>
+                    {matches.map(item => {
+                        <MatchCard data={item} key={item._id} />
+                    })}
+                </>
+            ) : (
+                <div className="flex flex-col pt-16 justify-center items-center gap-8">
+                    <Dog />
+                    <p>Looks like you haven't got any upcoming matches!</p>
+                </div>
+            )}        
+        </div>
+    )
+}
+
+function MatchCard({ data }) {
+
+}
+
+function TournamentResults({ matches }) {
+    return (
+        <div className="form-input bg-slate-100 flex flex-col gap-2.5 z-0">
+            <h3>Tournament Results</h3>
+            { matches.length > 0 ? (
+                <>
+                    {matches.map(item => {
+                        <Bracket data={item} key={item._id} />
+                    })}
+                </>
+            ) : (
+                <div className="flex flex-col pt-16 justify-center items-center gap-8">
+                    <Dog />
+                    <p>Matches for this tournament haven't been created yet!</p>
+                </div>
+            )}        
+        </div>
+    )
+}
+
+function Bracket({ data }) {
+
 }

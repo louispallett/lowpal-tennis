@@ -8,6 +8,7 @@ const Tournament = require("../models/tournament");
 const Category = require("../models/category");
 const Match = require("../models/match");
 const Player = require("../models/player");
+const Team = require("../models/team");
 
 exports.createTournament = [
     body("tournamentName")
@@ -256,9 +257,18 @@ exports.getTournamentInfo = asyncHandler(async (req, res, next) => {
         const tournamentMatches = await Match.find({ tournament: req.headers.tournamentid });
         const categories = await Category.find({ tournament: req.headers.tournamentid });
         const allPlayers = await Player.find({ tournament: req.headers.tournamentid });
-        
-        // Do later...
-        // const matches = await Match.find({ })
+        const userPlayer = await Player.findOne({ user: validateUser.user._id })
+        const userTeams = await Team.find({ players: userPlayer })
+            .populate({
+                path: "players",
+                select: "user -_id",
+                populate: {
+                    path: "user",
+                    select: "firstName lastName -_id"
+                },
+            }).exec();
+            
+        const userMatches = await Match.find({ participants: userPlayer._id });
 
         res.json({ 
             firstName: validateUser.user.firstName,
@@ -268,6 +278,8 @@ exports.getTournamentInfo = asyncHandler(async (req, res, next) => {
             host: validateUser.user._id == tournament.host._id,
             tournamentMatches,
             allPlayers: allPlayers.length,
+            teams: userTeams,
+            matches: userMatches,
         });
     } catch (err) {
         console.log("Server error TC0GTI " + err);

@@ -3,6 +3,7 @@
 @import "./texts.css";
 @import "./buttons.css";
 @import "./loader.css";
+@import "./dog.css";
 
 @tailwind base;
 @tailwind components;
