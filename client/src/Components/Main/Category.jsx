@@ -98,7 +98,7 @@ function PlayerCard({ info }) {
         <div className="form-input bg-slate-100">
             <p>{info.user.firstName} {info.user.lastName}</p>
             <p>Gender: {info.male ? "male" : "female"}</p>
-            <p>Seeded: {info.seeded ? "true" : "false"}</p>
+            <p>Seeded: {info.seeded ? "yes" : "no"}</p>
             <p>Ranking: {info.ranking === 0 ? "Not assigned" : info.ranking}</p>
         </div>
     )

@@ -173,27 +173,27 @@ function HostSection({ data }) {
 }
 
 function CloseRegistration() {
-    const { tournamentId } = useParams();
+    // const { tournamentId } = useParams();
 
-    const closeRegistration = () => {
-        axios.post("/api/tournaments/close-tournament", {}, {
-            headers: { tournamentId }
-        }).then((response) => {
-            if (!response) {
-                console.log("Error");
-            }
-        }).catch((err) => {
-            console.log(err);
-        })
-    }
+    // const closeRegistration = () => {
+    //     axios.post("/api/tournaments/close-tournament", {}, {
+    //         headers: { tournamentId }
+    //     }).then((response) => {
+    //         if (!response) {
+    //             console.log("Error");
+    //         }
+    //     }).catch((err) => {
+    //         console.log(err);
+    //     })
+    // }
 
     return (
-        <button
-            className="submit"
-            onClick={closeRegistration}
+        <Link to="close-registration"
+            className="submit text-center"
+            
         >
             Close registration
-        </button>
+        </Link>
     )
 }
 
