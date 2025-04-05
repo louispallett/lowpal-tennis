@@ -15,7 +15,6 @@ import DashboardSelect from "./Main/DashboardSelect.jsx";
 import SignUp from "./Users/SignUp.jsx";
 import CreateTeam from "./Main/CreateTeam.jsx";
 import CreateMatch from "./Main/CreateMatch.jsx";
-import CloseRegistration from "./Main/CloseRegistration.jsx";
 
 export default function Router() {
     const router = createBrowserRouter([
@@ -75,10 +74,6 @@ export default function Router() {
                         {
                             index: true,
                             element: <Dashboard />
-                        },
-                        {
-                            element: <CloseRegistration />,
-                            path: "close-registration"
                         },
                         {
                             path: "category/:categoryId",

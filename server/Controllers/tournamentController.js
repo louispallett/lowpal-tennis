@@ -287,29 +287,45 @@ exports.getTournamentInfo = asyncHandler(async (req, res, next) => {
     }
 });
 
-exports.closeRegistration = asyncHandler(async (req, res, next) => {
+exports.validateTournament = asyncHandler(async (req, res, next) => {
     try {
-        // In order to close, we need to check that each category in the tournament has at least:
-            // IF doubles: <= 8 players AND equal number
-            // IF singles: <= 4 players
         const allCategories = await Category.find({ tournament: req.headers.tournamentid }); // returns array
-        // loop through allCategories:
+        const invalid = [];
         for (let category of allCategories) {
-            const players = await Player.find({ category: category._id });
+            console.log(category._id)
+            const players = await Player.find({ categories: { $in: category._id } });
             if (category.doubles) {
                 if (players.length < 8) {
-                    throw new Error("Number of players in doubles category must be at least 8 players. Is currently: " + players.length);
+                    invalid.push(0);
                 }
                 if (players.length % 2 != 0) {
-                    throw new Error("Number of players in doubles must be an even number. Is currently: " + players.length);
+                    invalid.push(1);
                 }
             } else {
                 if (players.length < 4) {
-                    throw new Error("Number of players in singles category must be at least 4 players. Is currently: " + players.length);
+                    invalid.push(2);
+                }
+            }
+
+            if (category.code === "mixDoubles") {
+                const malePlayers = players.filter((player) => player.male);
+                const femalePlayers = players.filter((player) => !player.male);
+                if (malePlayers.length != femalePlayers.length) {
+                    invalid.push(3);
                 }
             }
         }
-        
+        res.json({ invalid });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({ 
+            error: err.message,
+        });
+    }
+});
+
+exports.closeRegistration = asyncHandler(async (req, res, next) => {
+    try {
         await Tournament.updateOne(
             { _id: req.headers.tournamentid },
             { $set: { stage: "play" }}
@@ -317,9 +333,6 @@ exports.closeRegistration = asyncHandler(async (req, res, next) => {
         res.sendStatus(200);
     } catch (err) {
         console.log(err);
-        res.status(401).json({ 
-            error: err.message,
-        });
     }
 });
 

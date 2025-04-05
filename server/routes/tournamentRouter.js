@@ -19,6 +19,8 @@ router.get("/get-tournament-info", tournamentController.getTournamentInfo);
 
 router.get("/get-user-tournaments", tournamentController.getUserTournaments);
 
+router.get("/validate-tournament", tournamentController.validateTournament);
+
 router.post("/close-registration", tournamentController.closeRegistration);
 
 router.post("/close-tournament", tournamentController.endTournament);

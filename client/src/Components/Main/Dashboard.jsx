@@ -64,6 +64,7 @@ import { useEffect, useState } from "react"
 import { useParams, Link } from "react-router-dom";
 
 import Dog from "../Auxiliary/Dog.jsx";
+import CloseRegistration from "./CloseRegistration.jsx";
 
 export default function Dashboard() {
     const { tournamentId } = useParams();
@@ -134,6 +135,7 @@ function TournamentInfo({ data }) {
 function HostSection({ data }) {
     // If matches have already been created for a match, category.locked will be TRUE, so filter these out
     const openCategories = data.categories.filter(category => !category.locked);
+    const [isOpen, setIsOpen] = useState(false);
     return (
         <div className="form-input bg-slate-100 flex flex-col gap-2.5">
             <h3>Host Section</h3>
@@ -145,7 +147,13 @@ function HostSection({ data }) {
                         Currently, the tournament is in it's 'sign-up' stage, meaning users with the right code can join. Once you wish to close registration, click the 
                         button below. Then you can use our tool to create the teams and matches.
                     </p>
-                    <CloseRegistration />
+                    <button
+                        className="submit text-center"
+                        onClick={() => setIsOpen(true)}
+                    >
+                        Close registration
+                    </button>
+                    <CloseRegistration isOpen={isOpen} setIsOpen={setIsOpen} />
                 </>
             )}
             <h4>Categories</h4>
@@ -169,31 +177,6 @@ function HostSection({ data }) {
                 <EditSettings data={data}/>
             )}
         </div>
-    )
-}
-
-function CloseRegistration() {
-    // const { tournamentId } = useParams();
-
-    // const closeRegistration = () => {
-    //     axios.post("/api/tournaments/close-tournament", {}, {
-    //         headers: { tournamentId }
-    //     }).then((response) => {
-    //         if (!response) {
-    //             console.log("Error");
-    //         }
-    //     }).catch((err) => {
-    //         console.log(err);
-    //     })
-    // }
-
-    return (
-        <Link to="close-registration"
-            className="submit text-center"
-            
-        >
-            Close registration
-        </Link>
     )
 }
 
