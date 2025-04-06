@@ -257,7 +257,7 @@ exports.getTournamentInfo = asyncHandler(async (req, res, next) => {
         const tournamentMatches = await Match.find({ tournament: req.headers.tournamentid });
         const categories = await Category.find({ tournament: req.headers.tournamentid });
         const allPlayers = await Player.find({ tournament: req.headers.tournamentid });
-        const userPlayer = await Player.findOne({ user: validateUser.user._id })
+        const userPlayer = await Player.findOne({ user: validateUser.user._id });
         const userTeams = await Team.find({ players: userPlayer })
             .populate({
                 path: "players",
@@ -267,8 +267,10 @@ exports.getTournamentInfo = asyncHandler(async (req, res, next) => {
                     select: "firstName lastName -_id"
                 },
             }).exec();
-            
-        const userMatches = userPlayer._id ? await Match.find({ participants: userPlayer._id }) : [];
+        let userMatches = [];
+        if (userPlayer) {
+            userMatches = await Match.find({ participants: userPlayer._id });
+        }
 
         res.json({ 
             firstName: validateUser.user.firstName,
