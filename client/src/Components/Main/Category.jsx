@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { Dialog } from '@headlessui/react';
 
 import tennisBall from "/assets/images/tennis-ball.svg";
 
@@ -32,6 +33,7 @@ export default function Category() {
                     </div>
                     <CategoryInfo tournamentInfo={tournamentInfo} />
                     <Actions tournamentInfo={tournamentInfo} />
+                    <DangerZone />
                 </>
             ) : (
                 <></>
@@ -228,3 +230,39 @@ function CreateMatches({ tournamentInfo }) {
         </>
     )
 } 
+
+function DangerZone() {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <div className="form-input bg-slate-100 flex flex-col gap-2.5">
+            <h3>Danger Zone</h3>
+            <p>These operations are permanent and should only be used when necessary. You have been warned.</p>
+            <div className="flex gap-2.5">
+                <button className="danger"
+                    onClick={() => setIsOpen(true)}
+                >
+                    Delete Category
+                </button>
+            </div>
+            <DeleteDialog isOpen={isOpen} setIsOpen={setIsOpen} />
+        </div>
+    )
+}
+
+function DeleteDialog({ isOpen, setIsOpen }) {
+    return (
+        <Dialog as="div" open={isOpen != false ? true : false} onClose={() => setIsOpen(false)} className="relative z-50 m-0 p-0">
+            <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+                <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+                <Dialog.Panel className="form-input text-base bg-slate-50 sm:p-6 overflow-y-auto max-h-[90vh]">
+                    <div className="flex flex-col gap-2.5">
+                        <h3>Delete this Category</h3>
+                        <p></p>
+                    </div>
+                </Dialog.Panel>
+            </div>
+        </Dialog>
+        
+    )
+}
