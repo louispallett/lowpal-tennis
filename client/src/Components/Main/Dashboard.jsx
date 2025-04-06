@@ -173,18 +173,18 @@ function HostSection({ data }) {
                     ))}
                 </div>
             )}
-            { data.tournament.stage === "sign-up" || data.tournament.stage === "play" && (
+            {/* { data.tournament.stage === "sign-up" || data.tournament.stage === "play" && (
                 <EditSettings data={data}/>
-            )}
+            )} */}
         </div>
     )
 }
 
-function CategoryFunctions({ data }) {
+function CategoryFunctions({ data, key }) {
     return (
             <Link to={"category/" + data._id}>
                 <button
-                    className="submit text-center"
+                    className="submit"
                 >
                     {data.name}
                 </button>

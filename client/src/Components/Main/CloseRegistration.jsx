@@ -3,6 +3,8 @@ import { Dialog } from '@headlessui/react';
 import { useState } from "react"
 import { useParams } from "react-router-dom";
 
+import Loader from "../Auxiliary/Loader";
+
 import { CheckBadgeIcon, XCircleIcon } from "@heroicons/react/16/solid";
 
 export default function CloseRegistration({ isOpen, setIsOpen }) {
@@ -40,6 +42,7 @@ export default function CloseRegistration({ isOpen, setIsOpen }) {
                             <ValidationRequirement rule={"All singles categories must have at least 4 players."} id={2} data={invalidatedData} submitted={submitted} loading={loading} />
                             <ValidationRequirement rule={"Mixed Doubles must have an equal number of male and female players"} id={3} data={invalidatedData} submitted={submitted} loading={loading} />
                         </div>
+                        <p>Please note that if your tournament does not have a certain category, the rule for that category will still show above, but it should still pass the validation.</p>
                         { invalidatedData.length > 0 && (
                             <div>
                                 <p className="text-red-600">Failed one or more validation checks? You can manage the players for each individual category to remove any if necessary.</p>

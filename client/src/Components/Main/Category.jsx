@@ -95,7 +95,7 @@ function CategoryInfo({ tournamentInfo }) {
     )
 }
 
-function PlayerCard({ info }) {
+function PlayerCard({ info, key }) {
     return (
         <div className="form-input bg-slate-100">
             <p>{info.user.firstName} {info.user.lastName}</p>
@@ -106,7 +106,7 @@ function PlayerCard({ info }) {
     )
 }
 
-function TeamCard({ info }) {
+function TeamCard({ info, key }) {
     return (
         <div className="form-input bg-slate-100">
             <p>{info.players[0].firstName} {info.players[0].lastName}</p>

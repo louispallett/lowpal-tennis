@@ -21,7 +21,6 @@ export default function JoinATournament() {
 }
 
 function SignUpParent() {
-    // const [validCode, setValidCode] = useState({ code: "adjlowejpoh0938q3j", name: "2025 Saltford In-House Tournament", hostName: "Louis Nicholson-Pallett"});
     const [validCode, setValidCode] = useState(false);
 
     return (

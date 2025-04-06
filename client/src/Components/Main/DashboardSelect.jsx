@@ -1,12 +1,14 @@
 import axios from "axios";
-import _ from "lodash";
+// import _ from "lodash";
 
 import { useEffect, useState } from "react";
 import racketRed from "/assets/images/racket-red.svg";
 import racketBlue from "/assets/images/racket-blue.svg";
 import { Link } from "react-router-dom";
+import Loader from "../Auxiliary/Loader";
 
 export default function TournamentSelect() {
+    const [loading, setLoading] = useState(true);
     const [userInfo, setUserInfo] = useState(false);
     const [serverError, setServerError] = useState(false);
     let tournamentsPlaying = {}, tournamentsHosting = {}
@@ -27,6 +29,8 @@ export default function TournamentSelect() {
                         console.log(err);
                         setServerError({ status: err.response.status, statusText: err.response.statusText });
                     }
+                }).finally(() => {
+                    setLoading(false);
                 });
         }
         getuserInfo();
@@ -57,15 +61,20 @@ export default function TournamentSelect() {
             <div className="form-input bg-lime-400">
                 <h3 className="md:text-center">Dashboard</h3>
             </div>
-            <div className="racket-cross-wrapper">
+            { loading && (
+                <div className="flex justify-center items-center my-6">
+                    <Loader />
+                </div>
+            )}
+            {/* <div className="racket-cross-wrapper">
                 <img src={racketRed} alt="" />
                 <img src={racketBlue} alt="" />
-            </div>
+            </div> */}
             { userInfo ? (
                 <>
                     { isHosting && (
                         <>
-                            <div className="form-input bg-indigo-500 text-white">
+                            <div className="form-input bg-indigo-500 mt-6 text-white">
                                 <h4 className="italic">Hosting tournaments</h4>
                             </div>
                             { tournamentsHosting.signUps.length > 0 && (
@@ -152,7 +161,7 @@ function UserTournamentPlaying({ data }) {
     )
 }
 
-function UserTournamentHosting({ data, tournamentsPlaying }) {
+function UserTournamentHosting({ data, tournamentsPlaying, key }) {
     console.log(data);
     const joined = tournamentsPlaying.signUps.some(item => item._id === data._id) || tournamentsPlaying.actives.some(item => item._id === data._id);
     const isFinished = data.stage === "finished";
