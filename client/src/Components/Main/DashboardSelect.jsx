@@ -55,15 +55,17 @@ export default function TournamentSelect() {
     return (
         <div className="flex flex-col gap-2.5 mx-5">
             <div className="form-input bg-lime-400">
-            <img src={racketRed} alt="" className="hidden lg:block transform -scale-x-100 w-16 lg:w-36 h-auto lg:absolute flex-shrink-0 -left-4 -top-8 z-30" />
-            <img src={racketBlue} alt="" className="hidden lg:block w-16 lg:w-36 h-auto lg:absolute flex-shrink-0 -right-4 -top-8 z-30" />
                 <h3 className="md:text-center">Dashboard</h3>
+            </div>
+            <div className="racket-cross-wrapper">
+                <img src={racketRed} alt="" />
+                <img src={racketBlue} alt="" />
             </div>
             { userInfo ? (
                 <>
                     { isHosting && (
                         <>
-                            <div className="mt-8 form-input bg-indigo-500 text-white">
+                            <div className="form-input bg-indigo-500 text-white">
                                 <h4 className="italic">Hosting tournaments</h4>
                             </div>
                             { tournamentsHosting.signUps.length > 0 && (
@@ -71,6 +73,10 @@ export default function TournamentSelect() {
                                     { tournamentsHosting.signUps.map((item) => (
                                         <UserTournamentHosting data={item} tournamentsPlaying={tournamentsPlaying} key={item._id} />
                                     ))}
+                                    <div className="racket-cross-wrapper">
+                                        <img src={racketRed} alt="" />
+                                        <img src={racketBlue} alt="" />
+                                    </div>
                                 </div>
                             )}
                             { tournamentsHosting.actives.length > 0 && (
@@ -115,6 +121,11 @@ export default function TournamentSelect() {
                                     ))}
                                 </div>
                             )}
+                            <div className="racket-cross-wrapper">
+                                <img src={racketRed} alt="" />
+                                <img src={racketBlue} alt="" />
+                            </div>
+
                         </>
                     )}
                 </>

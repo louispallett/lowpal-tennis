@@ -116,3 +116,25 @@
 .background-center {
 	background-color: #6B7280;
 }
+
+.racket-cross-wrapper {
+	margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+	align-items: center;
+    position: relative;
+}
+
+.racket-cross-wrapper > img:first-child {
+    height: 6rem; 	
+    transform: scaleX(-1);
+    z-index: 30;
+    position: relative;
+    left: 17px; 	
+}
+
+.racket-cross-wrapper > img:last-child {
+    height: 6rem; 	
+    position: relative;
+    right: 17px; 	
+}
