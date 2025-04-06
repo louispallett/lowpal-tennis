@@ -4,9 +4,11 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Dialog } from '@headlessui/react';
 
+import Loader from "../Auxiliary/Loader";
 import tennisBall from "/assets/images/tennis-ball.svg";
 
 export default function Category() {
+    const [loading, setLoading] = useState(true);
     const [tournamentInfo, setTournamentInfo] = useState(null);
     const { tournamentId, categoryId } = useParams();
 
@@ -20,12 +22,14 @@ export default function Category() {
                 setTournamentInfo(response.data);
             }).catch((err) => {
                 console.log(err);
+            }).finally(() => {
+                setLoading(false);
             })
         }
         getCategoryDetails();
     }, [])
     return (
-        <div className="flex flex-col gap-5 mx-1.5 md:mx-5">
+        <div className="flex flex-col justify-center items-center gap-5 mx-1.5 md:mx-5">
             { tournamentInfo ? (
                 <>
                     <div className="form-input bg-lime-400">
@@ -36,7 +40,7 @@ export default function Category() {
                     <DangerZone />
                 </>
             ) : (
-                <></>
+                <Loader />
             )}
             <Link to={"/main/tournament/" + tournamentId}>
                 <button className="submit">

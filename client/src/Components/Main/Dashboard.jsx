@@ -62,12 +62,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
 import { useParams, Link } from "react-router-dom";
+import Loader from "../Auxiliary/Loader.jsx";
 
-import Dog from "../Auxiliary/Dog.jsx";
+// import Dog from "../Auxiliary/Dog.jsx";
+import racketRed from "/assets/images/racket-red.svg";
+import racketBlue from "/assets/images/racket-blue.svg";
 import CloseRegistration from "./CloseRegistration.jsx";
 
 export default function Dashboard() {
     const { tournamentId } = useParams();
+    const [loading, setLoading] = useState(true);
     const [data, setData] = useState(null);
 
     useEffect(() => {
@@ -83,6 +87,8 @@ export default function Dashboard() {
                 setData(response.data);
             }).catch((err) => {
                 console.log(err);
+            }).finally(() => {
+                setLoading(false);
             })
         }
         getData();
@@ -91,7 +97,7 @@ export default function Dashboard() {
     console.log(data)
 
     return (
-        <div className="flex flex-col gap-5 mx-1.5 sm:mx-5">
+        <div className="flex flex-col justify-center items-center gap-5 mx-1 sm:mx-1.5 lg:mx-5">
             { data ? (
                 <>
                     <TournamentInfo data={data} />
@@ -110,7 +116,7 @@ export default function Dashboard() {
                     </Link>
                 </>
             ) : (
-                <></>
+                <Loader />
             )}
         </div>
     )
@@ -142,7 +148,7 @@ function HostSection({ data }) {
             <p>Hi {data.firstName}! Welcome to your host section. Here you can make unique operations and changes to the tournament reserved only for you (as host).</p>
             { data.tournament.stage === "sign-up" && (
                 <>
-                    <p><i>Closing registration</i></p>
+                    <h4 className="text-center">Closing registration</h4>
                     <p>
                         Currently, the tournament is in it's 'sign-up' stage, meaning users with the right code can join. Once you wish to close registration, click the 
                         button below. Then you can use our tool to create the teams and matches.
@@ -156,7 +162,7 @@ function HostSection({ data }) {
                     <CloseRegistration isOpen={isOpen} setIsOpen={setIsOpen} />
                 </>
             )}
-            <h4>Categories</h4>
+            <h4 className="text-center mt-4">Categories</h4>
             <p>
                 Below you'll see each category for your tournament. You can click on each individual category to find out information about the category and create the matches
                 for each category in your tournament.
@@ -217,8 +223,11 @@ function UserMatches({ matches }) {
                     })}
                 </>
             ) : (
-                <div className="flex flex-col pt-16 justify-center items-center gap-8">
-                    <Dog />
+                <div className="flex flex-col justify-center items-center gap-8">
+                    <div className="racket-cross-wrapper">
+                        <img src={racketRed} alt="" />
+                        <img src={racketBlue} alt="" />
+                    </div>
                     <p>Looks like you haven't got any upcoming matches!</p>
                 </div>
             )}        
@@ -241,8 +250,11 @@ function TournamentResults({ matches }) {
                     })}
                 </>
             ) : (
-                <div className="flex flex-col pt-16 justify-center items-center gap-8">
-                    <Dog />
+                <div className="flex flex-col justify-center items-center gap-8">
+                    <div className="racket-cross-wrapper">
+                        <img src={racketRed} alt="" />
+                        <img src={racketBlue} alt="" />
+                    </div>
                     <p>Matches for this tournament haven't been created yet!</p>
                 </div>
             )}        
