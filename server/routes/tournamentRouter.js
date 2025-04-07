@@ -21,8 +21,8 @@ router.get("/get-user-tournaments", tournamentController.getUserTournaments);
 
 router.get("/validate-tournament", tournamentController.validateTournament);
 
-router.post("/close-registration", tournamentController.closeRegistration);
+router.put("/update-tournament-stage", tournamentController.updateTournamentStage);
 
-router.post("/close-tournament", tournamentController.endTournament);
+router.post("/end-tournament", tournamentController.endTournament);
 
 module.exports = router;

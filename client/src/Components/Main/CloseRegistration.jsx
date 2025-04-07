@@ -60,9 +60,7 @@ export default function CloseRegistration({ isOpen, setIsOpen }) {
                                         { submitted ? (
                                             <>
                                                 { invalidatedData.length < 1 ? (
-                                                    <button className="submit hover:bg-lime-500">
-                                                        <b>Close Tournament</b>
-                                                    </button>
+                                                    <CloseRegistrationButton />
                                                 ) : (
                                                     <button className="submit hover:bg-lime-500"
                                                         onClick={validateTournament} 
@@ -113,5 +111,62 @@ function ValidationRequirement({ rule, id, data, submitted, loading }) {
                 )}
             </div>
         </div>
+    )
+}
+
+function CloseRegistrationButton() {
+    const { tournamentId } = useParams();
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    const handleCloseRegistration = (() => {
+        setLoading(true);
+        axios.put("/api/tournaments/update-tournament-stage", {
+            tournamentId,
+            stage: "play"
+        }).then(() => {
+            console.log("Success");
+            setSuccess(true);
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000)
+        }).catch((err) => {
+            console.error('Error updating tournament stage:', err);
+        }).finally(() => {
+            setLoading(false);
+        })
+    });
+
+    return (
+        <>
+            { loading ? (
+                <button className="submit cursor-wait flex justify-center">
+                    <div className="spinner h-6 w-6"></div>
+                </button>
+            ) : (
+                <>
+                    { error ? (
+                        <p>Error</p>
+                    ) : (
+                        <>
+                            { success ? (
+                                <button className="success flex justify-center items-center gap-2.5"
+                                >
+                                    <b>Success! Please wait...</b>
+                                    <div className="spinner w-4 h-4"></div>
+                                </button>
+                            ) : (
+                                <button className="submit hover:bg-lime-500"
+                                    onClick={handleCloseRegistration}
+                                >
+                                    <b>Close Tournament</b>
+                                </button>
+                            )}
+                        </>
+                    )}
+                </>
+            ) }
+        </>
     )
 }

@@ -294,7 +294,6 @@ exports.validateTournament = asyncHandler(async (req, res, next) => {
         const allCategories = await Category.find({ tournament: req.headers.tournamentid }); // returns array
         const invalid = [];
         for (let category of allCategories) {
-            console.log(category._id)
             const players = await Player.find({ categories: { $in: category._id } });
             if (category.doubles) {
                 if (players.length < 8) {
@@ -326,15 +325,17 @@ exports.validateTournament = asyncHandler(async (req, res, next) => {
     }
 });
 
-exports.closeRegistration = asyncHandler(async (req, res, next) => {
+exports.updateTournamentStage = asyncHandler(async (req, res, next) => {
+    const { tournamentId, stage } = req.body;
     try {
         await Tournament.updateOne(
-            { _id: req.headers.tournamentid },
-            { $set: { stage: "play" }}
+            { _id: tournamentId },
+            { $set: { stage }}
         );
         res.sendStatus(200);
     } catch (err) {
         console.log(err);
+        res.status(500).json({ err: err.message })
     }
 });
 
