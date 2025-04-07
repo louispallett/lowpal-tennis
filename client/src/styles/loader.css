@@ -18,6 +18,7 @@
   }
   
   .banter-loader__box:before {
+    outline: 2px solid black; /* Added myself... delete if necessary */
     content: "";
     position: absolute;
     left: 0;

@@ -3,7 +3,6 @@
 @import "./texts.css";
 @import "./buttons.css";
 @import "./loader.css";
-@import "./dog.css";
 
 @tailwind base;
 @tailwind components;
@@ -93,12 +92,6 @@ input[type="checkbox"] {
     background-image: url("https://res.cloudinary.com/divlee1zx/image/upload/v1727905355/20231014_145351_i44afe.jpg");
     background-size: cover;
     background-position: center top;
-}
-
-@media (max-width: 768px) { 
-    h3 {
-      font-size: 1.5rem;
-    }
 }
 
 @keyframes rotate {

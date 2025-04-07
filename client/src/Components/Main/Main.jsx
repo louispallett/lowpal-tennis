@@ -35,9 +35,6 @@ function Header() {
                     <Link className="menu-link" to="/main">
                         <p>Dashboard</p>
                     </Link>
-                    <Link className="menu-link" to="/about">
-                        <p>About</p>
-                    </Link>
                     <Link className="menu-link" to="/users/account-settings">
                         <p>Account</p>
                     </Link>

@@ -112,7 +112,6 @@
 	}
 }
 
-
 .background-center {
 	background-color: #6B7280;
 }
@@ -137,4 +136,22 @@
     height: 6rem; 	
     position: relative;
     right: 17px; 	
+}
+
+.spin-loader {
+	border: 3px solid #ffffff00;
+	border-left: 3px solid #4f46e5;
+	padding: 2rem;
+	border-radius: 100%;
+	animation: spin infinite 1.3s linear;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
 }

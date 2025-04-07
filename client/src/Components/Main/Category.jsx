@@ -8,6 +8,7 @@ import Loader from "../Auxiliary/Loader";
 import tennisBall from "/assets/images/tennis-ball.svg";
 
 export default function Category() {
+    const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [tournamentInfo, setTournamentInfo] = useState(null);
     const { tournamentId, categoryId } = useParams();
@@ -29,25 +30,33 @@ export default function Category() {
         getCategoryDetails();
     }, [])
     return (
-        <div className="flex flex-col justify-center items-center gap-5 mx-1.5 md:mx-5">
-            { tournamentInfo ? (
-                <>
-                    <div className="form-input bg-lime-400">
-                        <h3>{tournamentInfo.category.name}</h3>
-                    </div>
-                    <CategoryInfo tournamentInfo={tournamentInfo} />
-                    <Actions tournamentInfo={tournamentInfo} />
-                    <DangerZone />
-                </>
-            ) : (
-                <Loader />
-            )}
-            <Link to={"/main/tournament/" + tournamentId}>
-                <button className="submit">
-                    Back to Tournament Page
-                </button>
-            </Link>
-        </div>
+        <>
+            <div className="flex justify-center items-center">
+                {( loading && (
+                    <Loader />
+                ))}
+            </div>
+            <div className="flex flex-col gap-5 mx-1.5 md:mx-5">
+                { tournamentInfo && (
+                    <>
+                        <div className="form-input bg-lime-400">
+                            <h3>{tournamentInfo.category.name}</h3>
+                        </div>
+                        <CategoryInfo tournamentInfo={tournamentInfo} />
+                        <Actions tournamentInfo={tournamentInfo} />
+                        <DangerZone />
+                    </>
+                )}
+                { error && (
+                    <></>
+                )}
+                <Link to={"/main/tournament/" + tournamentId}>
+                    <button className="submit">
+                        Back to Tournament Page
+                    </button>
+                </Link>
+            </div>
+        </>
     )
 }
 

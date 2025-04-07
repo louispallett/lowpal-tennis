@@ -57,7 +57,7 @@ export default function TournamentSelect() {
     }
 
     return (
-        <div className="flex flex-col gap-2.5 mx-5">
+        <div className="flex flex-col gap-2.5 mx-1 sm:mx-1.5 md:mx-5">
             <div className="form-input bg-lime-400">
                 <h3 className="md:text-center">Dashboard</h3>
             </div>
@@ -82,10 +82,6 @@ export default function TournamentSelect() {
                                     { tournamentsHosting.signUps.map((item) => (
                                         <UserTournamentHosting data={item} tournamentsPlaying={tournamentsPlaying} key={item._id} />
                                     ))}
-                                    <div className="racket-cross-wrapper">
-                                        <img src={racketRed} alt="" />
-                                        <img src={racketBlue} alt="" />
-                                    </div>
                                 </div>
                             )}
                             { tournamentsHosting.actives.length > 0 && (
@@ -102,6 +98,10 @@ export default function TournamentSelect() {
                                     ))}
                                 </div>
                             )}
+                            <div className="racket-cross-wrapper">
+                                <img src={racketRed} alt="" />
+                                <img src={racketBlue} alt="" />
+                            </div>
                         </>
                     )}
                     { isPlaying && (
@@ -150,7 +150,7 @@ export default function TournamentSelect() {
 
 function UserTournamentPlaying({ data }) {
     return (
-        <Link to={"tournament/" + data._id} className="form-input bg-lime-500 hover:bg-lime-400">
+        <Link to={"tournament/" + data._id} className="form-input hover:bg-lime-400">
             <h3>{data.name}</h3>
             <div className="tournament-grid-sm">
                 <p className="form-input bg-indigo-500 text-white">Host: {data.host["name-long"]}</p>
@@ -168,7 +168,7 @@ function UserTournamentHosting({ data, tournamentsPlaying, key }) {
 
     return (
         <div className="flex gap-1.5 lg:flex-row flex-col">
-            <Link to={"tournament/" + data._id} className="form-input bg-lime-500 hover:bg-lime-400">
+            <Link to={"tournament/" + data._id} className="form-input hover:bg-lime-400">
                 <h3>{data.name}</h3>
                 <div className="tournament-grid-sm">
                     <p className="form-input bg-indigo-500 text-white">Host: {data.host["name-long"]}</p>

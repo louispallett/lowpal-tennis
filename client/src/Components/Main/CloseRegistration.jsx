@@ -49,7 +49,7 @@ export default function CloseRegistration({ isOpen, setIsOpen }) {
                                 <p className="text-red-600">If you are no longer able to get the minimum number of players, you can cancel and delete a category on the category page.</p>
                             </div>
                         )}
-                        <div className="flex gap-2.5">
+                        <div className="flex flex-col md:flex-row gap-2.5">
                             <div className="w-full">
                                 { loading ? (
                                     <button className="submit cursor-wait flex justify-center">
@@ -62,7 +62,7 @@ export default function CloseRegistration({ isOpen, setIsOpen }) {
                                                 { invalidatedData.length < 1 ? (
                                                     <CloseRegistrationButton />
                                                 ) : (
-                                                    <button className="submit hover:bg-lime-500"
+                                                    <button className="submit"
                                                         onClick={validateTournament} 
                                                     >
                                                         <b>Validate</b>
@@ -70,7 +70,7 @@ export default function CloseRegistration({ isOpen, setIsOpen }) {
                                                 )}
                                             </>
                                         ) : (
-                                            <button className="submit hover:bg-lime-500"
+                                            <button className="submit"
                                                 onClick={validateTournament} 
                                             >
                                                 <b>Validate</b>
@@ -80,7 +80,7 @@ export default function CloseRegistration({ isOpen, setIsOpen }) {
                                 )}
 
                             </div>
-                             <button className="submit hover:bg-lime-500" onClick={() => setIsOpen(false)}>
+                             <button className="submit" onClick={() => setIsOpen(false)}>
                                 <b>Close</b>
                             </button>
                         </div>
@@ -157,7 +157,7 @@ function CloseRegistrationButton() {
                                     <div className="spinner w-4 h-4"></div>
                                 </button>
                             ) : (
-                                <button className="submit hover:bg-lime-500"
+                                <button className="submit"
                                     onClick={handleCloseRegistration}
                                 >
                                     <b>Close Tournament</b>
