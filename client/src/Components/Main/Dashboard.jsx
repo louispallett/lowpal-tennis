@@ -164,7 +164,7 @@ function UserTeams({ teams }) {
 function UserMatches({ matches }) {
     return (
         <div className="form-input bg-slate-100 flex flex-col gap-2.5 z-0">
-            <h3>Your Matches</h3>
+            <h3>Your Upcoming Matches</h3>
             { matches.length > 0 ? (
                 <>
                     {matches.map(item => {
