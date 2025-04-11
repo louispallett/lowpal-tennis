@@ -17,7 +17,8 @@ exports.getCategoryDetail = asyncHandler(async (req, res, next) => {
             .populate({
                 path: "user",
                 select: "firstName lastName -_id"
-            });
+            })
+            .sort("ranking");
         const matches = await Match.find({ category: categoryId });
         const teams = await Team.find({ category: categoryId })
         // console.log(players, category, matches);

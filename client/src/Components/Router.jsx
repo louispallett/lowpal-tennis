@@ -13,8 +13,6 @@ import Category from "./Main/Category.jsx";
 import Match from "./Main/Match";
 import DashboardSelect from "./Main/DashboardSelect.jsx";
 import SignUp from "./Users/SignUp.jsx";
-import CreateTeam from "./Main/CreateTeam.jsx";
-import CreateMatch from "./Main/CreateMatch.jsx";
 
 export default function Router() {
     const router = createBrowserRouter([
@@ -77,20 +75,7 @@ export default function Router() {
                         },
                         {
                             path: "category/:categoryId",
-                            children: [
-                                {
-                                    element: <Category />,
-                                    index: true
-                                },
-                                {
-                                    element: <CreateTeam />,
-                                    path: "create-teams"
-                                },
-                                {
-                                    element: <CreateMatch />,
-                                    path: "create-matches"
-                                }
-                            ]
+                            element: <Category />,
                         },
                         {
                             path: "match/:matchId",

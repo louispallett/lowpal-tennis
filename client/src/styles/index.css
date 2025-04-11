@@ -52,6 +52,11 @@ ul {
     list-style:circle;
 }
 
+hr {
+    border-top: 3px double #333;
+    height: 5px;
+}
+
 input:hover, 
 input:focus,
 select:focus,

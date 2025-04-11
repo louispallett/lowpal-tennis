@@ -95,8 +95,6 @@ export default function Dashboard() {
         getData();
     }, []);
 
-    console.log(data)
-
     return (
         <>
             <div className="flex justify-center items-center">

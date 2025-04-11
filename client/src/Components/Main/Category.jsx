@@ -6,6 +6,7 @@ import { Dialog } from '@headlessui/react';
 
 import Loader from "../Auxiliary/Loader";
 import tennisBall from "/assets/images/tennis-ball.svg";
+import errorSVG from "/assets/images/error.svg";
 
 export default function Category() {
     const [error, setError] = useState(null);
@@ -23,6 +24,7 @@ export default function Category() {
                 setTournamentInfo(response.data);
             }).catch((err) => {
                 console.log(err);
+                setError(err);
             }).finally(() => {
                 setLoading(false);
             })
@@ -48,7 +50,13 @@ export default function Category() {
                     </>
                 )}
                 { error && (
-                    <></>
+                    <>
+                        <img src={errorSVG} alt="" className="h-24"/>
+                        <div className="text-center">
+                            <p>{error}</p>
+                            <p>Sorry about that! Some sort of error has occured. If the issue keeps persisting, please contact the administrator.</p>
+                        </div>
+                    </>
                 )}
                 <Link to={"/main/tournament/" + tournamentId}>
                     <button className="submit">
@@ -153,16 +161,16 @@ function Actions({ tournamentInfo }) {
                                                             If this category has seeded players, each seeded player will be matched with a non-seeded player until there are none left, and the remaining 
                                                             non-seeded players will be matched together.
                                                         </p>
-                                                        <CreateTeam players={tournamentInfo.players} />
+                                                        <CreateTeams playersLength={tournamentInfo.players.length}  />
                                                     </>
                                                 ) : (
-                                                    <CreateMatches tournamentInfo={tournamentInfo} />
+                                                    <CreateMatches />
                                                 )}
                                             </>
                                         )}
                                     </>
                                 ) : (
-                                    <CreateMatches tournamentInfo={tournamentInfo} />
+                                    <CreateMatches />
                                 )}
                             </div>
                         </>
@@ -184,65 +192,96 @@ function Actions({ tournamentInfo }) {
     )
 }
 
-function CreateTeam({ players }) {
+function CreateTeams({ playersLength }) {
+    const { tournamentId, categoryId } = useParams();
+    const [isOpen, setIsOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [teams, setTeams] = useState(null);
+    const [error, setError] = useState(null);
+
+    const checkPlayerRankings = () => {
+        setLoading(true);
+        if (isOpen) {
+            axios.post("/api/teams/create-teams", {
+                categoryId
+            }).then(response => {
+                setTeams(response.data.teams);
+            }).catch((err) => {
+                setError(err.message);
+            }).finally(() => {
+                setIsOpen(false);
+                setLoading(false);
+            });
+        } else {
+            axios.get("/api/players/check-player-rankings", {
+                headers: { tournamentId }
+            }).then((response) => {
+                const zeroPlayers = response.data.zeroPlayers;
+                if (zeroPlayers.length > 0) {
+                    setIsOpen(true);
+                } else {
+                    axios.post("/api/teams/create-teams", {
+                        categoryId
+                    }).then(response => {
+                        setTeams(response.data.teams);
+                    }).catch((err) => {
+                        setError(err.message);
+                    });
+                }
+            }).catch((err) => {
+                setError(err.message);
+            }).finally(() => {
+                setLoading(false);
+            });
+        }
+    }
+
     return (
         <>
-            { players.length < 8 ? (
+            { playersLength < 8 ? (
                 <div className="button-disabled">
                     <p className="text-center">There must be at least 8 players in a doubles category before you create teams.</p>
                 </div>
             ) : (
-                <Link to="create-teams">
-                    <button
-                        className="submit text-center"
-                    >
-                        Create teams
-                    </button>
-                </Link>
+                <div className="flex flex-col gap-2.5">
+                    { isOpen && (
+                        <div className="form-input px-2.5 text-base">
+                            <h5 className="text-red-700">Warning</h5>
+                            <p>
+                                One or more players in your tournament has a zero (0) ranking. You may continue in creating teams and matches, however
+                                the matches will not be organised strategically. This is not recommended for larger tournaments.
+                            </p>
+                            <p>If you wish to continue, please click 'Create Teams' again.</p>
+                            <p>You can read more about strategically organised tournaments in the <Link to="/about" className="text-click">About</Link> section.</p>
+                        </div>
+                    )}
+                    { loading ? (
+                        <button className="submit cursor-wait flex justify-center">
+                            <div className="spinner h-6 w-6"></div>
+                        </button>
+                    ) : (
+                        <button
+                            className={ teams ? "hidden" : "submit text-center"}
+                            onClick={checkPlayerRankings}
+                        >
+                            Create teams
+                        </button>
+                    )}
+                </div>
             )}
         </>
     )
 }
 
-function CreateMatches({ tournamentInfo }) {
+function CreateMatches() {
     return (
-        <>
-            { tournamentInfo.category.doubles ? (
-                <>
-                    { tournamentInfo.teams.length < 1 ? (
-                        <div className="button-disabled">
-                            <p className="text-center">You must have at least 4 teams in this category to create matches.</p>
-                        </div>
-                    ) : (
-                        <Link to="create-matches">
-                            <button
-                                className="submit text-center"
-                            >
-                                Create matches
-                            </button>
-                        </Link>
-                    )}
-                </>
-            ) : (
-                <>
-                    { tournamentInfo.players.length < 4 ? (
-                        <div className="button-disabled">
-                            <p className="text-center">You must have at least 4 players in this category to create matches.</p>
-                        </div>
-                    ) : (
-                        <Link to="create-matches">
-                            <button
-                                className="submit text-center"
-                            >
-                                Create matches
-                            </button>
-                        </Link>
-                    )}
-                </>
-            )}
-        </>
+        <button
+            className="submit text-center"
+        >
+            Create matches
+        </button>
     )
-} 
+}
 
 function DangerZone() {
     const [isOpen, setIsOpen] = useState(false);
