@@ -257,8 +257,8 @@ exports.getTournamentInfo = asyncHandler(async (req, res, next) => {
         const tournamentMatches = await Match.find({ tournament: req.headers.tournamentid });
         const categories = await Category.find({ tournament: req.headers.tournamentid });
         const allPlayers = await Player.find({ tournament: req.headers.tournamentid });
-        const userPlayer = await Player.findOne({ user: validateUser.user._id });
-        const userTeams = await Team.find({ players: userPlayer })
+        const userPlayer = await Player.findOne({ user: validateUser.user._id, tournament: req.headers.tournamentid });
+        const userTeams = await Team.find({ players: userPlayer, category: { $in: categories } })
             .populate({ path: "players", 
                 select: "user -_id",
                 populate: [
