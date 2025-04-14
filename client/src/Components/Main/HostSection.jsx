@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link, useParams } from "react-router-dom";
 
 import CloseRegistration from "./CloseRegistration.jsx";
+import ReOpenRegistration from "./ReOpenRegistration.jsx";
 import errorSVG from "/assets/images/error.svg";
 import Loader from "../Auxiliary/Loader";
 import axios from "axios";
@@ -11,11 +12,12 @@ import { useForm } from "react-hook-form";
 export default function HostSection({ data }) {
     // If matches have already been created for a match, category.locked will be TRUE, so filter these out
     const openCategories = data.categories.filter(category => !category.locked);
-    return (
+    const canReOpen = data.matches.length < 1 && data.allTeams.length < 1;
+        return (
         <div className="form-input bg-slate-100 flex flex-col gap-2.5">
             <h3>Host Section</h3>
             <p>Hi {data.firstName}! Welcome to your host section. Here you can make unique operations and changes to the tournament reserved only for you (as host).</p>
-            <TournamentStage stage={data.tournament.stage} openCategoriesLength={openCategories.length} />
+            <TournamentStage stage={data.tournament.stage} openCategoriesLength={openCategories.length} canReOpen={canReOpen} />
             { openCategories.length > 0 && (
                 <>
                     <h4 className="text-center mt-4">Categories</h4>
@@ -45,8 +47,9 @@ export default function HostSection({ data }) {
     )
 }
 
-function TournamentStage({ stage, openCategoriesLength }) {
+function TournamentStage({ stage, openCategoriesLength, canReOpen }) {
     const [isCloseRegOpen, setIsCloseRegOpen] = useState(false);
+    const [isReOpenOpen, setIsReOpenOpen] = useState(false);
     const [isFinishOpen, setIsFinishOpen] = useState(false);
 
     return (
@@ -81,6 +84,21 @@ function TournamentStage({ stage, openCategoriesLength }) {
                             <p>
                                 Once you create the matches for a category, it will be locked, and you won't able to access this page again.
                             </p>
+                            { canReOpen && (
+                            <>
+                                <button
+                                    className="submit text-center mt-2.5"
+                                    onClick={() => setIsReOpenOpen(true)}
+                                >
+                                    Re-Open Registration<i>*</i>
+                                </button>
+                                <p className="text-sm mt-2.5 italic">
+                                    * You can re-open registration as no teams or matches have been created. As soon as you create teams or matches for any category, you 
+                                    will no longer be able to re-open registration and no other players can join.
+                                </p>
+                                <ReOpenRegistration isOpen={isReOpenOpen} setIsOpen={setIsReOpenOpen} />
+                            </>
+                            )}
                         </>
                     ) : (
                         <>
@@ -107,7 +125,7 @@ function TournamentStage({ stage, openCategoriesLength }) {
     )
 }
 
-function CategoryFunctions({ data, key }) {
+function CategoryFunctions({ data }) {
     return (
             <Link to={"category/" + data._id}>
                 <button
@@ -282,7 +300,7 @@ function RankPlayers() {
     )
 }
 
-function PlayerRankCard({ data, key, register, reg }) {
+function PlayerRankCard({ data, register, reg }) {
     return (
         <div className="form-input p-2 flex flex-1 justify-between shadow-none items-center gap-2.5">
             <p className="text-left">{data.user["name-long"]}</p>

@@ -257,6 +257,7 @@ exports.getTournamentInfo = asyncHandler(async (req, res, next) => {
             });
         const tournamentMatches = await Match.find({ tournament: req.headers.tournamentid });
         const categories = await Category.find({ tournament: req.headers.tournamentid });
+        const allTeams = await Team.find({ category: { $in: categories }});
         const allPlayers = await Player.find({ tournament: req.headers.tournamentid });
         const userPlayer = await Player.findOne({ user: validateUser.user._id, tournament: req.headers.tournamentid });
         const userTeams = await Team.find({ players: userPlayer, category: { $in: categories } })
@@ -281,6 +282,7 @@ exports.getTournamentInfo = asyncHandler(async (req, res, next) => {
             categories,
             host: validateUser.user._id == tournament.host._id,
             tournamentMatches,
+            allTeams,
             allPlayers: allPlayers.length,
             teams: userTeams,
             matches: userMatches,
