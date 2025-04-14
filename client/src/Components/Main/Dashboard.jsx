@@ -112,9 +112,9 @@ export default function Dashboard() {
                             { data.host && (
                                 <HostSection data={data} />
                             )}
-                            { data.teams.length > 0 && (
-                                <UserTeams teams={data.teams} />
-                            )}
+                            {/* { data.teams.length > 0 && (
+                            )} */}
+                            <UserTeams teams={data.teams} />
                             <UserMatches matches={data.matches} />
                             <TournamentResults matches={data.matches} />
                         </>
@@ -155,7 +155,32 @@ function EditSettings({ data }) {
 
 function UserTeams({ teams }) {
     return (
-        <p>{teams[0].ranking}</p>
+        <div className="form-input bg-slate-100 flex flex-col gap-2.5 z-0">
+            <h3>Your Teams</h3>
+            { teams.length > 0 ? (
+                <div className="tournament-grid-sm">
+                    {teams.map(info => (
+                        <div className="form-input bg-indigo-600 text-white max-w-4xl" key={info._id}>
+                            <h5>{info.category.name}</h5>
+                            <div className="flex justify-between flex-col lg:flex-row items-center gap-2.5">
+                                <p className="form-input bg-slate-100 shadow-none">{info.players[0].user.firstName} {info.players[0].user.lastName}</p>
+                                <p>and</p>
+                                <p className="form-input bg-slate-100 shadow-none">{info.players[1].user.firstName} {info.players[1].user.lastName}</p>
+                            </div>
+                            <p className="form-input mt-2.5 bg-lime-400 shadow-none text-center">Ranking: {info.ranking === 0 ? "Not assigned" : info.ranking}</p>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="flex flex-col justify-center items-center gap-8">
+                    <div className="racket-cross-wrapper">
+                        <img src={racketRed} alt="" />
+                        <img src={racketBlue} alt="" />
+                    </div>
+                    <p>You aren't part of any teams</p>
+                </div>
+            )}        
+        </div>
     )
 }
 

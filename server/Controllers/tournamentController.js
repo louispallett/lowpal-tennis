@@ -259,14 +259,15 @@ exports.getTournamentInfo = asyncHandler(async (req, res, next) => {
         const allPlayers = await Player.find({ tournament: req.headers.tournamentid });
         const userPlayer = await Player.findOne({ user: validateUser.user._id });
         const userTeams = await Team.find({ players: userPlayer })
-            .populate({
-                path: "players",
+            .populate({ path: "players", 
                 select: "user -_id",
-                populate: {
-                    path: "user",
-                    select: "firstName lastName -_id"
-                },
-            }).exec();
+                populate: [
+                    { path: "user",
+                        select: "firstName lastName -_id"
+                    },
+                ]
+            })
+            .populate({ path: "category", select: "name"});
         let userMatches = [];
         if (userPlayer) {
             userMatches = await Match.find({ participants: userPlayer._id });

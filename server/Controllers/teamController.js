@@ -10,8 +10,17 @@ const player = require("../models/player");
 
 exports.getTeams = asyncHandler(async (req, res, next) => {
     try {
-        const teams = await Team.find({ category: req.headers.categoryid });
-        res.status(200).json({ teams });
+        const teams = await Team.find({ category: req.headers.categoryid })
+            .populate({ path: "players", 
+                select: "user -_id",
+                populate: [
+                    { path: "user",
+                        select: "firstName lastName -_id"
+                    },
+                ]
+            });
+        console.log(teams);
+        res.json({ teams });
     } catch (err) {
         console.log(err);
     }

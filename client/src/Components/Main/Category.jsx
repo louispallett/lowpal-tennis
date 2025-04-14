@@ -130,8 +130,8 @@ function PlayerCard({ info, key }) {
 function TeamCard({ info, key }) {
     return (
         <div className="form-input bg-slate-100">
-            <p>{info.players[0].firstName} {info.players[0].lastName}</p>
-            <p>{info.players[1].firstName} {info.players[1].lastName}</p>
+            <p>{info.players[0].user.firstName} {info.players[0].user.lastName}</p>
+            <p>{info.players[1].user.firstName} {info.players[1].user.lastName}</p>
             <p>Ranking: {info.ranking === 0 ? "Not assigned" : info.ranking}</p>
         </div>
     )
@@ -199,20 +199,35 @@ function CreateTeams({ playersLength }) {
     const [teams, setTeams] = useState(null);
     const [error, setError] = useState(null);
 
+    const fetchTeams = () => {
+        setLoading(true);
+        axios.get("/api/teams/get-teams", {
+            headers: { categoryId }
+        }).then((response) => {
+            console.log(response.data.teams);
+            setTeams(response.data.teams);
+        }).finally(() => {
+            setLoading(false);
+        });
+    }
+
+    const createTeams = () => {
+        setLoading(true);
+        axios.post("/api/teams/create-teams", {
+            categoryId,
+            tournamentId
+        }).then(response => {
+            fetchTeams();
+        }).catch((err) => {
+            setError(err.message);
+            setLoading(false);
+        });
+    }
+
     const checkPlayerRankings = () => {
         setLoading(true);
         if (isOpen) {
-            axios.post("/api/teams/create-teams", {
-                categoryId,
-                tournamentId
-            }).then(response => {
-                setTeams(response.data.teams);
-            }).catch((err) => {
-                setError(err.message);
-            }).finally(() => {
-                setIsOpen(false);
-                setLoading(false);
-            });
+            createTeams();
         } else {
             axios.get("/api/players/check-player-rankings", {
                 headers: { tournamentId }
@@ -220,18 +235,12 @@ function CreateTeams({ playersLength }) {
                 const zeroPlayers = response.data.zeroPlayers;
                 if (zeroPlayers.length > 0) {
                     setIsOpen(true);
+                    setLoading(false);
                 } else {
-                    axios.post("/api/teams/create-teams", {
-                        categoryId
-                    }).then(response => {
-                        setTeams(response.data.teams);
-                    }).catch((err) => {
-                        setError(err.message);
-                    });
+                    createTeams();
                 }
             }).catch((err) => {
                 setError(err.message);
-            }).finally(() => {
                 setLoading(false);
             });
         }
@@ -268,6 +277,16 @@ function CreateTeams({ playersLength }) {
                             Create teams
                         </button>
                     )}
+                        { teams && (
+                            <>
+                                <div className="tournament-grid-sm">
+                                    {teams.map(team => (
+                                        <TeamCard info={team} key={team._id} />
+                                    ))}
+                                </div>
+                                <CreateMatches />                            
+                            </>
+                        )}
                 </div>
             )}
         </>

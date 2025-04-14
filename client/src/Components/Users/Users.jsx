@@ -22,7 +22,7 @@ export default function Users() {
                     </div>
                 </div>
                 <div className="relative">
-                    <div className="rounded-xl mx-2 md:mx-4 lg:mx-16 relative z-20 p-4 sm:p-8 border-[3px] border-gray-900 bg-lime-300 shadow-[5px_5px_0px_0px_#000000]">
+                    <div className="rounded-md mx-2 md:mx-4 lg:mx-16 relative z-20 p-4 sm:p-8 border-[3px] border-gray-900 bg-lime-300 shadow-[5px_5px_0px_0px_#000000]">
                         <Outlet />
                     </div>
                 </div>
