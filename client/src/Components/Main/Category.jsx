@@ -323,14 +323,36 @@ function DangerZone() {
 }
 
 function DeleteDialog({ isOpen, setIsOpen }) {
+    const {tournamentId} = useParams();
+    const [submitted, setSubmitted] = useState(false);
+    const [invalidatedData, setInValidatedData] = useState([]);
+    const [loading, setLoading] = useState(false);
+
     return (
         <Dialog as="div" open={isOpen != false ? true : false} onClose={() => setIsOpen(false)} className="relative z-50 m-0 p-0">
             <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
                 <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
                 <Dialog.Panel className="form-input text-base bg-slate-50 sm:p-6 overflow-y-auto max-h-[90vh]">
-                    <div className="flex flex-col gap-2.5">
+                    <div className="flex flex-col gap-1.5">
                         <h3>Delete this Category</h3>
-                        <p></p>
+                        <p>Are you sure you wish to delete this category? Please note that you cannot delete this category if the following conditions are not met:</p>
+                        <div className="flex gap-2.5">
+                            <p>&gt; This category must not have any matches.</p>
+                            <div>
+                                { loading && (
+                                    <div className="spinner w-4 h-4"></div>
+                                )}
+                                { submitted && (
+                                    <>
+                                        { invalid ? (
+                                            <XCircleIcon className="w-6 text-red-600" />
+                                        ) : (
+                                            <CheckBadgeIcon className="w-6 text-lime-600" />
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </Dialog.Panel>
             </div>

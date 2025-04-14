@@ -44,14 +44,15 @@ export default function DialogBox({ isOpen, setIsOpen }) {
 
     return (
         <Dialog as="div" open={isOpen != false ? true : false} onClose={() => setIsOpen(false)} className="relative z-50 m-0 p-0">
-            <div className="fixed inset-0 flex w-screen items-center justify-center sm:p-4">
-                <Dialog.Panel as="div" className="max-w-4xl text-white rounded-xl p-4 sm:p-10 py-8 border-[3px] border-gray-900 bg-indigo-600 shadow-[5px_5px_0px_0px_#000000]">
+            <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+            <div className="fixed inset-0 flex w-screen items-center justify-center sm:p-4 ">
+                <Dialog.Panel as="div" className="max-w-4xl form-input bg-slate-100">
                     <div className="flex flex-col gap-5">
-                        <h2 className="">{dialogInfo.title}</h2>
+                        <h3 className="">{dialogInfo.title}</h3>
                         <p>{dialogInfo.content1}</p>
                         <p>{dialogInfo.content2}</p>
                         <div className="flex w-full">
-                            <button className="submit bg-lime-300 text-black hover:bg-lime-500" onClick={() => setIsOpen(false)}><b>Close</b></button>
+                            <button className="submit" onClick={() => setIsOpen(false)}><b>Close</b></button>
                         </div>
                     </div>
                 </Dialog.Panel>

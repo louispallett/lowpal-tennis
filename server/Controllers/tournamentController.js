@@ -205,7 +205,8 @@ exports.isValidCode = [
                         name: tournamentExists.name,
                         host: {
                             "name-long": tournamentExists.host.firstName + " " + tournamentExists.host.lastName
-                        }
+                        },
+                        seededPlayers: tournamentExists.seededPlayers
                     });
                 } else {
                     console.log("Tournament " + tournamentExists._id + " is closed for registration.");

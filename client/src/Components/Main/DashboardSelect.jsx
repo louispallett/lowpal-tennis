@@ -66,10 +66,6 @@ export default function TournamentSelect() {
                     <Loader />
                 </div>
             )}
-            {/* <div className="racket-cross-wrapper">
-                <img src={racketRed} alt="" />
-                <img src={racketBlue} alt="" />
-            </div> */}
             { userInfo ? (
                 <>
                     { isHosting && (

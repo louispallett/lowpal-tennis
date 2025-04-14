@@ -7,11 +7,12 @@ import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import DialogBox from "../DialogBox";
 
 export default function JoinTournamentForm({ validTournament }) {
+
+    console.log(validTournament);
     const location = useLocation();
     if (!validTournament) {
         validTournament = location.state?.data;
     }
-    console.log(validTournament)
 
     const form = useForm();
     const { register, control, handleSubmit, formState, watch, reset, setValue, trigger } = form;

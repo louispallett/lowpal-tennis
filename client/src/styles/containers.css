@@ -116,7 +116,8 @@
 	background-color: #6B7280;
 }
 
-.racket-cross-wrapper {
+.racket-cross-wrapper,
+.racket-cross-wrapper-sm {
 	margin-top: 0.5rem;
     display: flex;
     justify-content: center;
@@ -124,18 +125,45 @@
     position: relative;
 }
 
-.racket-cross-wrapper > img:first-child {
-    height: 6rem; 	
+.racket-cross-wrapper > img:first-child,
+.racket-cross-wrapper-sm > img:first-child,
+.racket-cross-wrapper > img:last-child,
+.racket-cross-wrapper-sm > img:last-child {
+	position: relative;
+}
+
+.racket-cross-wrapper > img:first-child,
+.racket-cross-wrapper-sm > img:first-child {
     transform: scaleX(-1);
     z-index: 30;
-    position: relative;
-    left: 17px; 	
+}
+
+.racket-cross-wrapper > img:first-child {
+	left: 17px; 	
 }
 
 .racket-cross-wrapper > img:last-child {
-    height: 6rem; 	
-    position: relative;
-    right: 17px; 	
+	right: 17px; 	
+}
+
+.racket-cross-wrapper-sm > img:first-child {
+	left: 9px; 
+}
+
+.racket-cross-wrapper-sm > img:last-child {
+	right: 9px; 
+}
+
+
+
+.racket-cross-wrapper > img:first-child,
+.racket-cross-wrapper > img:last-child {
+	height: 6em; 	
+}
+
+.racket-cross-wrapper-sm > img:first-child,
+.racket-cross-wrapper-sm > img:last-child {
+	height: 3em;
 }
 
 .spin-loader {

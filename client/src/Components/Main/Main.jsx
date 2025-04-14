@@ -1,5 +1,8 @@
 import { Link, Outlet } from "react-router-dom";
 
+import racketRed from "/assets/images/racket-red.svg";
+import racketBlue from "/assets/images/racket-blue.svg";
+
 export default function Main() {
     return (
         <div className="flex flex-col min-h-screen w-full">
@@ -24,10 +27,14 @@ function Header() {
     return (
         <section className="header">
             <div className="header-inner">
-                <div className="font-semibold p-2.5 px-5">
+                <div>
                     <Link to="/main" >
-                        <div className="flex flex-col">
-                            <h3 className="hidden font-mania text-right sm:text-2xl md:block">LowPal Tennis</h3>
+                        <div className="flex items-center">
+                            <div className="racket-cross-wrapper-sm">
+                                <img src={racketRed} alt="" />
+                                <img src={racketBlue} alt="" />
+                            </div>
+                            <h3 className="hidden font-mania md:block">LowPal Tennis</h3>
                         </div>
                     </Link>
                 </div>

@@ -50,9 +50,9 @@ function TournamentStage({ stage, openCategoriesLength }) {
     const [isFinishOpen, setIsFinishOpen] = useState(false);
 
     return (
-        <div className="form-input bg-indigo-600 text-white">
+        <div className="form-input">
             { stage === "sign-up" && (
-                <>
+                <div className="flex flex-col">
                     <h4>Stage: Sign-Up</h4>
                     <h5 className="text-center">Closing registration</h5>
                     <p>
@@ -60,16 +60,16 @@ function TournamentStage({ stage, openCategoriesLength }) {
                         button below. Then you can use our tool to create the teams and matches.
                     </p>
                     <button
-                        className="submit text-center"
+                        className="submit text-center mt-2.5"
                         onClick={() => setIsCloseRegOpen(true)}
                     >
                         Close registration
                     </button>
                     <CloseRegistration isOpen={isCloseRegOpen} setIsOpen={setIsCloseRegOpen} />
-                </>
+                </div>
             )}
             { stage === "play" && (
-                <div className="flex flex-col gap-2.5">
+                <div className="flex flex-col">
                     <h4>Stage: Play</h4>
                     { openCategoriesLength > 0 ? (
                         <>

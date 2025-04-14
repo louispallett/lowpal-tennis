@@ -94,7 +94,7 @@ export default function CloseRegistration({ isOpen, setIsOpen }) {
 function ValidationRequirement({ rule, id, data, submitted, loading }) {
     const invalid = data.includes(id);
     return (
-        <div className="flex gap-2.5 justify-center">
+        <div className="flex gap-2.5 ml-5">
             <p>&gt; {rule}</p>
             <div>
                 { loading && (
