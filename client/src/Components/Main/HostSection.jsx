@@ -134,7 +134,7 @@ function RankPlayers() {
 
     const openRankingPlayers = () => {
         setLoading(true);
-        setIsOpen(true);
+        setIsOpen(!isOpen);
         axios.get("/api/players/get-player-rankings", {
             headers: {
                 tournamentId
@@ -247,7 +247,7 @@ function RankPlayers() {
                                     Success!
                                 </div>
                             ) : (
-                                <button 
+                                <button
                                     className="submit flex justify-center my-2.5"
                                     type="submit"
                                 >
@@ -260,6 +260,11 @@ function RankPlayers() {
                                     )}
                                 </button>
                             )}
+                            <button className="submit justify-center"
+                                onClick={() => setIsOpen(!isOpen)}
+                            >
+                                Close
+                            </button>
                         </form>
                     )}
                     { error && (

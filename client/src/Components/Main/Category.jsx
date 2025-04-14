@@ -203,7 +203,8 @@ function CreateTeams({ playersLength }) {
         setLoading(true);
         if (isOpen) {
             axios.post("/api/teams/create-teams", {
-                categoryId
+                categoryId,
+                tournamentId
             }).then(response => {
                 setTeams(response.data.teams);
             }).catch((err) => {

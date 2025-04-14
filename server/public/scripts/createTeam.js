@@ -1,110 +1,109 @@
-const mongoose = require("mongoose");
+/*
+===========================================================================================
+createTeam.js
+-------------------------------------------------------------------------------------------
 
-const createMixedTeams = (category) => {
-    // Filter out our players so we are left with seeded males and females, and non-seeded males and females
-    const seededPlayers = category.players.filter(player => player.seeded);
-    const notSeededPlayers = category.players.filter(player => !player.seeded);
-    let seededFemale = seededPlayers.filter(player => !player.male);
-    let seededMale = seededPlayers.filter(player => player.male);
-    let notSeededFemale = notSeededPlayers.filter(player => !player.male);
-    let notSeededMale = notSeededPlayers.filter(player => player.male);  
+This has now been simplified to only push the player._id to a double array. The ranking is
+now worked out in the controller function.
 
-    if ((seededPlayers.length + notSeededPlayers.length) % 2 != 0) throw new Error("Number of players must be even");
-    if ((seededMale.length + notSeededMale.length) != (seededFemale.length + notSeededFemale.length)) throw new Error("Number of female and male players must be even");
+It also now handles the (rare) case where the number of seeded players is greater than the 
+number of non-seeded players.
+
+---
+Variable seededHeavy
+This refers to a case where the total number of seeded players is greater than the total number of 
+non-seeded players.
+
+Because the number of males and females (in mixed) must be equal and this is checked, there are only
+three possible outcomes after the first loop matching seeded and non-seeded together:
+    1. There are seeded players but NO non-seeded players remaining.
+    2. There are non-seeded players but NO seeded players remaining.
+    3. There are no players in either group remaining.
+This means, when we go to the second loop, if seededHeavy is true, we match the remaining seeded
+players together, otherwise we match the remaining non-seeded players together.
+
+===========================================================================================
+*/
+
+const shuffleArray = (array) => {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+const createMixedTeams = (
+    maleSeeded, maleNonSeeded,
+    femaleSeeded, femaleNonSeeded
+) => {
+    // This refers to a scenario where there are more seeded than non-seeded, in which case
+    // we want to match until non-seeded players have run out. This should be a rare case
+    const seededHeavy = maleSeeded + femaleSeeded > maleNonSeeded + femaleNonSeeded;
 
     const teams = [];
-    seededFemale = seededFemale.sort(() => Math.random() - 0.5);
-    seededMale = seededMale.sort(() => Math.random() - 0.5);
-    notSeededFemale = notSeededFemale.sort(() => Math.random() - 0.5);
-    notSeededMale = notSeededMale.sort(() => Math.random() - 0.5);
 
-    while (seededFemale.length > 0 && notSeededMale.length > 0) {
-        const femalePlayer = seededFemale.shift();
-        const malePlayer = notSeededMale.shift();
-        teams.push({
-            _id: new mongoose.Types.ObjectId().toHexString(),
-            players: [femalePlayer, malePlayer],
-            name: `${malePlayer.firstName[0]}. ${malePlayer.lastName} and ${femalePlayer.firstName[0]}. ${femalePlayer.lastName}`,
-            category: category._id,
-            ranking: femalePlayer.ranking + malePlayer.ranking,
-        });
+    // Randomize the players
+    const maleSeededRand = shuffleArray(maleSeeded);
+    const femaleSeededRand = shuffleArray(femaleSeeded);
+    const maleNonSeededRand = shuffleArray(maleNonSeeded);
+    const femaleNonSeededRand = shuffleArray(femaleNonSeeded);
+
+    while (maleSeededRand.length > 0 && femaleNonSeededRand.length > 0) {
+        const malePlayer = maleSeededRand.shift();
+        const femalePlayer = femaleNonSeededRand.shift();
+        teams.push([malePlayer, femalePlayer]);
     }
 
-    while (seededMale.length > 0 && notSeededFemale.length > 0) {
-        const malePlayer = seededMale.shift();
-        const femalePlayer = notSeededFemale.shift();
-        teams.push({
-            _id: new mongoose.Types.ObjectId().toHexString(),
-            players: [femalePlayer, malePlayer],
-            name: `${malePlayer.firstName[0]}. ${malePlayer.lastName} and ${femalePlayer.firstName[0]}. ${femalePlayer.lastName}`,
-            category: category._id,
-            ranking: femalePlayer.ranking + malePlayer.ranking,
-        });
+    while (femaleSeededRand.length > 0 && maleNonSeededRand.length > 0) {
+        const femalePlayer = femaleSeededRand.shift();
+        const malePlayer = maleNonSeededRand.shift();
+        teams.push([femalePlayer, malePlayer]);
     }
 
-    while (notSeededFemale.length > 0 && notSeededMale.length > 0) {
-        const malePlayer = notSeededMale.shift();
-        const femalePlayer = notSeededFemale.shift();
-        teams.push({
-            _id: new mongoose.Types.ObjectId().toHexString(),
-            players: [femalePlayer, malePlayer],
-            name: `${malePlayer.firstName[0]}. ${malePlayer.lastName} and ${femalePlayer.firstName[0]}. ${femalePlayer.lastName}`,
-            category: category._id,
-            ranking: femalePlayer.ranking + malePlayer.ranking,
-        });
+    if (seededHeavy) {
+        while (maleSeededRand.length > 0 && femaleSeededRand.length > 0) {
+            const malePlayer = maleNonSeededRand.shift();
+            const femalePlayer = femaleNonSeededRand.shift();
+            teams.push([femalePlayer, malePlayer]);
+        }
+    } else {
+        while (maleNonSeededRand.length > 0 && femaleNonSeededRand.length > 0) {
+            const malePlayer = maleNonSeededRand.shift();
+            const femalePlayer = femaleNonSeededRand.shift();
+            teams.push([femalePlayer, malePlayer]);
+        }
     }
 
     return teams;
 }
 
-const createTeams = (category) => {
-    // TODO: This function works on the assumption that notSeeded exists and it is greater than seeded
-    // console.log(category.players);
-    let seeded = category.players.filter(player => player.seeded);
-    const notSeeded = category.players.filter(player => !player.seeded);
-    if (!seeded) seeded = [];
-    if (!notSeeded) throw new Error("No non-seeded players found");
-    // console.log(seeded, notSeeded);
-
-    const teams = matchDoublesPairs(category._id, seeded, notSeeded);
-
-    return teams;
-}
-
-// This function assumes seeded.length < notSeeded.length
-const matchDoublesPairs = (categoryId, seeded, notSeeded) => {
-
-    // I.e. total number of players is not even
-    if ((seeded.length + notSeeded.length) % 2 != 0) return new Error("Number of players must be even");
-
-    // Note that seeded and notSeeded must be arrays
-    seeded = seeded.sort(() => Math.random() - 0.5);
-    notSeeded = notSeeded.sort(() => Math.random() - 0.5);
+const createTeams = (seeded, nonSeeded) => {
+    const seededHeavy = seeded.length > nonSeeded.length;
     const teams = [];
 
-    while (seeded.length > 0 && notSeeded.length > 0) {
-        const playerA = seeded.shift();
-        const playerB = notSeeded.shift();
-        teams.push({
-            _id: new mongoose.Types.ObjectId().toHexString(),
-            players: [playerA, playerB],
-            name: `${playerA.firstName[0]}. ${playerA.lastName} and ${playerB.firstName[0]}. ${playerB.lastName}`,
-            category: categoryId,
-            ranking: playerA.ranking + playerB.ranking,
-        })
+    const seededRand = shuffleArray(seeded);
+    const nonSeededRand = shuffleArray(nonSeeded);
+
+    while (seededRand.length > 0 && nonSeededRand.length > 0) {
+        const playerA = seededRand.shift();
+        const playerB = nonSeededRand.shift();
+        teams.push([playerA, playerB]);
     }
 
-    // Remaining nonSeeded matched
-    while (notSeeded.length > 1) {
-        const playerA = notSeeded.shift();
-        const playerB = notSeeded.shift();
-        teams.push({
-            _id: new mongoose.Types.ObjectId().toHexString(),
-            players: [playerA, playerB],
-            name: `${playerA.firstName[0]}. ${playerA.lastName} and ${playerB.firstName[0]}. ${playerB.lastName}`,
-            category: categoryId,
-            ranking: playerA.ranking + playerB.ranking,
-        });
+    if (seededHeavy) {
+        while (seededRand.length > 1) {
+            const playerA = seededRand.shift();
+            const playerB = seededRand.shift();
+            teams.push([playerA, playerB]);
+        }
+    } else {
+        while (nonSeededRand.length > 1) {
+            const playerA = nonSeededRand.shift();
+            const playerB = nonSeededRand.shift();
+            teams.push([playerA, playerB]);
+        }
     }
 
     return teams;
