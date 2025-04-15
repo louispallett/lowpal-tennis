@@ -161,13 +161,12 @@ function UserTeams({ teams }) {
                 <div className="tournament-grid-sm">
                     {teams.map(info => (
                         <div className="form-input bg-indigo-600 text-white max-w-4xl" key={info._id}>
-                            <h5>{info.category.name}</h5>
+                            <h5 className="form-input mb-2.5 text-center bg-lime-400 shadow-none">{info.category.name}</h5>
                             <div className="flex justify-between flex-col lg:flex-row items-center gap-2.5">
                                 <p className="form-input bg-slate-100 shadow-none">{info.players[0].user.firstName} {info.players[0].user.lastName}</p>
                                 <p>and</p>
                                 <p className="form-input bg-slate-100 shadow-none">{info.players[1].user.firstName} {info.players[1].user.lastName}</p>
                             </div>
-                            <p className="form-input mt-2.5 bg-lime-400 shadow-none text-center">Ranking: {info.ranking === 0 ? "Not assigned" : info.ranking}</p>
                         </div>
                     ))}
                 </div>

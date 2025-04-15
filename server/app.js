@@ -11,7 +11,7 @@ const session = require("express-session");
 
 // const bracketRouter = require("./routes/bracketRouter.js");
 // const dashboardRouter = require("./routes/dashboardRouter.js");
-// const matchRouter = require("./routes/matchRouter.js");
+const matchRouter = require("./routes/matchRouter.js");
 const usersRouter = require("./routes/usersRouter");
 const tournamentRouter = require("./routes/tournamentRouter");
 const categoryRouter = require("./routes/categoryRouter.js");
@@ -70,7 +70,7 @@ app.use("/api/tournaments", tournamentRouter)
 app.use("/api/categories", categoryRouter);
 app.use("/api/teams", teamRouter);
 app.use("/api/players", playerRouter);
-// app.use("/api/match", matchRouter);
+app.use("/api/match", matchRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
