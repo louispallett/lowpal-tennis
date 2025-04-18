@@ -264,7 +264,8 @@ exports.getTournamentInfo = asyncHandler(async (req, res, next) => {
             .populate({ path: "players", 
                 select: "user -_id",
                 populate: [
-                    { path: "user",
+                    { 
+                        path: "user",
                         select: "firstName lastName -_id"
                     },
                 ]

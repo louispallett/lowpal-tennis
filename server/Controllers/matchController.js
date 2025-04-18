@@ -27,14 +27,33 @@ exports.createMatches = asyncHandler(async (req, res, next) => {
 
         const category = await Category.findById(req.body.categoryId);
 
-        let participants;
+        let participants = [];
         if (category.doubles) {
-            participants = await Team.find({ category: req.body.category });
+            participants = await Team.find({ category: req.body.categoryId })
+                .populate({ 
+                    path: "players",
+                    select: "user",
+                    populate: [
+                        {
+                            path: "user",
+                            select: "firstName lastName"
+                        }
+                    ]
+                })
+                .sort("ranking");
         } else {
-            participants = await Player.find({ categories: req.body.category });
+            participants = await Player.find({ categories: req.body.categoryId })
+                .populate({
+                    path: "user",
+                    select: "firstName lastName"
+                })
+                .sort("ranking");
         }
 
         const matches = generateMatchesForTournament(participants); 
+
+        const matchArr = matches.flat();
+
         // Is an object array - should look like:
         // [
         //      {
@@ -51,25 +70,57 @@ exports.createMatches = asyncHandler(async (req, res, next) => {
         // participants (teams OR players) minus 1.
         // This 'equation' is tied to tree theory in CS, because each match eliminates exactly ONE team. Because 
         // there is a single winner, we must eliminate n-1 teams.
-        if (matches.length !== participants.length - 1) {
+        
+        if (matchArr.length !== participants.length - 1) {
             const error = new Error("Number of matches does not equal number of participants minus 1");
             error.statusCode = 500;
             throw error;
         }
 
-        for (let match of matches) {
+        const totalRounds = Math.ceil(Math.log2(participants.length)); // This is the round number of the FINAL match
+
+        for (let match of matchArr) {
+            for (let participant of match.participants) {
+                if (category.doubles) {
+                    const team = participants.find(p => p._id === participant.id);
+                    participant._id = participant.id;
+                    participant.name = `${team.players[0].user.firstName} ${team.players[0].user.lastName} and ${team.players[1].user.firstName} ${team.players[1].user.lastName}`;
+                    participant.participantModel = "Team";
+                } else {
+                    const player = participants.find(p => p._id === participant.id);
+                    participant._id = participant.id;
+                    participant.name = player.user.firstName + " " + player.user.lastName;
+                    participant.participantModel = "Player";
+                }
+            }
             match.tournament = req.body.tournamentId;
             match.category = req.body.categoryId;
-            match.state = "SCHEDULED";
             match.date = new Date();
-            for (let participant of match.participants) {
-                participant.participantModel = category.doubles ? "Team" : "Player";
+            switch (match.tournamentRoundText) {
+                case totalRounds:
+                    match.tournamentRoundText = "Final"
+                    break;
+                case totalRounds - 1:
+                    match.tournamentRoundText = "Semi-Finals"
+                    break;
+                case totalRounds - 2:
+                    match.tournamentRoundText = "Quarter-Finals"
+                default:
+                    break;
             }
 
-            await match.save();
+            const newMatch = new Match(match);
+            await newMatch.save();
         }
 
-        const totalRounds = Math.ceil(Math.log2(participants.length)); // This is the round number of the FINAL match
+        const savedMatches = await Match.find({ category: req.body.categoryId });
+
+        // ? We may want to just pass the matchArr object here and NOT create/save the Mongo document. We could then display it to the client and ask the 
+        // ? user to add the deadline dates. Then, once the user submits this, we actual save the matches to Mongo.
+        // ? We can then change this function to 'generateMatches' and then create a 'createMatches' function. This would allow us to simplify this function
+        // ? slightly by moving things like the 'tournmentRoundText' changes to the createMatches function (and even the categoryId and tournamentId)
+        
+        res.json({ savedMatches, totalRounds });
 
     } catch (err) {
         console.log(err);

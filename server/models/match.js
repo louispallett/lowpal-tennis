@@ -5,7 +5,8 @@ const { DateTime } = require("luxon");
 // This allows us to put either a Team _id or a Player _id.
 // But, we need to define the ref through the participantModel
 const ParticipantSchema = new Schema({
-  participantId: {
+  id: { type: String, required: true }, // This is just a copy of _id... we may not need this and can just change _id to id
+  _id: {
     type: Schema.Types.ObjectId,
     required: true,
     refPath: 'participants.participantModel'
@@ -14,7 +15,11 @@ const ParticipantSchema = new Schema({
     type: String,
     required: true,
     enum: ['Player', 'Team']
-  }
+  },
+  resultText: { type: String, default: "" },
+  isWinner: { type: Boolean, required: true, default: false },
+  status: { type: String, default: null },
+  name: { type: String, required: true }
 });
 
 const Match = new Schema({
@@ -23,7 +28,7 @@ const Match = new Schema({
   nextMatchId: { type: Schema.Types.ObjectId, ref: "Match", default: null }, // ><
   previousMatchId: [{ type: Schema.Types.ObjectId, ref: "Match" }], // ><
   tournamentRoundText: { type: String, required: true }, // ><
-  state: { type: String, required: true }, // SCHEDULED' | 'NO_SHOW' | 'WALK_OVER' | 'NO_PARTY' | 'DONE' | 'SCORE_DONE' Only needed to decide walkovers and if teamNames are TBD (to be decided)
+  state: { type: String, required: true, default: "SCHEDULED" }, // SCHEDULED' | 'NO_SHOW' | 'WALK_OVER' | 'NO_PARTY' | 'DONE' | 'SCORE_DONE' Only needed to decide walkovers and if teamNames are TBD (to be decided)
   participants: [ParticipantSchema], // ><
   date: { type: Date, default: null },
   updateNumber: { type: Number, required: true, default: 0 },
