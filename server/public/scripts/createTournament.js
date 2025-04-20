@@ -29,7 +29,6 @@ const createMatch = (tournamentRoundText, nextMatchId = null, qualifyingMatch = 
 const generateMatchesForTournament = (teams) => {
     
     const numOfPlayers = teams.length;
-    console.log(numOfPlayers);
     const totalRounds = Math.ceil(Math.log2(numOfPlayers));
     const matchesByRound = [];
     const numOfQualPlayers = numOfPlayers - calculateByes(numOfPlayers);    

@@ -9,6 +9,8 @@ router.get("/:matchId", matchController.getMatch);
 
 // router.get("/:matchId/contactDetails", matchController.get_contact_details);
 
+router.post("/generate", matchController.generateMatches);
+
 router.post("/create", matchController.createMatches);
 
 // router.post("/matches/:matchId/update", matchController.post_match_results);
