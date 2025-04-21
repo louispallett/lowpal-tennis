@@ -8,6 +8,8 @@ import Loader from "../Auxiliary/Loader";
 import tennisBall from "/assets/images/tennis-ball.svg";
 import errorSVG from "/assets/images/error.svg";
 
+import GenerateMatches from "./GenerateMatches";
+
 export default function Category() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -164,13 +166,17 @@ function Actions({ tournamentInfo }) {
                                                         <CreateTeams playersLength={tournamentInfo.players.length}  />
                                                     </>
                                                 ) : (
-                                                    <CreateMatches />
+                                                    <>
+                                                        {!tournamentInfo.category.locked && (<GenerateMatches />)}
+                                                    </>
                                                 )}
                                             </>
                                         )}
                                     </>
                                 ) : (
-                                    <CreateMatches />
+                                    <>
+                                        {!tournamentInfo.category.locked && (<GenerateMatches />)}
+                                    </>
                                 )}
                             </div>
                         </>
@@ -277,29 +283,21 @@ function CreateTeams({ playersLength }) {
                             Create teams
                         </button>
                     )}
-                        { teams && (
+                    { teams && (
+                        <>
+                            <div className="tournament-grid-sm">
+                                {teams.map(team => (
+                                    <TeamCard info={team} key={team._id} />
+                                ))}
+                            </div>
                             <>
-                                <div className="tournament-grid-sm">
-                                    {teams.map(team => (
-                                        <TeamCard info={team} key={team._id} />
-                                    ))}
-                                </div>
-                                <CreateMatches />                            
+                                {!tournamentInfo.category.locked && (<GenerateMatches />)}
                             </>
-                        )}
+                        </>
+                    )}
                 </div>
             )}
         </>
-    )
-}
-
-function CreateMatches() {
-    return (
-        <button
-            className="submit text-center"
-        >
-            Create matches
-        </button>
     )
 }
 

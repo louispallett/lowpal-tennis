@@ -18,7 +18,7 @@ export default function HostSection({ data }) {
             <h3>Host Section</h3>
             <p>Hi {data.firstName}! Welcome to your host section. Here you can make unique operations and changes to the tournament reserved only for you (as host).</p>
             <TournamentStage stage={data.tournament.stage} openCategoriesLength={openCategories.length} canReOpen={canReOpen} />
-            { openCategories.length > 0 && (
+            { data.categories.length > 0 && (
                 <>
                     <h4 className="text-center mt-4">Categories</h4>
                     <p>
@@ -26,23 +26,13 @@ export default function HostSection({ data }) {
                         for each category in your tournament.
                     </p>
                     <div className="tournament-grid-sm">
-                        { openCategories.map(item => (
+                        { data.categories.map(item => (
                             <CategoryFunctions data={item} key={item._id} />
                         ))}
                     </div>
                 </>
             )}
             <RankPlayers />
-            {/* { data.tournament.stage === "finished" && (
-                <div className="tournament-grid-sm">
-                    { openCategories.map(item => (
-                        <CategoryFunctions data={item} key={item._id} />
-                    ))}
-                </div>
-            )} */}
-            {/* { data.tournament.stage === "sign-up" || data.tournament.stage === "play" && (
-                <EditSettings data={data}/>
-            )} */}
         </div>
     )
 }
@@ -105,12 +95,12 @@ function TournamentStage({ stage, openCategoriesLength, canReOpen }) {
                             <h5 className="text-center italic">Time to play!</h5>
                             <p> You've created matches for all the categories in your tournament. Now all that's left is for your players to play their matches!</p>
                             <button
-                                className="submit bg-lime-600 text-center"
+                                className="submit text-slate-950 bg-lime-500 hover:bg-lime-400 focus:bg-lime-400 text-center"
                                 onClick={() => setIsFinishOpen(true)}
                             >
                                 Finish Tournament
                             </button>
-                            <CloseRegistration isOpen={isFinishOpen} setIsOpen={setIsFinishOpen} />
+                            {/* <CloseRegistration isOpen={isFinishOpen} setIsOpen={setIsFinishOpen} /> */}
                         </>
                     )}
                 </div>

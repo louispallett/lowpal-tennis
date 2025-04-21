@@ -126,11 +126,10 @@ function CloseRegistrationButton() {
             tournamentId,
             stage: "play"
         }).then(() => {
-            console.log("Success");
             setSuccess(true);
             setTimeout(() => {
                 window.location.reload();
-            }, 2000)
+            }, 2000);
         }).catch((err) => {
             console.error('Error updating tournament stage:', err);
         }).finally(() => {
