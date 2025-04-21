@@ -5,10 +5,45 @@ const Category = require("../models/category");
 const Player = require("../models/player");
 const Team = require("../models/team");
 const generateMatchesForTournament = require("../public/scripts/createTournament");
-const category = require("../models/category");
+
+const verifyUser = require("../config/verifyUser");
 
 exports.getMatches = asyncHandler(async (req, res, next) => {
+    try {
+        const matches = await Match.find({ tournament: req.headers.tournamentid })
+            .populate({
+                path: "category",
+                select: "name"
+            });
 
+        res.json({ matches });
+    } catch(err) {
+        console.log(err);
+        res.status(err.statusCode || 500).json({
+            success: false,
+            message: err.message || "Server Error",
+        });
+    }
+});
+
+exports.getUserMatches = asyncHandler(async (req, res, next) => {
+    try {
+        const user = await verifyUser(req.headers.authorization);
+        const player = await Player.findOne({ user: user.user._id, tournament: req.headers.tournamentid })
+        const playerId = player._id;
+        const userTeams = await Team.find({ players: playerId });
+        const userTeamsIds = userTeams.map(item => item._id);
+        const idsToCheck = [playerId, ...userTeamsIds];
+        const userMatchData = await Match.find({ state: 'SCHEDULED', 'participants.id': { $in: idsToCheck }}).populate({ path: "category", select: "name"}).exec();
+
+        res.json({ userMatchData });
+    } catch (err) {
+        console.log(err);
+        res.status(err.statusCode || 500).json({
+            success: false,
+            message: err.message || "Server Error",
+        });
+    }
 });
 
 exports.getMatch = asyncHandler(async (req, res, next) => {

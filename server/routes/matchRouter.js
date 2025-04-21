@@ -3,7 +3,9 @@ const router = express.Router();
 
 const matchController = require("../Controllers/matchController");
 
-router.get("/matches", matchController.getMatches);
+router.get("/get-matches", matchController.getMatches);
+
+router.get("/get-user-matches", matchController.getUserMatches);
 
 router.get("/:matchId", matchController.getMatch);
 

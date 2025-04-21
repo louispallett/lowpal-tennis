@@ -7,6 +7,7 @@ import racketRed from "/assets/images/racket-red.svg";
 import racketBlue from "/assets/images/racket-blue.svg";
 
 import HostSection from "./HostSection.jsx";
+import Bracket from "./Bracket.jsx";
 
 export default function Dashboard() {
     const { tournamentId } = useParams();
@@ -52,10 +53,10 @@ export default function Dashboard() {
                             <HostSection data={data} />
                         )}
                         <UserTeams teams={data.teams} />
-                        <UserMatches matches={data.matches} />
-                        <TournamentResults matches={data.matches} />
                     </>
-                    )}
+                )}
+                <UserMatches />
+                <TournamentResults />
                 <Link to="/main">
                     <button className="submit">
                         Back to Tournament Selection Page
@@ -82,14 +83,6 @@ function TournamentInfo({ data }) {
     )
 }
 
-function EditSettings({ data }) {
-    return (
-        <>
-
-        </>
-    )
-}
-
 function UserTeams({ teams }) {
     return (
         <div className="form-input bg-slate-100 flex flex-col gap-2.5 z-0">
@@ -97,10 +90,10 @@ function UserTeams({ teams }) {
             { teams.length > 0 ? (
                 <div className="tournament-grid-sm">
                     {teams.map(info => (
-                        <div className="form-input bg-indigo-600 text-white max-w-4xl" key={info._id}>
+                        <div className="form-input bg-indigo-600 text-white max-w-4xl">
                             <h5 className="form-input mb-2.5 text-center bg-lime-400 shadow-none">{info.category.name}</h5>
                             <div className="flex justify-between flex-col lg:flex-row items-center gap-2.5">
-                                <p className="form-input bg-slate-100 shadow-none">{info.players[0].user.firstName} {info.players[0].user.lastName}</p>
+                                <p className="form-input bg-slate-100 shadow-none text-right">{info.players[0].user.firstName} {info.players[0].user.lastName}</p>
                                 <p>and</p>
                                 <p className="form-input bg-slate-100 shadow-none">{info.players[1].user.firstName} {info.players[1].user.lastName}</p>
                             </div>
@@ -120,56 +113,136 @@ function UserTeams({ teams }) {
     )
 }
 
-function UserMatches({ matches }) {
+function UserMatches() {
+    const { tournamentId } = useParams();
+    const [matches, setMatches] = useState(null);
+
+    useEffect(() => {
+        const getUserMatches = () => {
+            const token = localStorage.getItem("Authorization");
+            axios.get("/api/match/get-user-matches", {
+                headers: { 
+                    Authorization: token,
+                    tournamentId
+                }
+            }).then(response => {
+                setMatches(response.data.userMatchData);
+            }).catch((err) => {
+                console.log(err);
+            }).finally(() => {
+    
+            });
+        }
+
+        getUserMatches();
+    }, [])
+
     return (
         <div className="form-input bg-slate-100 flex flex-col gap-2.5 z-0">
             <h3>Your Upcoming Matches</h3>
-            { matches.length > 0 ? (
+            { matches && (
                 <>
-                    {matches.map(item => {
-                        <MatchCard data={item} key={item._id} />
-                    })}
-                </>
-            ) : (
-                <div className="flex flex-col justify-center items-center gap-8">
-                    <div className="racket-cross-wrapper">
-                        <img src={racketRed} alt="" />
-                        <img src={racketBlue} alt="" />
-                    </div>
-                    <p>Looks like you haven't got any upcoming matches!</p>
-                </div>
-            )}        
+                    { matches.length > 0 ? (
+                        <div className="tournament-grid-sm">
+                            {matches.map(item => (
+                                <MatchCard data={item} key={item._id} />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="flex flex-col justify-center items-center gap-8">
+                            <div className="racket-cross-wrapper">
+                                <img src={racketRed} alt="" />
+                                <img src={racketBlue} alt="" />
+                            </div>
+                            <p>Looks like you haven't got any upcoming matches!</p>
+                        </div>
+                    )}
+                </>   
+            )}    
         </div>
     )
 }
 
 function MatchCard({ data }) {
-
-}
-
-function TournamentResults({ matches }) {
     return (
-        <div className="form-input bg-slate-100 flex flex-col gap-2.5 z-0">
-            <h3>Tournament Results</h3>
-            { matches.length > 0 ? (
-                <>
-                    {matches.map(item => {
-                        <Bracket data={item} key={item._id} />
-                    })}
-                </>
-            ) : (
-                <div className="flex flex-col justify-center items-center gap-8">
-                    <div className="racket-cross-wrapper">
-                        <img src={racketRed} alt="" />
-                        <img src={racketBlue} alt="" />
-                    </div>
-                    <p>Matches for this tournament haven't been created yet!</p>
+        <Link to={"match/" + data._id}>
+            <div className="form-input bg-indigo-600 text-white max-w-4xl hover:bg-indigo-500">
+                <h5 className="form-input mb-2.5 text-center bg-lime-400 shadow-none">{data.category.name}</h5>
+                <div className="flex justify-between flex-col lg:flex-row items-center gap-2.5">
+                    <p className="form-input bg-slate-100 shadow-none">{data.participants.length > 0 ? data.participants[0].name : "TBC"}</p>
+                    <p>vs</p>
+                    <p className="form-input bg-slate-100 shadow-none">{data.participants.length > 1 ? data.participants[1].name : "TBC"}</p>
                 </div>
-            )}        
-        </div>
+                <div className="flex gap-2.5">
+                    <p className="form-input bg-slate-100 shadow-none mt-2.5">Deadline: {data.deadline}</p>
+                    <p className="form-input bg-slate-100 shadow-none mt-2.5">Round: {data.tournamentRoundText}</p>
+                </div>
+            </div>
+        </Link>
     )
 }
 
-function Bracket({ data }) {
+function TournamentResults() {
+    const { tournamentId } = useParams();
+    const [matches, setMatches] = useState(null);
+    const [groupedMatches, setGroupedMatches] = useState(null);
+    const [loading, setLoading] = useState(true)
 
+    useEffect(() => {
+        const getMatches = () => {
+            axios.get("/api/match/get-matches", {
+                headers: { tournamentId }
+            }).then(response => {
+                const validMatches = response.data.matches.filter(match => !match.qualifyingMatch);
+                const groupedMatchesObj = validMatches.reduce((acc, match) => {
+                    const categoryId = match.category._id;
+                    
+                    if (!acc[categoryId]) {
+                        acc[categoryId] = [];
+                    }
+                    
+                    acc[categoryId].push(match);
+                    return acc;
+                }, {});
+                const allMatchesGrouped = Object.values(groupedMatchesObj);
+                console.log(allMatchesGrouped);
+                setGroupedMatches(allMatchesGrouped);
+                setMatches(response.data.matches);
+            }).catch(err => {
+                console.log(err);
+            }).finally(() => {
+                setLoading(false);
+            })
+        }
+        getMatches();
+    }, [])
+    return (
+        <div className="form-input bg-slate-100 flex flex-col gap-2.5 z-0">
+            <h3>Tournament Results</h3>
+            { matches && (
+                <>
+                    { matches.length > 0 ? (
+                        <>
+                            { groupedMatches.map(item => (
+                                <Bracket matchData={item} categoryName={item[0].category.name} key={item._id} />
+                            ))}
+                        </>
+                    ) : (
+                        <div className="flex flex-col justify-center items-center gap-8">
+                            <div className="racket-cross-wrapper">
+                                <img src={racketRed} alt="" />
+                                <img src={racketBlue} alt="" />
+                            </div>
+                            <p>Matches for this tournament haven't been created yet!</p>
+                        </div>
+                    )}
+                </>
+            )}
+            <div className="flex justify-center">
+                { loading && (
+                    <Loader />
+                )}
+            </div>
+        </div>
+    )
 }
