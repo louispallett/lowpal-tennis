@@ -57,8 +57,8 @@ export default function TournamentSelect() {
     }
 
     return (
-        <div className="flex flex-col gap-2.5 mx-1 sm:mx-1.5 md:mx-5">
-            <div className="form-input bg-lime-400">
+        <div className="flex flex-col gap-2.5 sm:mx-1.5 lg:mx-5">
+            <div className="standard-container bg-lime-400">
                 <h3 className="md:text-center">Dashboard</h3>
             </div>
             { loading && (
@@ -70,7 +70,7 @@ export default function TournamentSelect() {
                 <>
                     { isHosting && (
                         <>
-                            <div className="form-input bg-indigo-500 mt-6 text-white">
+                            <div className="standard-container bg-indigo-500 mt-6 text-white">
                                 <h4 className="italic">Hosting tournaments</h4>
                             </div>
                             { tournamentsHosting.signUps.length > 0 && (
@@ -102,7 +102,7 @@ export default function TournamentSelect() {
                     )}
                     { isPlaying && (
                         <>
-                            <div className="mt-2.5 form-input bg-indigo-500 text-white">
+                            <div className="mt-2.5 standard-container bg-indigo-500 text-white">
                                 <h4 className="italic">Joined Tournaments</h4>
                             </div>
                             { tournamentsPlaying.signUps.length > 0 && (
@@ -146,12 +146,12 @@ export default function TournamentSelect() {
 
 function UserTournamentPlaying({ data }) {
     return (
-        <Link to={"tournament/" + data._id} className="form-input hover:bg-lime-400">
+        <Link to={"tournament/" + data._id} className="standard-container hover:bg-lime-400">
             <h3>{data.name}</h3>
             <div className="tournament-grid-sm">
-                <p className="form-input bg-indigo-500 text-white">Host: {data.host["name-long"]}</p>
-                <p className="form-input bg-indigo-500 text-white">Stage: <i>{data.stage}</i></p>
-                <p className="form-input bg-indigo-500 text-white">Date Created: {data.startDateFormatted}</p>
+                <p className="standard-container bg-indigo-500 text-white">Host: {data.host["name-long"]}</p>
+                <p className="standard-container bg-indigo-500 text-white">Stage: <i>{data.stage}</i></p>
+                <p className="standard-container bg-indigo-500 text-white">Date Created: {data.startDateFormatted}</p>
             </div>
         </Link>
     )
@@ -164,12 +164,12 @@ function UserTournamentHosting({ data, tournamentsPlaying, key }) {
 
     return (
         <div className="flex gap-1.5 lg:flex-row flex-col">
-            <Link to={"tournament/" + data._id} className="form-input hover:bg-lime-400">
+            <Link to={"tournament/" + data._id} className="standard-container hover:bg-lime-400">
                 <h3>{data.name}</h3>
                 <div className="tournament-grid-sm">
-                    <p className="form-input bg-indigo-500 text-white">Host: {data.host["name-long"]}</p>
-                    <p className="form-input bg-indigo-500 text-white">Stage: <i>{data.stage}</i></p>
-                    <p className="form-input bg-indigo-500 text-white">Date Created: {data.startDateFormatted}</p>
+                    <p className="standard-container bg-indigo-500 text-white">Host: {data.host["name-long"]}</p>
+                    <p className="standard-container bg-indigo-500 text-white">Stage: <i>{data.stage}</i></p>
+                    <p className="standard-container bg-indigo-500 text-white">Date Created: {data.startDateFormatted}</p>
                 </div>
             </Link>
             { joined ? (
@@ -198,7 +198,7 @@ function UserTournamentHosting({ data, tournamentsPlaying, key }) {
 function CreateORJoin() {
     return (
         <>
-            <div className="mt-2.5 form-input bg-indigo-500 text-white">
+            <div className="mt-2.5 standard-container bg-indigo-500 text-white">
                 <h4 className="italic text-center">Create or join a new tournament</h4>
             </div>
             <div className="flex flex-col md:grid grid-cols-2 gap-2.5">

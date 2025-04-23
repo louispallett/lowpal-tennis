@@ -40,10 +40,10 @@ export default function Category() {
                     <Loader />
                 ))}
             </div>
-            <div className="flex flex-col gap-5 mx-1.5 md:mx-5">
+            <div className="flex flex-col gap-5 sm:mx-1.5 lg:mx-5">
                 { tournamentInfo && (
                     <>
-                        <div className="form-input bg-lime-400">
+                        <div className="standard-container bg-lime-400">
                             <h3>{tournamentInfo.category.name}</h3>
                         </div>
                         <CategoryInfo tournamentInfo={tournamentInfo} />
@@ -75,20 +75,20 @@ function CategoryInfo({ tournamentInfo }) {
     const seeded = tournamentInfo.players.filter(player => player.seeded).length;
 
     return (
-        <div className="form-input bg-slate-100 flex flex-col gap-2.5">
+        <div className="standard-container bg-slate-100 flex flex-col gap-2.5">
             <h3>Category Information</h3>
             <div className="tournament-grid-sm">
-                <p className="form-input">Number of players: {tournamentInfo.players.length}</p>
-                <p className="form-input">Number of active matches: {tournamentInfo.matches.filter(match => match.state === "SCHEDULED").length}</p>
-                <p className="form-input">Males: {noOfMales}</p>
-                <p className="form-input">Females: {tournamentInfo.players.length - noOfMales}</p>
-                <p className="form-input">Seeded: {seeded}</p>
-                <p className="form-input">Non-Seeded: {tournamentInfo.players.length - seeded}</p>
+                <p className="standard-container">Number of players: {tournamentInfo.players.length}</p>
+                <p className="standard-container">Number of active matches: {tournamentInfo.matches.filter(match => match.state === "SCHEDULED").length}</p>
+                <p className="standard-container">Males: {noOfMales}</p>
+                <p className="standard-container">Females: {tournamentInfo.players.length - noOfMales}</p>
+                <p className="standard-container">Seeded: {seeded}</p>
+                <p className="standard-container">Non-Seeded: {tournamentInfo.players.length - seeded}</p>
             </div>
-            <div className="form-input bg-indigo-500">
+            <div className="standard-container bg-indigo-500">
                 <h4 className="text-white">Players</h4>
                 { tournamentInfo.players.length < 1 ? (
-                    <div className="form-input bg-slate-100 flex gap-2.5 justify-center items-center">
+                    <div className="standard-container bg-slate-100 flex gap-2.5 justify-center items-center">
                         <img src={tennisBall} className="h-16" id="spinner" alt="" />
                         <h4>No players yet!</h4>
                     </div>
@@ -103,7 +103,7 @@ function CategoryInfo({ tournamentInfo }) {
             { tournamentInfo.category.doubles && (
                 <>
                     { tournamentInfo.teams.length > 0 && (
-                        <div className="form-input bg-indigo-500">
+                        <div className="standard-container bg-indigo-500">
                             <h4 className="text-white">Teams</h4>
                             <div className="tournament-grid-sm">
                                 { tournamentInfo.teams.map((team) => (
@@ -120,7 +120,7 @@ function CategoryInfo({ tournamentInfo }) {
 
 function PlayerCard({ info, key }) {
     return (
-        <div className="form-input bg-slate-100">
+        <div className="standard-container bg-slate-100">
             <p>{info.user.firstName} {info.user.lastName}</p>
             <p>Gender: {info.male ? "male" : "female"}</p>
             <p>Seeded: {info.seeded ? "yes" : "no"}</p>
@@ -131,7 +131,7 @@ function PlayerCard({ info, key }) {
 
 function TeamCard({ info, key }) {
     return (
-        <div className="form-input bg-slate-100">
+        <div className="standard-container bg-slate-100">
             <p>{info.players[0].user.firstName} {info.players[0].user.lastName}</p>
             <p>{info.players[1].user.firstName} {info.players[1].user.lastName}</p>
             <p>Ranking: {info.ranking === 0 ? "Not assigned" : info.ranking}</p>
@@ -141,7 +141,7 @@ function TeamCard({ info, key }) {
 
 function Actions({ tournamentInfo }) {
     return (
-        <div className="form-input bg-slate-100 flex flex-col gap-2.5">
+        <div className="standard-container bg-slate-100 flex flex-col gap-2.5">
             <h3>Category Operations</h3>
             { tournamentInfo.category.tournament.stage === "finished" ? (
                 <p>Finished</p>
@@ -261,7 +261,7 @@ function CreateTeams({ playersLength }) {
             ) : (
                 <div className="flex flex-col gap-2.5">
                     { isOpen && (
-                        <div className="form-input px-2.5 text-base">
+                        <div className="standard-container px-2.5 text-base">
                             <h5 className="text-red-700">Warning</h5>
                             <p>
                                 One or more players in your tournament has a zero (0) ranking. You may continue in creating teams and matches, however
@@ -305,7 +305,7 @@ function DangerZone() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="form-input bg-slate-100 flex flex-col gap-2.5">
+        <div className="standard-container bg-slate-100 flex flex-col gap-2.5">
             <h3>Danger Zone</h3>
             <p>These operations are permanent and should only be used when necessary. You have been warned.</p>
             <div className="flex gap-2.5">
@@ -330,7 +330,7 @@ function DeleteDialog({ isOpen, setIsOpen }) {
         <Dialog as="div" open={isOpen != false ? true : false} onClose={() => setIsOpen(false)} className="relative z-50 m-0 p-0">
             <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
                 <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-                <Dialog.Panel className="form-input text-base bg-slate-50 sm:p-6 overflow-y-auto max-h-[90vh]">
+                <Dialog.Panel className="standard-container text-base bg-slate-50 sm:p-6 overflow-y-auto max-h-[90vh]">
                     <div className="flex flex-col gap-1.5">
                         <h3>Delete this Category</h3>
                         <p>Are you sure you wish to delete this category? Please note that you cannot delete this category if the following conditions are not met:</p>

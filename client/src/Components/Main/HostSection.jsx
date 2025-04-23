@@ -14,7 +14,7 @@ export default function HostSection({ data }) {
     const openCategories = data.categories.filter(category => !category.locked);
     const canReOpen = data.matches.length < 1 && data.allTeams.length < 1;
         return (
-        <div className="form-input bg-slate-100 flex flex-col gap-2.5">
+        <div className="standard-container bg-slate-100 flex flex-col gap-2.5">
             <h3>Host Section</h3>
             <p>Hi {data.firstName}! Welcome to your host section. Here you can make unique operations and changes to the tournament reserved only for you (as host).</p>
             <TournamentStage stage={data.tournament.stage} openCategoriesLength={openCategories.length} canReOpen={canReOpen} />
@@ -43,7 +43,7 @@ function TournamentStage({ stage, openCategoriesLength, canReOpen }) {
     const [isFinishOpen, setIsFinishOpen] = useState(false);
 
     return (
-        <div className="form-input">
+        <div className="standard-container">
             { stage === "sign-up" && (
                 <div className="flex flex-col">
                     <h4>Stage: Sign-Up</h4>
@@ -197,7 +197,7 @@ function RankPlayers() {
                 Rank Players
             </button>
             { isOpen && (
-                <div className="form-input p-2.5 flex flex-col justify-center items-center">
+                <div className="standard-container p-2.5 flex flex-col justify-center items-center">
                     { loading && (
                             <Loader />                    
                         )}
@@ -292,7 +292,7 @@ function RankPlayers() {
 
 function PlayerRankCard({ data, register, reg }) {
     return (
-        <div className="form-input p-2 flex flex-1 justify-between shadow-none items-center gap-2.5">
+        <div className="standard-container p-2 flex flex-1 justify-between shadow-none items-center gap-2.5">
             <p className="text-left">{data.user["name-long"]}</p>
             <input type="number" className="form-input p-2 max-w-24 shadow-none"
                 required

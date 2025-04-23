@@ -27,6 +27,24 @@
     flex: 1;   
 }
 
+.standard-container,
+.standard-container-no-shadow {
+	border: 3px solid #000000;
+	width: 100%; 
+	position: relative; 
+	font-weight: bold; 
+	padding: 0.875rem 1.5rem; 
+	border-radius: 0.25rem; 
+	color: black;
+	-webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.standard-container {
+	box-shadow: 5px 5px 0px 0px #000000; 
+}
+
 .tournament-grid,
 .tournament-grid-sm {
 	display: grid;
@@ -181,5 +199,12 @@
 
 	100% {
 		transform: rotate(360deg);
+	}
+}
+
+@media (max-width: 768px) { 
+	.standard-container,
+	.standard-container-no-shadow {
+		padding: 0.4em 0.4em; 
 	}
 }

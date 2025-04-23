@@ -46,7 +46,7 @@ export default function DialogBox({ isOpen, setIsOpen }) {
         <Dialog as="div" open={isOpen != false ? true : false} onClose={() => setIsOpen(false)} className="relative z-50 m-0 p-0">
             <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
             <div className="fixed inset-0 flex w-screen items-center justify-center sm:p-4 ">
-                <Dialog.Panel as="div" className="max-w-4xl form-input bg-slate-100">
+                <Dialog.Panel as="div" className="max-w-4xl standard-container bg-slate-100">
                     <div className="flex flex-col gap-5">
                         <h3 className="">{dialogInfo.title}</h3>
                         <p>{dialogInfo.content1}</p>

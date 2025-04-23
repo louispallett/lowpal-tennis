@@ -13,7 +13,7 @@ export default function ReOpenRegistration({ isOpen, setIsOpen }) {
         <Dialog as="div" open={isOpen != false ? true : false} onClose={() => setIsOpen(false)} className="relative z-50 m-0 p-0">
             <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
                 <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-                <Dialog.Panel className="form-input text-base bg-slate-50 sm:p-6 overflow-y-auto max-h-[90vh] max-w-6xl">
+                <Dialog.Panel className="standard-container text-base bg-slate-50 sm:p-6 overflow-y-auto max-h-[90vh] max-w-6xl">
                     <div>
                         <h3>Re-Opening Registration</h3>
                         <div className="flex flex-col my-5 gap-1.5">

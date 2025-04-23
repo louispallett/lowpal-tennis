@@ -36,7 +36,7 @@ export default function GenerateMatches() {
                 Generate matches
             </button>
             { isOpen && (
-                <div className="form-input bg-slate-100">
+                <div className="standard-container bg-slate-100">
                     { loading && (
                         <div className="flex justify-center">
                             <Loader />
@@ -162,15 +162,15 @@ function Rounds({ round, totalRounds, register }) {
     }
 
     return (
-        <div className="form-input shadow-none text-center bg-lime-200 flex flex-col my-5">
+        <div className="standard-container shadow-none text-center bg-lime-200 flex flex-col my-5">
             <h5><i>{roundNumber}</i></h5>
             { round[0].qualifyingMatch && (
-                <p className="form-input bg-indigo-600 text-white shadow-none">This is a qualifying round</p>
+                <p className="standard-container bg-indigo-600 text-white shadow-none">This is a qualifying round</p>
             )}
             { round.map((match) => (
                 <MatchCard match={match} />
             ))}
-            <div className="form-input self-end shadow-none bg-indigo-200 max-w-2xl flex-col flex">
+            <div className="standard-container self-end shadow-none bg-indigo-200 max-w-2xl flex-col flex">
                 <label className="text-right">Deadline for {roundNumber}</label>
                 <input
                     type="date" className="p-2.5 rounded-md"
@@ -186,7 +186,7 @@ function Rounds({ round, totalRounds, register }) {
 function MatchCard({ match }) {
     return (
         <div className="flex items-center my-2.5 gap-2.5">
-            <div className="form-input shadow-none bg-slate-100">
+            <div className="standard-container shadow-none bg-slate-100">
                 { match.participants.length > 0 ? (
                     <p>{match.participants[0].name}</p>
                 ) : (
@@ -194,7 +194,7 @@ function MatchCard({ match }) {
                 )} 
             </div>
             <p>vs.</p>
-            <div className="form-input shadow-none bg-slate-100">
+            <div className="standard-container shadow-none bg-slate-100">
                 { match.participants.length > 1 ? (
                     <p>{match.participants[1].name}</p>
                 ) : (
