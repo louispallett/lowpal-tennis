@@ -1,3 +1,20 @@
+// TODO
+//? Add account section
+//? Add loaders to all sections (specifically thinking about user sign-up, login, and joining/creating tournament)
+//? Add editing section for host to edit PLAYER seeded boolean
+//? Add editing section for host to edit match results
+//? Add match component page for match details and submitting results (maybe a isOpen component so that the form remains on the page?)
+    //? We may want to add a 'walkover' option too. We could just have a dialog explaining that the user should submit 'WO'
+//? Functions for deleting category
+//? Functions for finishing tournament
+//? Validate host for category pages
+
+//! FIXME
+//? Check loaders (especially on dashboard)
+//? Category 'stage' section for host is incorrect when teams/matches done.
+//? Display names in matches as 'short' (initial plus surname) but on teams etc. as long. We may actually be able to edit the match model now to no longer use name, instead populate participants._id 
+// ? and fetch their names that way (especially now we use a custom bracket)
+
 import axios from "axios";
 import { useEffect, useState } from "react"
 import { useParams, Link } from "react-router-dom";
@@ -93,9 +110,9 @@ function UserTeams({ teams }) {
                         <div className="standard-container bg-indigo-600 text-white max-w-4xl">
                             <h5 className="standard-container mb-2.5 text-center bg-lime-400 shadow-none">{info.category.name}</h5>
                             <div className="flex justify-between flex-col lg:flex-row items-center gap-2.5">
-                                <p className="standard-container bg-slate-100 shadow-none text-right">{info.players[0].user.firstName} {info.players[0].user.lastName}</p>
+                                <p className="standard-container bg-slate-100 shadow-none text-center lg:text-right">{info.players[0].user.firstName} {info.players[0].user.lastName}</p>
                                 <p>and</p>
-                                <p className="standard-container bg-slate-100 shadow-none">{info.players[1].user.firstName} {info.players[1].user.lastName}</p>
+                                <p className="standard-container bg-slate-100 text-center lg:text-left shadow-none">{info.players[1].user.firstName} {info.players[1].user.lastName}</p>
                             </div>
                         </div>
                     ))}

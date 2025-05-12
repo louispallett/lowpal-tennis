@@ -5,14 +5,15 @@ import Home from "./Home";
 import Users from "./Users/Users";
 import HostATournament from "./Users/Host";
 import JoinATournament from "./Users/JoinATournament";
-import JoinATournamentForm from "./Users/JoinATournamentForm.jsx";
+import JoinATournamentForm from "./Users/JoinATournamentForm";
 import SignIn from "./Users/SignIn";
 import Main from "./Main/Main";
 import Dashboard from "./Main/Dashboard";
-import Category from "./Main/Category.jsx";
+import Category from "./Main/Category";
 import Match from "./Main/Match";
-import DashboardSelect from "./Main/DashboardSelect.jsx";
-import SignUp from "./Users/SignUp.jsx";
+import DashboardSelect from "./Main/DashboardSelect";
+import SignUp from "./Users/SignUp";
+import Account from "./Main/Account";
 
 export default function Router() {
     const router = createBrowserRouter([
@@ -63,7 +64,11 @@ export default function Router() {
                         {
                             path: "join-existing-tournament-form",
                             element: <JoinATournamentForm />
-                        },                        
+                        },
+                        {
+                            path: "account-settings",
+                            element: <Account />
+                        }
                     ]
                 },
                 {

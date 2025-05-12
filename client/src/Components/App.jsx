@@ -3,9 +3,9 @@ import { Link, Outlet } from "react-router-dom";
 export default function App() {
     return (
         <div className="flex flex-col min-h-screen w-full">
-            <Header />
+            {/* <Header /> */}
             <div className="flex flex-1 mt-8">
-                <div className="grid flex-1 min-h-full max-w-full max-w-screen-3xl font-roboto">
+                <div className="app-wrapper">
                     <Outlet />
                 </div>
             </div>  
@@ -43,16 +43,16 @@ function Header() {
 
 function Footer() {
     return (
-      <footer className="w-full flex px-3 py-3 justify-between items-center rounded-lg m-1 my-2 sm:px-5">
+      <footer>
         <div>          
-            <p className="font-bold text-xs py-5 sm:text-sm text-slate-700">© 2024 LowPal/Louis Nicholson-Pallett</p>
+            <p className="font-bold text-xs sm:text-sm text-slate-700">© 2024 LowPal/Louis Nicholson-Pallett</p>
         </div>
         <div className="text-right">
             <a href="https://github.com/louispallett/lowpal-tennis/">
-                <p className="text-click text-slate-700">See it on GitHub</p>
+                <p className="text-click text-slate-700 text-xs">See it on GitHub</p>
             </a>
             <Link to="/users/using-your-data" target="_blank" rel="noopener noreferrer" >
-                <p className="text-click text-slate-700">Data & Privacy Policy</p>
+                <p className="text-click text-slate-700 text-xs">Data & Privacy Policy</p>
             </Link>
         </div>
       </footer>

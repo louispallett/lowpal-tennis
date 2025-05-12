@@ -4,32 +4,34 @@ import racketBlue from "/assets/images/racket-blue.svg";
 
 export default function Home() {
     return (
-        <div className="flex-1 max-w-7xl mx-auto px-2 sm:px-4">
-            <div className="mb-8">
+        <div className="flex-1 max-w-7xl mx-auto px-1 sm:px-4">
+            <div className="">
                 <div className="relative w-full mx-auto flex flex-col items-center">
-                    <h1 className="main-title">
-                        LowPal Tennis
-                    </h1>
+                    <div className="max-w-96">
+                        <h2 className="main-title text-left">Tennis</h2>
+                        <h2 className="main-title text-right">Tournament</h2>
+                        <h2 className="main-title text-left">Creator</h2>
+                    </div>
+                    <div className="racket-cross-wrapper">
+                        <img src={racketRed} alt="" />
+                        <img src={racketBlue} alt="" />
+                    </div>
                     <div className="max-w-3xl text-center mt-5 text-slate-600 text-lg">
-                        <p>
+                        {/* <p>
                             Ease the admin and tedium of organizing a tennis tournament by hosting it through LowPal tennis. Create a tournament today or 
                             join an existing tournament now!
-                        </p>
+                        </p> */}
                     </div>
                 </div>
             </div>
             <div className="flex flex-col gap-2.5 lg:mx-10">
                 <div className="md:grid grid-cols-2 flex flex-col gap-2.5 justify-center">
-                    <img src={racketRed} alt="" className="hidden lg:block transform -scale-x-100 w-16 lg:w-36 h-auto lg:absolute flex-shrink-0 -left-0 top-64 z-30" />
-                    <img src={racketBlue} alt="" className="hidden lg:block w-16 lg:w-36 h-auto lg:absolute flex-shrink-0 -right-0 top-64 z-30" />
+                    {/* <img src={racketRed} alt="" className="hidden lg:block transform -scale-x-100 w-16 lg:w-36 h-auto lg:absolute flex-shrink-0 -left-0 top-64 z-30" />
+                    <img src={racketBlue} alt="" className="hidden lg:block w-16 lg:w-36 h-auto lg:absolute flex-shrink-0 -right-0 top-64 z-30" /> */}
                     <Host />
                     <Join />
-                </div>
-                <div className="flex justify-center items-center mt-5 text-lg">
-                    <p>Already Signed Up?&nbsp;</p>
-                    <Link to="/users/sign-in">
-                        <span className="text-click">Click here to login</span>
-                    </Link>
+                    <About />
+                    <SignIn />
                 </div>
             </div>
         </div>
@@ -38,7 +40,7 @@ export default function Home() {
 
 function Host() {
     return (
-        <div className="flex flex-col justify-between rounded-xl text-slate-50 relative z-20 p-4 sm:p-8 border-[3px] border-gray-900 bg-indigo-600 shadow-[5px_5px_0px_0px_#000000]">
+        <div className="standard-container bg-indigo-600 text-white justify-between flex flex-col">
             <div>
                 <h3 className="font-roboto text-center">Host a tournament</h3>
                 <div className="my-2.5">
@@ -64,7 +66,7 @@ function Host() {
 
 function Join() {
     return (
-        <div className="rounded-xl relative z-20 p-4 sm:p-8 border-[3px] border-gray-900 bg-lime-300 shadow-[5px_5px_0px_0px_#000000]">
+        <div className="standard-container bg-lime-300 justify-between flex flex-col">
             <h3 className="font-roboto text-center">Join a tournament</h3>
             <div className="my-2.5">
                 <p>
@@ -88,5 +90,25 @@ function Join() {
                 >Join a tournament</button>
             </Link>
         </div>
+    )
+}
+
+function About() {
+    return (
+        <Link to="about">
+            <button className="submit bg-lime-300 text-black hover:bg-lime-500">
+                How it works
+            </button>
+        </Link>
+    )
+}
+
+function SignIn() {
+    return (
+    <Link to="/users/sign-in">
+        <button className="submit">
+        Already Signed Up? Log In
+        </button>
+    </Link>
     )
 }

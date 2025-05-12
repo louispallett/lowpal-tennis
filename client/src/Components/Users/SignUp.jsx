@@ -64,7 +64,7 @@ export default function SignUp() {
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="form">
             <div className="relative w-full h-full flex flex-col gap-2.5">
                 <h3 className="font-roboto text-center">Create an account</h3>
-                <div className="grid grid-cols-2 gap-2.5">
+                <div className="form-grid">
                     <div>
                         <input type="text" placeholder="First Name" className="form-input"
                             required id="firstName" {...register("firstName", {
@@ -94,7 +94,7 @@ export default function SignUp() {
                         </span>
                     </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2.5">
+                <div className="form-grid">
                     <div>
                         <input type="email" placeholder="Email" className="form-input"
                             required id="email" {...register("email", {
@@ -133,7 +133,7 @@ export default function SignUp() {
                         </span>
                     </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2.5">
+                <div className="form-grid">
                     <div>
                         <div>
                             <input type={showPassword ? "text" : "password"} id="password" autoComplete="current-password" required placeholder="Password"

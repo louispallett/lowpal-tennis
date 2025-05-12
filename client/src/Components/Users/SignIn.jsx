@@ -35,7 +35,7 @@ export default function SignIn() {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="form">
-            <div className="relative w-full h-full flex flex-col gap-2.5">
+            <div className="w-full h-full flex flex-col gap-2.5">
                 <div className="flex flex-col md:grid grid-cols-2 gap-2.5">
                     <input type="email" className="form-input" placeholder="Email"
                         {...register ("email", {

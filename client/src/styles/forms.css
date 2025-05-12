@@ -8,6 +8,14 @@
     gap: 1.25rem; 
 }
 
+.form-grid {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 0.625em;
+}
+
 .form-input {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -92,5 +100,13 @@
     .form {
         flex-direction: row; 
         gap: 0; 
+    }
+}
+
+
+@media (min-width: 768px) { 
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
     }
 }
