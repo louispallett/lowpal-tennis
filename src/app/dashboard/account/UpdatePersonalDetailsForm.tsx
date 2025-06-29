@@ -2,9 +2,8 @@
 
 import { UserType } from "@/lib/types"
 import axios from "axios";
-import countryCodes from "country-codes-list";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
     details:UserType
@@ -16,9 +15,16 @@ export default function UpdatePersonalDetailsForm({ details }:Props) {
     const { errors } = formState;
     const [isPending, setIsPending] = useState(false);
     const [success, setSuccess] = useState(false);
-    const countryCodesArray = Object.entries(countryCodes.customList('countryCode', '{countryCode}: +{countryCallingCode}'));
     const [error, setError] = useState(null);
-    const [isOpen, setIsOpen] = useState(false);
+
+    const [countryCodesArray, setCountryCodesArray] = useState<[string, string][]>([]);
+
+    useEffect(() => {
+        import('country-codes-list').then(module => {
+            const list = Object.entries(module.customList('countryCode', '{countryCode}: +{countryCallingCode}'));
+            setCountryCodesArray(list);
+        });
+    }, []);
 
     const onSubmit = async (data:any) => {
         setError(null);
