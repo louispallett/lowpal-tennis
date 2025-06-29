@@ -4,7 +4,7 @@ import { getPlayer, getPlayersByCategory } from "@/lib/players";
 import { getTeam, getTeamsByCategory } from "@/lib/teams";
 import Category from "@/models/Category";
 import Match from "@/models/Match";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 //? Having both user and players as optional allows us to use this for both teams and players (doubles and singles)
@@ -60,7 +60,7 @@ const getParticipantObj = async (participantId:string, doubles:boolean) => {
     return participant;
 }
 
-export async function POST(req:Request, { params }: { params: { categoryId:string }}) {
+export async function POST(req:NextRequest, { params }: { params: { categoryId:string }}) {
     try {
         const body = await req.json();
         const { categoryId } = await params;

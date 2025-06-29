@@ -1,5 +1,5 @@
 import { connectToDB } from "@/lib/db";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 import User from "@/models/User";
@@ -19,7 +19,7 @@ const RegisterSchema = z.object({
     )
 });
 
-export async function POST(req:Request) {
+export async function POST(req:NextRequest) {
     try {
         await connectToDB();
         const body = await req.json();

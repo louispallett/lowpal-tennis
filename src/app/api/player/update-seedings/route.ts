@@ -1,7 +1,7 @@
 import HttpError from "@/lib/HttpError";
 import Player from "@/models/Player";
 import mongoose from "mongoose";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod"
 
 const PutValidation = z.array(z.object({
@@ -13,7 +13,7 @@ const PutValidation = z.array(z.object({
     seeded: z.boolean()
 }));
 
-export async function PUT(req:Request) {
+export async function PUT(req:NextRequest) {
     try {
         const body = await req.json();
         const data = [];

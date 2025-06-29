@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import generator from "generate-password";
 import HttpError from "@/lib/HttpError";
 import jwt from "jsonwebtoken";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Tournament from "@/models/Tournament";
 import { z } from "zod";
 import Category from "@/models/Category";
@@ -32,7 +32,7 @@ const PostValidation = z.object({
     categories: z.array(z.string())
 })
 
-export async function POST(req: Request) {
+export async function POST(req:NextRequest) {
     try {
         await connectToDB();
         

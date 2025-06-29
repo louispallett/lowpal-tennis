@@ -3,13 +3,13 @@ import generator from "generate-password";
 import HttpError from "@/lib/HttpError";
 import nodemailer from "nodemailer";
 import User from "@/models/User";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 
 const PutValidation = z.string().trim().email().max(100);
 
-export async function PUT(req:Request) {
+export async function PUT(req:NextRequest) {
     try {
         await connectToDB();
         const body = await req.json();

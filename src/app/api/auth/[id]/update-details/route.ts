@@ -7,7 +7,7 @@ import { getUserTeams } from "@/lib/teams";
 import { TeamType } from "@/lib/types";
 import Match from "@/models/Match";
 import User from "@/models/User";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 const PutValidation = z.object({
@@ -21,7 +21,7 @@ const PutValidation = z.object({
     })
 });
 
-export async function PUT(req:Request, { params }: { params: { id:string }}) {
+export async function PUT(req:NextRequest, { params }: { params: { id:string }}) {
     try {
         await connectToDB();
 

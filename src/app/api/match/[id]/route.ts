@@ -1,7 +1,7 @@
 import { connectToDB } from "@/lib/db";
 import HttpError from "@/lib/HttpError";
 import Match from "@/models/Match";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import objectIdSchema from "../../objectIdSchema";
 
@@ -19,7 +19,7 @@ const PutValidation = z.object({
     })
 });
 
-export async function PUT(req:Request, { params }: { params: { id:string } }) {
+export async function PUT(req:NextRequest, { params }: { params: { id:string } }) {
     try {
         await connectToDB();
         const { id } = await params;

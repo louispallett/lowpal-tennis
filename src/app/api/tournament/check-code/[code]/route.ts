@@ -7,7 +7,7 @@ import { z } from "zod";
 
 const GetValidation = z.string().trim();
 
-export async function GET(request: NextRequest, { params }: { params: { code:string }}) {
+export async function GET(req:NextRequest, { params }: { params: { code:string }}) {
     try {
         await connectToDB();
         const { code } = await params;

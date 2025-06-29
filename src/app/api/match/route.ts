@@ -1,7 +1,7 @@
 import { connectToDB } from "@/lib/db";
 import HttpError from "@/lib/HttpError";
 import Match from "@/models/Match";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import objectIdSchema from "../objectIdSchema";
 
@@ -34,7 +34,7 @@ const PostValidation = z.object({
     matches: z.array(MatchValidation).min(1, { message: "At least one match is required" }),
 })
 
-export async function POST(req: Request) {
+export async function POST(req:NextRequest) {
     try {
         await connectToDB();
         const body = await req.json();

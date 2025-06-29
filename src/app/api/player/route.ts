@@ -6,7 +6,7 @@ import Tournament from "@/models/Tournament";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 export async function GET() {
@@ -36,7 +36,7 @@ const PostValidation = z.object({
     categories: z.array(z.string().trim().max(15)),
 })
 
-export async function POST(req: Request) {
+export async function POST(req:NextRequest) {
     try {
         await connectToDB();
 

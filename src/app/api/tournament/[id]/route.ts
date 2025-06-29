@@ -3,7 +3,7 @@ import { MatchType } from "@/lib/types";
 import Match from "@/models/Match";
 import Tournament from "@/models/Tournament";
 import mongoose from "mongoose";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 const PutValidation = z.object({
@@ -22,7 +22,7 @@ const checkPlayInvalid = (matches:MatchType[]):boolean => {
 }
 
 export async function PUT(
-    req:Request,
+    req:NextRequest,
     { params }: { params: { id:string }}
 ) {
     try {

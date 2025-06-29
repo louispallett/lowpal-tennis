@@ -1,5 +1,5 @@
 import { connectToDB } from "@/lib/db";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -11,7 +11,7 @@ const ValidationSchema = z.object({
 });
 
 // sign-in
-export async function POST(req:Request) {
+export async function POST(req:NextRequest) {
     try {
         await connectToDB();
         const body = await req.json();

@@ -4,7 +4,7 @@ import { createMixedTeams, createTeams } from "@/lib/createTeams";
 import { PlayerType } from "@/lib/types";
 import Category from "@/models/Category";
 import mongoose from "mongoose";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import objectIdSchema from "../../objectIdSchema";
 
@@ -21,7 +21,7 @@ const extractIds = (players:PlayerType[]):string[] => {
 }
 
 export async function GET(
-    req:Request,
+    req:NextRequest,
     { params }: { params: { categoryId:string }}
 ) {
     const { categoryId } = await params;
