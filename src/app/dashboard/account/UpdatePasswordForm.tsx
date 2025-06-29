@@ -58,6 +58,14 @@ export default function UpdatePasswordForm({ userId }:Props) {
                             <input type={showPassword ? "text" : "password"} id="newPassword" required placeholder="New Password"
                                 {...register("newPassword", {
                                     required: "Required",
+                                    minLength: {
+                                        value: 8,
+                                        message: "Password must be at least eight (8) characters long"
+                                    },
+                                    pattern: {
+                                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/,
+                                        message: "Must contain: uppercase, lowercase, number, and special character"
+                                    },
                                 })}
                                 className="w-full"
                             />
