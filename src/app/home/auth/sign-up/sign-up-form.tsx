@@ -7,7 +7,11 @@ import { useEffect, useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/16/solid";
 
 export default function SignUpForm() {
-    const form = useForm();
+    const form = useForm({
+        defaultValues: {
+        mobCode: "GB: +44"
+        }
+    });
     const { register, control, handleSubmit, formState, watch, reset, setValue, trigger } = form;
     const { errors } = formState;
     const [isPending, setIsPending] = useState(false);
@@ -20,8 +24,10 @@ export default function SignUpForm() {
         import('country-codes-list').then(module => {
             const list = Object.entries(module.customList('countryCode', '{countryCode}: +{countryCallingCode}'));
             setCountryCodesArray(list);
+            setValue("mobCode", "GB: +44");
+            trigger("mobCode");
         });
-    }, []);
+    }, [setValue, trigger]);
 
     const onSubmit = async (data:any) => {
         setSignupError(null);
