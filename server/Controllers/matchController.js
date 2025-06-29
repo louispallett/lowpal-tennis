@@ -115,6 +115,9 @@ exports.generateMatches = asyncHandler(async (req, res, next) => {
 
         }
         
+        for (let match of matches) {
+            console.log(match.participants);
+        }
         res.json({ matches, totalRounds });
 
     } catch (err) {

@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useState } from "react"
 import { useParams } from "react-router-dom";
-import { Dialog } from '@headlessui/react';
 import { useForm } from "react-hook-form";
 
 import Loader from "../Auxiliary/Loader";
