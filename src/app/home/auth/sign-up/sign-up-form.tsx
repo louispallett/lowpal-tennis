@@ -1,9 +1,8 @@
 "use client"
 
 import axios from "axios";
-import countryCodes from "country-codes-list";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/16/solid";
 
@@ -12,9 +11,17 @@ export default function SignUpForm() {
     const { register, control, handleSubmit, formState, watch, reset, setValue, trigger } = form;
     const { errors } = formState;
     const [isPending, setIsPending] = useState(false);
-    const countryCodesArray = Object.entries(countryCodes.customList('countryCode', '{countryCode}: +{countryCallingCode}'));
     const [showPassword, setShowPassword] = useState(false);
     const [signupError, setSignupError] = useState(null);
+
+    const [countryCodesArray, setCountryCodesArray] = useState<[string, string][]>([]);
+
+    useEffect(() => {
+        import('country-codes-list').then(module => {
+            const list = Object.entries(module.customList('countryCode', '{countryCode}: +{countryCallingCode}'));
+            setCountryCodesArray(list);
+        });
+    }, []);
 
     const onSubmit = async (data:any) => {
         setSignupError(null);
