@@ -1,6 +1,5 @@
 Dockerfile
 fly.toml
-package-lock.json
 
 # Connections
 public/javascripts/connections
