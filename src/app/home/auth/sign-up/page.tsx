@@ -1,9 +1,13 @@
 import Link from "next/link"
 import SignUpForm from "./sign-up-form"
-import countryCodes from "country-codes-list";
+import * as countryCodes from "country-codes-list";
 
 export default function SignUp() {
-    const countryCodesArray:string[][] = Object.entries(countryCodes.customList('countryCode', '{countryCode}: +{countryCallingCode}'));
+    const countryCodesArray = countryCodes.customList(
+        "countryCode",
+        "{countryCode}: +{countryCallingCode}"
+    );
+
     return (
         <>
             <SignUpForm countryCodesArray={countryCodesArray}/>

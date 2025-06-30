@@ -11,8 +11,11 @@ const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
 export default async function Account() {
     const cookieStore = cookies();
     const token = (await cookieStore).get("token")?.value;
-    const countryCodesArray:string[][] = Object.entries(countryCodes.customList('countryCode', '{countryCode}: +{countryCallingCode}'));
-
+    const countryCodesArray = countryCodes.customList(
+        "countryCode",
+        "{countryCode}: +{countryCallingCode}"
+    );
+    
     const { payload } = await jwtVerify(token!, JWT_SECRET);
     const userId:any = payload.userId;
     const user = await getUserById(userId);

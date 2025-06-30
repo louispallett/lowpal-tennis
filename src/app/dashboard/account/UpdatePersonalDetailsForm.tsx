@@ -7,7 +7,7 @@ import { useState } from "react";
 
 type Props = {
     details:UserType, 
-    countryCodesArray:string[][]
+    countryCodesArray:Record<string, string>
 }
 
 export default function UpdatePersonalDetailsForm({ details, countryCodesArray }:Props) {
@@ -97,7 +97,7 @@ export default function UpdatePersonalDetailsForm({ details, countryCodesArray }
                                     {...register("mobCode")}
                                     className="w-full"
                                 >
-                                    {countryCodesArray.map(([code, label]) => (
+                                    {Object.entries(countryCodesArray).map(([code, label]) => (
                                         <option key={code} value={label}>
                                             {label}
                                         </option>

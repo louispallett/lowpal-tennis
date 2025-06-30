@@ -7,7 +7,7 @@ import { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/16/solid";
 
 type SignUpFormProps = {
-    countryCodesArray:string[][]
+    countryCodesArray:Record<string, string>;
 }
 
 export default function SignUpForm({ countryCodesArray }:SignUpFormProps) {
@@ -19,24 +19,23 @@ export default function SignUpForm({ countryCodesArray }:SignUpFormProps) {
     const [signupError, setSignupError] = useState(null);
 
     const onSubmit = async (data:any) => {
-        // setSignupError(null);
-        // setIsPending(true);
-        // axios.post("/api/auth/register", data)
-        //     .then(() => {
-        //         axios.post("/api/auth", data)
-        //             .then(() => {
-        //                 window.location.assign("/dashboard");
-        //             }).catch((err) => {
-        //                 console.log(err);
-        //                 setSignupError(err)
-        //             })
-        //     }).catch((err) => {
-        //         console.log(err);
-        //         setSignupError(err);
-        //     }).finally(() => {
-        //         setIsPending(false);
-        //     });
-        console.log(data);
+        setSignupError(null);
+        setIsPending(true);
+        axios.post("/api/auth/register", data)
+            .then(() => {
+                axios.post("/api/auth", data)
+                    .then(() => {
+                        window.location.assign("/dashboard");
+                    }).catch((err) => {
+                        console.log(err);
+                        setSignupError(err)
+                    })
+            }).catch((err) => {
+                console.log(err);
+                setSignupError(err);
+            }).finally(() => {
+                setIsPending(false);
+            });
 
     }
 
@@ -97,11 +96,11 @@ export default function SignUpForm({ countryCodesArray }:SignUpFormProps) {
                                     {...register("mobCode")}
                                     className="w-full"
                                 >
-                                    {countryCodesArray.map(([code, label]) => (
-                                        <option key={code} value={label}>
-                                            {label}
-                                        </option>
-                                    ))}
+                                {Object.entries(countryCodesArray).map(([code, label]) => (
+                                    <option key={code} value={label}>
+                                        {label}
+                                    </option>
+                                ))}
                                 </select>
                             </div>
                             <input type="tel" placeholder="Mobile" className="form-input"
