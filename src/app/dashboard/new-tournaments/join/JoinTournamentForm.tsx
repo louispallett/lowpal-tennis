@@ -136,7 +136,7 @@ export default function JoinTournamentForm({ validTournament }: { validTournamen
                         <h3 className="font-roboto text-center mt-2.5">Categories</h3>
                         <h4>Select at least one category you wish to play</h4>
                         <div className="flex flex-col gap-2.5">
-                            <div className="flex gap-2.5">
+                            <div className="flex flex-col sm:flex-row gap-2.5">
                                 { gender == "male" ? (
                                     <>
                                         { (!tournamentCategories.includes("Men's Singles") && !tournamentCategories.includes("Men's Doubles") && !tournamentCategories.includes("Mixed Doubles")) && (
@@ -165,7 +165,6 @@ export default function JoinTournamentForm({ validTournament }: { validTournamen
                                             </label>
                                         )}
                                     </>
-
                                 ) : (
                                     <>
                                         { (!tournamentCategories.includes("Women's Singles") && !tournamentCategories.includes("Women's Doubles") && !tournamentCategories.includes("Mixed Doubles")) && (

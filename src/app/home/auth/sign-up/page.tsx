@@ -11,7 +11,7 @@ export default function SignUp() {
     return (
         <>
             <SignUpForm countryCodesArray={countryCodesArray}/>
-            <p className="text-center mt-5">Already registered? <Link href="/home/auth/sign-in" className="text-link">Sign In</Link></p>
+            <p className="text-center mt-5">Already registered? <Link href="/dashboard" className="text-link">Sign In</Link></p>
         </>
 
     )

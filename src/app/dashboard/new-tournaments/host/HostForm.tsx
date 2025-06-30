@@ -70,7 +70,7 @@ export default function HostForm() {
                         categories. This cannot be changed.
                     </p>
                     <div className="flex flex-col gap-2.5">
-                        <div className="flex gap-2.5">
+                        <div className="flex flex-col sm:flex-row gap-2.5">
                             <label className={`tournament-button ${checkedState["Men's Singles"] ? "checked" : ""}`}>
                                 <p>Men's Singles</p>
                                 <input
@@ -90,7 +90,7 @@ export default function HostForm() {
                                 <span className="custom-checkbox"></span>
                             </label>
                         </div>
-                        <div className="flex gap-2.5">
+                        <div className="flex flex-col sm:flex-row gap-2.5">
                             <label className={`tournament-button ${checkedState["Men's Doubles"] ? "checked" : ""}`}>
                                 <p>Men's Doubles</p>
                                 <input
