@@ -2,11 +2,15 @@
 
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/16/solid";
 
-export default function SignUpForm() {
+type SignUpFormProps = {
+    countryCodesArray:string[][]
+}
+
+export default function SignUpForm({ countryCodesArray }:SignUpFormProps) {
     const form = useForm();
     const { register, control, handleSubmit, formState, watch, reset, setValue, trigger } = form;
     const { errors } = formState;
@@ -14,33 +18,25 @@ export default function SignUpForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [signupError, setSignupError] = useState(null);
 
-    const [countryCodesArray, setCountryCodesArray] = useState<[string, string][]>([]);
-
-    useEffect(() => {
-        import('country-codes-list').then(module => {
-            const list = Object.entries(module.customList('countryCode', '{countryCode}: +{countryCallingCode}'));
-            setCountryCodesArray(list);
-        });
-    }, []);
-
     const onSubmit = async (data:any) => {
-        setSignupError(null);
-        setIsPending(true);
-        axios.post("/api/auth/register", data)
-            .then(() => {
-                axios.post("/api/auth", data)
-                    .then(() => {
-                        window.location.assign("/dashboard");
-                    }).catch((err) => {
-                        console.log(err);
-                        setSignupError(err)
-                    })
-            }).catch((err) => {
-                console.log(err);
-                setSignupError(err);
-            }).finally(() => {
-                setIsPending(false);
-            });
+        // setSignupError(null);
+        // setIsPending(true);
+        // axios.post("/api/auth/register", data)
+        //     .then(() => {
+        //         axios.post("/api/auth", data)
+        //             .then(() => {
+        //                 window.location.assign("/dashboard");
+        //             }).catch((err) => {
+        //                 console.log(err);
+        //                 setSignupError(err)
+        //             })
+        //     }).catch((err) => {
+        //         console.log(err);
+        //         setSignupError(err);
+        //     }).finally(() => {
+        //         setIsPending(false);
+        //     });
+        console.log(data);
 
     }
 
@@ -97,7 +93,7 @@ export default function SignUpForm() {
                         <div className="mobile-wrapper">
                             <div className="form-input">
                                 <select name="countryCode" id="countryCode"
-                                    required
+                                    required defaultValue="GB: +44"
                                     {...register("mobCode")}
                                     className="w-full"
                                 >

@@ -1,5 +1,6 @@
-import UpdatePersonalDetailsForm from "./UpdatePersonalDetailsForm"
-import UpdatePasswordForm from "./UpdatePasswordForm"
+import UpdatePersonalDetailsForm from "./UpdatePersonalDetailsForm";
+import UpdatePasswordForm from "./UpdatePasswordForm";
+import countryCodes from "country-codes-list";
 
 import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
@@ -10,6 +11,7 @@ const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
 export default async function Account() {
     const cookieStore = cookies();
     const token = (await cookieStore).get("token")?.value;
+    const countryCodesArray:string[][] = Object.entries(countryCodes.customList('countryCode', '{countryCode}: +{countryCallingCode}'));
 
     const { payload } = await jwtVerify(token!, JWT_SECRET);
     const userId:any = payload.userId;
@@ -28,8 +30,8 @@ export default async function Account() {
             <div className="standard-container container-lime">
                 <h3 className="main-title-sm">Account Settings</h3>
             </div>
-            <UpdatePersonalDetailsForm details={JSON.parse(JSON.stringify(userClient))} />
-            <UpdatePasswordForm userId={JSON.parse(JSON.stringify(user._id))} />
+            <UpdatePersonalDetailsForm details={JSON.parse(JSON.stringify(userClient))} countryCodesArray={countryCodesArray} />
+            <UpdatePasswordForm userId={JSON.parse(JSON.stringify(user._id))}  />
         </div>
     )
 }
