@@ -36,7 +36,7 @@ export async function GET(req:NextRequest, { params }: { params: { id:string }})
                 }
             }
 
-            if (category.name === "mixDoubles") {
+            if (category.name === "Mixed Doubles") {
                 const malePlayers = players.filter((player) => player.male);
                 const femalePlayers = players.filter((player) => !player.male);
                 if (malePlayers.length != femalePlayers.length) {
