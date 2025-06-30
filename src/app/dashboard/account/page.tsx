@@ -1,6 +1,6 @@
 import UpdatePersonalDetailsForm from "./UpdatePersonalDetailsForm";
 import UpdatePasswordForm from "./UpdatePasswordForm";
-import countryCodes from "country-codes-list";
+import * as countryCodes from "country-codes-list";
 
 import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
@@ -15,7 +15,7 @@ export default async function Account() {
         "countryCode",
         "{countryCode}: +{countryCallingCode}"
     );
-    
+
     const { payload } = await jwtVerify(token!, JWT_SECRET);
     const userId:any = payload.userId;
     const user = await getUserById(userId);
