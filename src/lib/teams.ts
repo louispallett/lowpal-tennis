@@ -21,7 +21,6 @@ export async function getTeam(teamId:string):Promise<TeamType> {
 export async function getTeamsByTournament(tournamentId:string):Promise<TeamType[]> {
     await connectToDB();
     const teams = await Team.find({ tournament: tournamentId }).sort("ranking");
-    console.log(tournamentId);
     return teams;
 }
 

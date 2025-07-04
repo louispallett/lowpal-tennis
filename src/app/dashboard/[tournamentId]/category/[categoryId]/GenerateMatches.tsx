@@ -5,6 +5,7 @@ import { MatchType, PlayerTypeClient, TeamTypeClient } from "@/lib/types";
 import axios from "axios";
 import { useState } from "react"
 import { useForm } from "react-hook-form";
+import Bracket from "../../Bracket";
 
 type GenerateMatchesProps = {
     participants:PlayerTypeClient[] | TeamTypeClient[],

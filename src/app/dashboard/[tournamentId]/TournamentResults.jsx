@@ -3,7 +3,7 @@
 import Bracket from "./Bracket.jsx";
 import NoInfo from "./NoInfo.tsx";
 
-export default function TournamentResults({ matches, stage }) {
+export default function TournamentResults({ matches, stage, isHost }) {
     const matchesExist = matches.length > 0;
     let groupedMatches = [];
 
@@ -22,11 +22,13 @@ export default function TournamentResults({ matches, stage }) {
         groupedMatches = Object.values(groupedMatchesObj);
     }
 
+    const canSeeBracket = (isHost && stage === "draw") || (stage === "play" || stage === "finished");
+
     return (
         <div className="standard-container container-indigo flex flex-col gap-2.5 z-0">
             <h3>Tournament Results</h3>
             <div className="flex flex-col items-center gap-2.5">
-                { (stage === "play" || stage === "finished") ? (
+                { canSeeBracket ? (
                     <>
                         { matchesExist ? (
                             <>

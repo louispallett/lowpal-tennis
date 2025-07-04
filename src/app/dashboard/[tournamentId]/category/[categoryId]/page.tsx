@@ -216,7 +216,8 @@ function StageDraw({ tournament, category, teams, players }:ActionProps) {
                         </>
                     ) : (
                         <GenerateMatches participants={clientPlayers} categoryId={category._id.toString()} doubles={category.doubles} />
-                    )}               
+                    )}
+                    <RemovePlayers players={clientPlayers} categoryId={JSON.parse(JSON.stringify(category._id))} />
                 </>
             ) : (
                 <p>Looks like you've created matches for this category! Once you have created matches for each category, return to the tournament page and move to the PLAY stage.</p>

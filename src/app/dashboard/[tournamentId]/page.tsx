@@ -2,13 +2,13 @@ import { getMatchesByTournament, getUserMatches } from "@/lib/matches";
 import { getPlayerByUser, getPlayersByTournament } from "@/lib/players";
 import { getTeamsByTournament, getUserTeams } from "@/lib/teams";
 import { getTournamentById } from "@/lib/tournaments";
-import { MatchType, PlayerType, TeamType, TournamentType } from "@/lib/types";
+import { CategoryType, MatchType, PlayerType, TeamType, TournamentType } from "@/lib/types";
 import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 // @ts-ignore - TournamentResults is a .jsx file with no type definitions
 import TournamentResults from "./TournamentResults";
 import HostSection from "./HostSection";
-import { getCategoriesByTournament } from "@/lib/categories";
+import { getCategoriesByTournament, getPlayerCategories } from "@/lib/categories";
 import UserMatches from "./UserMatches";
 import NoInfo from "./NoInfo";
 import Link from "next/link";
@@ -48,6 +48,7 @@ export default async function Tournament({ params }: { params: { tournamentId: s
     const categories = await getCategoriesByTournament(tournamentId);
     const teams = await getTeamsByTournament(tournamentId);
     const player = await getPlayer(tournamentId, userId);
+    const playerCategories = await getPlayerCategories(player.categories);
 
     let userTeams = [], userMatches = [];
     if (player) {
@@ -66,6 +67,7 @@ export default async function Tournament({ params }: { params: { tournamentId: s
                     tournament={tournament} categories={categories} matches={matches} players={players} teams={teams} 
                 />
             )}
+            <PlayerCategories categories={playerCategories} />
             <div className="racket-cross-wrapper-sm">
                 <img src="/assets/images/racket-red.svg" alt="" />
                 <img src="/assets/images/racket-blue.svg" alt="" />
@@ -80,7 +82,7 @@ export default async function Tournament({ params }: { params: { tournamentId: s
                 <img src="/assets/images/racket-red.svg" alt="" />
                 <img src="/assets/images/racket-blue.svg" alt="" />
             </div>
-            <TournamentResults matches={matchesClient} stage={tournament.stage} />
+            <TournamentResults matches={matchesClient} stage={tournament.stage} isHost={isHost} />
             <Link href="/dashboard" className="submit text-center">Return to dashboard</Link>
         </div>
     )
@@ -104,6 +106,34 @@ function TournamentInfo({ tournament, players, matches }: TournamentInfoProps) {
                 <p>Number of players: {players.length}</p>
                 <p>Number of active matches: {matches.filter(match => match.state === "SCHEDULED" && match.participants.length > 1).length}</p>
             </div>
+        </div>
+    )
+}
+
+type PlayerCategoriesProps = { categories:CategoryType[] }
+
+function PlayerCategories({ categories }:PlayerCategoriesProps) {
+    return (
+        <div className="standard-container container-indigo">
+            <h3>Your Categories</h3>
+            { categories.length > 0 ? (
+                <>
+                    <p className="my-2.5">This tournament has not yet started. You've signed up to the following categories:</p>
+                    <div className="tournament-grid-sm">
+                            <>
+                                { categories.map((category) => (
+                                    <p className="standard-container-no-shadow bg-indigo-100 shadow-none lg:text-center"
+                                        key={category._id}
+                                    >
+                                        {category.name}
+                                    </p>
+                                ))}
+                            </>
+                    </div>
+                </>
+            ) : (
+                <NoInfo text="You aren't part of any categories" />
+            )}
         </div>
     )
 }
@@ -146,11 +176,11 @@ type TeamCardProps = {
 function TeamCard({ info }:TeamCardProps) {
     return (
         <div className="standard-container-no-shadow bg-indigo-600/90 max-w-4xl">
-            <h5 className="standard-container-no-shadow mb-2.5 text-center bg-lime-400 shadow-none">{info.category.name}</h5>
+            <h5 className="standard-container-no-shadow mb-2.5 text-center bg-lime-400">{info.category.name}</h5>
             <div className="flex justify-between flex-col lg:flex-row items-center gap-2.5">
-                <p className="standard-container-no-shadow bg-indigo-100 shadow-none text-center lg:text-right">{info.players[0].user.firstName} {info.players[0].user.lastName}</p>
+                <p className="standard-container-no-shadow bg-indigo-100 text-center lg:text-right">{info.players[0].user.firstName} {info.players[0].user.lastName}</p>
                 <p className="text-white">and</p>
-                <p className="standard-container-no-shadow bg-indigo-100 text-center lg:text-left shadow-none">{info.players[1].user.firstName} {info.players[1].user.lastName}</p>
+                <p className="standard-container-no-shadow bg-indigo-100 text-center lg:text-left">{info.players[1].user.firstName} {info.players[1].user.lastName}</p>
             </div>
         </div>    
     )
