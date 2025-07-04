@@ -93,8 +93,9 @@ export default async function Dashboard() {
             )}
             { isPlaying && (
                 <>
-                    <div className="standard-container container-indigo flex flex-col gap-5">
+                    <div className="standard-container container-indigo flex flex-col gap-2.5">
                         <h3 className="italic">Joined Tournaments</h3>
+                        <p>Go to a tournament page by clicking on a tournament below:</p>
                         { tournamentsPlayingFiltered.signUps.length > 0 && (
                             <div className="flex flex-col gap-2.5">
                                 { tournamentsPlayingFiltered.signUps.map((item) => (

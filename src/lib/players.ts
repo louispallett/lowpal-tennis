@@ -2,6 +2,7 @@ import Player from "@/models/Player";
 import { PlayerType, PlayerTypeClient } from "./types";
 import User from "@/models/User";
 import { connectToDB } from "./db";
+import Category from "@/models/Category";
 
 export async function getPlayer(playerId:string):Promise<PlayerType[]> {
     await connectToDB();
