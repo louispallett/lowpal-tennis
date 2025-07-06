@@ -76,7 +76,7 @@ export async function POST(req:NextRequest) {
                 <p>The Developer, Louis Nicholson-Pallett</p>`,
         };
 
-        // await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
 
         return NextResponse.json({
             firstName: user.firstName,
