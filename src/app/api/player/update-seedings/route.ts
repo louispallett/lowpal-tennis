@@ -1,3 +1,4 @@
+import { connectToDB } from "@/lib/db";
 import HttpError from "@/lib/HttpError";
 import Player from "@/models/Player";
 import mongoose from "mongoose";
@@ -15,6 +16,7 @@ const PutValidation = z.array(z.object({
 
 export async function PUT(req:NextRequest) {
     try {
+        await connectToDB();
         const body = await req.json();
         const data = [];
         for (let player in body) {

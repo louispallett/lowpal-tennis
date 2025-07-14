@@ -118,7 +118,7 @@ function PlayerCategories({ categories }:PlayerCategoriesProps) {
             <h3>Your Categories</h3>
             { categories.length > 0 ? (
                 <>
-                    <p className="my-2.5">This tournament has not yet started. You've signed up to the following categories:</p>
+                    <p className="my-2.5">You've signed up to the following categories:</p>
                     <div className="tournament-grid-sm">
                             <>
                                 { categories.map((category) => (

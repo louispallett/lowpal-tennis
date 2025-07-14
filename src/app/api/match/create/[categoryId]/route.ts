@@ -1,7 +1,6 @@
 import objectIdSchema from "@/app/api/objectIdSchema";
+import { connectToDB } from "@/lib/db";
 import HttpError from "@/lib/HttpError";
-import { getPlayer, getPlayersByCategory } from "@/lib/players";
-import { getTeam, getTeamsByCategory } from "@/lib/teams";
 import Category from "@/models/Category";
 import Match from "@/models/Match";
 import { NextRequest, NextResponse } from "next/server";
@@ -38,30 +37,10 @@ const PostValidation = z.object({
     dates: z.record(z.coerce.date()),
 });
 
-const getParticipantObj = async (participantId:string, doubles:boolean) => {
-    let participant;
-
-    if (doubles) {
-        const team = await getTeam(participantId);
-        participant = {
-            participantId,
-            participantModel: "Team",
-            name: `${team.players[0].user.firstName} ${team.players[0].user.lastName} and ${team.players[1].user.firstName} ${team.players[1].user.firstName}`
-        };
-    } else {
-        const player = await getPlayer(participantId);
-        participant = {
-            participantId,
-            participantModel: "Player",
-            name: `${player.user.firstName} ${player.user.lastName}`
-        }
-    }
-
-    return participant;
-}
-
 export async function POST(req:NextRequest, { params }: { params: { categoryId:string }}) {
     try {
+        await connectToDB();
+
         const body = await req.json();
         const { categoryId } = await params;
 
