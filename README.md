@@ -1,4 +1,4 @@
-# Tennis Tournament by LowPal
+# Tennis Tournament Creator
 
 ![Server Tests](https://github.com/louispallett/lowpal-tennis/actions/workflows/main.yml/badge.svg)
 ![Static Badge](https://img.shields.io/badge/license-GPL2.0-green?style=flat&logo=license)
