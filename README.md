@@ -5,7 +5,7 @@
 
 [![A screenshot of the home page of the website. An indigo background with the website title at the top of the page. Underneath are two tennis rackets crossed at their handles, with buttons for 'Register' and 'Login' underneath. To the right handside, a silhouette of a women looking left, holding a racket in her hand.](https://res.cloudinary.com/divlee1zx/image/upload/v1757927457/Screenshot_From_2025-09-15_10-09-24_jkx6pc.png)](https://www.tennistournamentcreator.com)
 
-## Puropse
+## Purpose
 
 _Tennis Tournament Creator_ is a web application with the aim of simplifying the running of and participation in tennis tournaments by both hosts and players.
 
