@@ -48,7 +48,7 @@ export default async function Tournament({ params }: { params: { tournamentId: s
     const categories = await getCategoriesByTournament(tournamentId);
     const teams = await getTeamsByTournament(tournamentId);
     const player = await getPlayer(tournamentId, userId);
-    const playerCategories = await getPlayerCategories(player.categories);
+    // const playerCategories = await getPlayerCategories(player.categories);
 
     let userTeams = [], userMatches = [];
     if (player) {
@@ -67,7 +67,7 @@ export default async function Tournament({ params }: { params: { tournamentId: s
                     tournament={tournament} categories={categories} matches={matches} players={players} teams={teams} 
                 />
             )}
-            <PlayerCategories categories={playerCategories} />
+            {/* <PlayerCategories categories={playerCategories} /> */}
             <div className="racket-cross-wrapper-sm">
                 <img src="/assets/images/racket-red.svg" alt="" />
                 <img src="/assets/images/racket-blue.svg" alt="" />
