@@ -16,11 +16,17 @@ export default async function Dashboard() {
     const tournaments = await getUserTournaments(userId);
     let tournamentsHosting = tournaments[0];
     let tournamentsPlaying = tournaments[1];
+    
+    const hostingIds = new Set(tournamentsHosting.map(tournament => tournament._id.toString()));
+
+    const filteredTournamentsPlaying = tournamentsPlaying.filter(tournament =>
+        !hostingIds.has(tournament._id.toString())
+    );
     const tournamentsPlayingFiltered = {
-        signUps: tournamentsPlaying.filter(x => x.stage === "sign-up"),
-        draws: tournamentsPlaying.filter(x => x.stage === "draw"),
-        actives: tournamentsPlaying.filter(x => x.stage === "play"),
-        finished: tournamentsPlaying.filter(x => x.stage === "finished")
+        signUps: filteredTournamentsPlaying.filter(x => x.stage === "sign-up"),
+        draws: filteredTournamentsPlaying.filter(x => x.stage === "draw"),
+        actives: filteredTournamentsPlaying.filter(x => x.stage === "play"),
+        finished: filteredTournamentsPlaying.filter(x => x.stage === "finished")
     }
     const tournamentsHostingFiltered = {
         signUps: tournamentsHosting.filter(x => x.stage === "sign-up"),
@@ -29,7 +35,7 @@ export default async function Dashboard() {
         finished: tournamentsHosting.filter(x => x.stage === "finished")
     }
     const isHosting = tournamentsHosting.length > 0
-    const isPlaying = tournamentsPlaying.length > 0;
+    const isPlaying = filteredTournamentsPlaying.length > 0;
 
     return (
         <div className="flex flex-col gap-2.5 sm:mx-1.5 lg:mx-5">
@@ -166,11 +172,11 @@ const idEquals = (a:any, b:any) => {
 }
 
 function UserTournamentHosting({ data, tournamentsPlaying }:UserTournamentHostingProps) {
-    const joined = 
-        tournamentsPlaying.signUps.some(item => idEquals(item._id, data._id)) ||
-        tournamentsPlaying.draws.some(item => idEquals(item._id, data._id)) ||
-        tournamentsPlaying.actives.some(item => idEquals(item._id, data._id));
-    const isFinished = data.stage === "finished";
+    // const joined = 
+    //     tournamentsPlaying.signUps.some(item => idEquals(item._id, data._id)) ||
+    //     tournamentsPlaying.draws.some(item => idEquals(item._id, data._id)) ||
+    //     tournamentsPlaying.actives.some(item => idEquals(item._id, data._id));
+    // const isFinished = data.stage === "finished";
 
     return (
         <div className="hosting-wrapper">
@@ -182,7 +188,7 @@ function UserTournamentHosting({ data, tournamentsPlaying }:UserTournamentHostin
                     <p>Date Created: {data.startDateFormatted}</p>
                 </div>
             </Link>
-            { joined ? (
+            {/* { joined ? (
                 <div className={isFinished ? "hidden" : "standard-container-no-shadow container-lime-interactive hover:bg-lime-500/75!"}>
                     <div className="flex lg:flex-col justify-center items-center gap-2.5">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#054205" className="size-24">
@@ -200,7 +206,7 @@ function UserTournamentHosting({ data, tournamentsPlaying }:UserTournamentHostin
                         <p className="text-center">Join this tournament</p>
                     </div>
                 </Link>
-            )}
+            )} */}
         </div>
     )
 }
