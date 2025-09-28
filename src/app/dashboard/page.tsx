@@ -179,7 +179,7 @@ function UserTournamentHosting({ data, tournamentsPlaying }:UserTournamentHostin
     // const isFinished = data.stage === "finished";
 
     return (
-        <div className="hosting-wrapper">
+        <div className="hosting-wrapper flex!">
             <Link href={"/dashboard/" + data._id} className="standard-container-no-shadow container-indigo-interactive">
                 <h3>{data.name}</h3>
                 <div className="tournament-grid-sm">
