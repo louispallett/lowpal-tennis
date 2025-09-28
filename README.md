@@ -34,7 +34,7 @@ A full list of technologies can be found in the package.json [file](https://gith
     - [jest](https://jestjs.io/): JavaScript testing framework. 
     - [nodemon](https://nodemon.io/): Node.js dev tool to automatically restart servers during development.
 
-## Version 3.0.1
+## Version 3.0.3
 Version 3 has migrated the application over to NextJS and TypeScript. As with version 2, all users can now host and join multiple tournaments. 
 
 Hosts can:
