@@ -200,7 +200,7 @@ const generateFirstRoundMatches = (numOfPlayers:number):MatchTypeLite[][] => {
     return matchesByRound;
 }
 
-type participantType = PlayerTypeClient[] | TeamTypeClient[];
+type participantType = PlayerTypeClient[] | TeamTypeClient[] | string[];
 
 export function generateMatches(participants:participantType):MatchTypeLite[] {
     const numOfPlayers = participants.length;
