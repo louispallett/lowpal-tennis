@@ -34,6 +34,17 @@ export async function POST(req:NextRequest) {
             throw new HttpError(error, 500);
         }
 
+        for (let match of matches) {
+            match.participants = match.participants.map((participant) => {
+                const newParticipant = {
+                    name: participant,
+                    resultText: ""
+                };
+                
+                return newParticipant;
+            });
+        }
+
         return NextResponse.json({ matches });
     } catch (err:any) {
         console.error(err);
