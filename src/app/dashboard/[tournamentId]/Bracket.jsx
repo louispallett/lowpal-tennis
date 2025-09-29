@@ -78,7 +78,6 @@ export default function Bracket({ matchData, categoryName }) {
                         }}
                         >
                             <div
-                                // onMouseEnter={() => onMouseEnter(topParty.id)}
                                 style={{ 
                                     display: "flex", 
                                     justifyContent: "space-between", 
@@ -92,7 +91,6 @@ export default function Bracket({ matchData, categoryName }) {
                                 style={{ height: "4px", width: "100%", background: "#4f46e5" }}
                             />
                             <div
-                            // onMouseEnter={() => onMouseEnter(bottomParty.id)}
                                 style={{ 
                                     display: "flex", 
                                     justifyContent: "space-between", 
