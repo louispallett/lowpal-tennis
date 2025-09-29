@@ -5,8 +5,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 const PostValidation = z.object({
-    players: z.array(z.string().trim().max(200))
-})
+    players: z.array(z.string().max(200))
+}).transform(data => ({
+    players: data.players.map(p => p.trim())
+}));
+
 
 
 export async function POST(req:NextRequest) {
@@ -24,11 +27,12 @@ export async function POST(req:NextRequest) {
         }
 
         const { players } = parsed.data;
-
+        const numOfPlayers = players.length;
+        
         const matches = generateMatches(players);
 
         // The total number of matches must equal the number of players - 1. This is a fail-safe in case it doesn't.
-        if (matches.length != players.length - 1) {
+        if (matches.length != numOfPlayers - 1) {
             const error = "Error generating matches. Code: client-generate-GET/array-size-is-unexpected";
             console.error(error);
             throw new HttpError(error, 500);
