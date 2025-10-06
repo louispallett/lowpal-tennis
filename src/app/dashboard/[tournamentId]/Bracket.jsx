@@ -15,7 +15,8 @@ export default function Bracket({ matchData, categoryName }) {
     if (!mounted) return null;
 
     const isMobile = width <= 450;
-    const finalWidth = isMobile ? width - 40 : Math.max(width - 200, 400);
+    const isLarge = width > 1500;
+    const finalWidth = isMobile ? width - 40 : (isLarge ? width - 400 : Math.max(width - 200, 400));
     const finalHeight = Math.max(height - 100, 500);
 
     return (
@@ -25,7 +26,7 @@ export default function Bracket({ matchData, categoryName }) {
                 matches={matchData}
                 options={{
                     style: {
-                        roundHeader: { backgroundColor: "#000" },
+                        roundHeader: { backgroundColor: "#fff" },
                         connectorColor: "#4f46e5",
                         connectorColorHighlight: "#000",
                     },
@@ -47,20 +48,8 @@ export default function Bracket({ matchData, categoryName }) {
                 )}
                 matchComponent={({
                     match,
-                    onMatchClick,
-                    onPartyClick,
-                    onMouseEnter,
-                    onMouseLeave,
                     topParty,
                     bottomParty,
-                    topWon,
-                    bottomWon,
-                    topHovered,
-                    bottomHovered,
-                    topText,
-                    bottomText,
-                    connectorColor,
-                    computedStyles,
                     teamNameFallback,
                     resultFallback,
                 }) => (
