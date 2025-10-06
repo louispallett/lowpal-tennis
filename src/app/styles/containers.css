@@ -309,3 +309,21 @@ footer {
 		font-size: 0.9rem;
 	}
 }
+
+.table {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	border-collapse: collapse;
+	border: 1px solid #686868;
+}
+
+.cell {
+	background-color: #e7e7e7;
+	border: 1px solid #838383;
+	padding: 10px;
+	margin: 0 2px;
+}
+
+.row {
+  display: contents;
+}

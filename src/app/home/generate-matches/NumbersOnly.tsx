@@ -2,10 +2,10 @@
 
 import Bracket from "@/app/dashboard/[tournamentId]/Bracket";
 import { MatchTypeLite } from "@/lib/types";
-import { ArrowRightCircleIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 import axios from "axios";
 import { useState } from "react"
 import { useForm } from "react-hook-form";
+import QualifyingMatches from "./QualifyingMatches";
 
 export default function NumbersOnly() {
     const [matches, setMatches] = useState<MatchTypeLite[] | null>(null);
@@ -32,17 +32,18 @@ export default function NumbersOnly() {
             .then((response:any) => {
                 const returnedMatches = response.data.matches;
                 const matchesClient = returnedMatches.map((match: any, matchIdx: number) => ({
-                _id: match._id,
-                id: match._id,
-                category: { name: "" },
-                nextMatchId: match.nextMatchId,
-                qualifyingMatch: match.qualifyingMatch,
-                tournamentRoundText: match.tournamentRoundText,
-                state: "SCHEDULED",
-                    participants: match.participants.map((participant: any, idx: number) => ({
-                        name: typeof participant === "string" ? participant : participant.name,
-                        resultText: "",
-                    })),
+                    _id: match._id,
+                    id: match._id,
+                    category: { name: "" },
+                    nextMatchId: match.nextMatchId,
+                    qualifyingMatch: match.qualifyingMatch,
+                    tournamentRoundText: match.tournamentRoundText,
+                    state: "SCHEDULED",
+                        participants: match.participants.map((participant: any, idx: number) => ({
+                            name: typeof participant === "string" ? participant : participant.name,
+                            resultText: "",
+                        })),
+                    previousMatchId: match.previousMatchId || []
                 }));
 
                 const matchesClientFiltered = matchesClient.filter((match:MatchTypeLite) => !match.qualifyingMatch);
@@ -68,7 +69,7 @@ export default function NumbersOnly() {
                     create a tournament bracket with that number of players, each named according to
                     their ranking (i.e. "Player 1", "Player 2").
                 </p>
-                <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex gap-2.5">
+                <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col sm:flex-row gap-2.5">
                     <input type="number" className="form-input" 
                         {...register("numOfPlayers", {
                             required: "Is Required",
@@ -89,47 +90,14 @@ export default function NumbersOnly() {
             { matches && (
                 <Bracket matchData={matches} categoryName="" />
             )}
-            {/* { qualMatches && (
-                <QualifyingMatches matches={qualMatches} allMatches={matches} />
-            )} */}
+            { qualMatches && (
+                <>
+                    { qualMatches.length > 0 && (
+                        <QualifyingMatches matches={qualMatches} allMatches={matches} />
+                    )}
+                </>
+            )}
 
-        </div>
-    )
-}
-
-type QualifyingMatchesProps = {
-    matches:MatchTypeLite[],
-    allMatches:MatchTypeLite[] | null
-}
-
-function QualifyingMatches({ matches, allMatches }:QualifyingMatchesProps) {
-    return (
-        <div className="flex flex-col gap-2.5">
-            { matches.map(match => (
-                <MatchCard matchData={match} allMatches={allMatches} key={match._id} />
-            ))}
-        </div>
-    )
-}
-
-type MatchCardProps = {
-    matchData:MatchTypeLite,
-    allMatches:MatchTypeLite[] | null
-}
-
-function MatchCard({ matchData, allMatches }:MatchCardProps) {
-    const nextMatch = allMatches?.find(item => item._id == matchData.nextMatchId);
-    return (
-        <div className="standard-container flex gap-2.5 items-center">
-            <div className="flex flex-col">
-                <p>Players:</p>
-                <p>{matchData.participants[0].name}</p>
-                <p>{matchData.participants[1].name}</p>
-            </div>
-            <ChevronRightIcon className="h-24" />
-            <p>will play</p>
-            <ChevronRightIcon className="h-24" />
-            <p>{nextMatch?.participants[0] ? nextMatch?.participants[0].name : ""}</p>
         </div>
     )
 }

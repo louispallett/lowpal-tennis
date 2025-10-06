@@ -52,3 +52,36 @@
 .success:hover {
 	background-color: #a3e635;
 }
+
+.button-default {
+	cursor: pointer;
+}
+
+.wrapper {
+  	display: inline-flex;
+	align-items: center;
+  	transition: transform 0.3s ease;
+}
+
+.one-eighty {
+	transform: rotate(90deg);
+}
+
+.arrow {
+	height: 3rem;
+	display: inline-flex;
+	align-items: center;
+}
+
+.bounce {
+	animation: float 1s ease-in-out infinite;
+}
+
+@keyframes float {
+	0%, 100% {
+		transform: translateX(0);
+	}
+	50% {
+		transform: translateX(-8px);
+	}
+}

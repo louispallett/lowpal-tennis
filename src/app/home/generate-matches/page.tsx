@@ -1,18 +1,17 @@
-import Bracket from "@/app/dashboard/[tournamentId]/Bracket";
 import { generateMatches } from "@/lib/generateMatches";
-import { GenerateMatchesForm } from "./Form";
+// import { GenerateMatchesForm } from "./Form";
 import NumbersOnly from "./NumbersOnly";
 import AboutClient from "./AboutClient";
 
 export default function GenerateMatches() {
     return (
         <div className="flex-1 mx-auto px-1 sm:px-4">
-            <div className="standard-container bg-slate-200/75">
+            <div className="standard-container bg-lime-400/75">
                 <h3 className="home-subtitle">Quick Generate Matches</h3>
             </div>
             <About />
             <NumbersOnly />
-            <CreateYourOwn />
+            {/* <CreateYourOwn /> */}
         </div>
     )
 }
@@ -41,7 +40,6 @@ function About() {
             return newParticipant;
         });
     }
-    console.log(matches);
     
     const matchesClient = JSON.parse(JSON.stringify(matches));
 
@@ -50,14 +48,14 @@ function About() {
     )
 }
 
-function CreateYourOwn() {
-    return (
-        <div className="standard-container bg-slate-200/75 my-2.5">
-            <h3 className="home-subtitle text-4xl!">Create Your Own</h3>
-            <p>
-                You can quickly create your own bracket below using the function below - you just need to enter their names and rankings below:
-            </p>
-            <GenerateMatchesForm />
-        </div>
-    )
-}
+// function CreateYourOwn() {
+//     return (
+//         <div className="standard-container bg-slate-200/75 my-2.5">
+//             <h3 className="home-subtitle text-4xl!">Create Your Own</h3>
+//             <p>
+//                 You can quickly create your own bracket below using the function below - you just need to enter their names and rankings below:
+//             </p>
+//             <GenerateMatchesForm />
+//         </div>
+//     )
+// }
