@@ -75,7 +75,7 @@ export default function NumbersOnly() {
                 <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col sm:flex-row gap-2.5">
                     <input type="number" className="form-input" 
                         {...register("numOfPlayers", {
-                            required: "Is Required",
+                            required: "Required",
                             min: {
                                 value: 2,
                                 message: "Must be a positive integer greater than 1"

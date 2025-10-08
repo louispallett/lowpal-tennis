@@ -13,9 +13,14 @@ export default function Home() {
                         <img src="/assets/images/racket-red.svg" alt="" />
                         <img src="/assets/images/racket-blue.svg" alt="" />
                     </div>
-                    <div className="flex flex-col md:flex-row gap-2.5 w-full md:w-2xl text-center my-8">
-                        <Link href="home/auth/sign-up" className="submit">Register</Link>
-                        <Link href="/dashboard" className="submit">Login</Link>
+                    <div className="my-4">
+                        <div className="flex flex-col md:flex-row gap-2.5 w-full md:w-2xl text-center my-2.5">
+                            <Link href="home/auth/sign-up" className="submit">Register</Link>
+                            <Link href="/dashboard" className="submit">Login</Link>
+                        </div>
+                        <div className="flex flex-col md:flex-row gap-2.5 w-full md:w-2xl text-center my-2.5 ">
+                            <Link href="home/generate-matches" className="submit">Quick Generate</Link>
+                        </div>
                     </div>
                 </div>
             

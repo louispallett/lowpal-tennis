@@ -2,6 +2,7 @@ import { generateMatches } from "@/lib/generateMatches";
 import { GenerateMatchesForm } from "./Form";
 import NumbersOnly from "./NumbersOnly";
 import AboutClient from "./AboutClient";
+import Link from "next/link";
 
 export default function GenerateMatches() {
     return (
@@ -12,6 +13,9 @@ export default function GenerateMatches() {
             <About />
             <NumbersOnly />
             <CreateYourOwn />
+            <div className="flex mt-5">
+                <Link href="/home" className="submit text-center">Return Home</Link>
+            </div>
         </div>
     )
 }
