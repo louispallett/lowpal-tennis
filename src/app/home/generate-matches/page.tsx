@@ -1,5 +1,5 @@
 import { generateMatches } from "@/lib/generateMatches";
-// import { GenerateMatchesForm } from "./Form";
+import { GenerateMatchesForm } from "./Form";
 import NumbersOnly from "./NumbersOnly";
 import AboutClient from "./AboutClient";
 
@@ -11,7 +11,7 @@ export default function GenerateMatches() {
             </div>
             <About />
             <NumbersOnly />
-            {/* <CreateYourOwn /> */}
+            <CreateYourOwn />
         </div>
     )
 }
@@ -26,6 +26,7 @@ function About() {
     })(8);
 
     const matches = generateMatches(players);
+    console.log(matches);
     
     for (let match of matches) {
         match.category = { name: "" };
@@ -48,14 +49,14 @@ function About() {
     )
 }
 
-// function CreateYourOwn() {
-//     return (
-//         <div className="standard-container bg-slate-200/75 my-2.5">
-//             <h3 className="home-subtitle text-4xl!">Create Your Own</h3>
-//             <p>
-//                 You can quickly create your own bracket below using the function below - you just need to enter their names and rankings below:
-//             </p>
-//             <GenerateMatchesForm />
-//         </div>
-//     )
-// }
+function CreateYourOwn() {
+    return (
+        <div className="standard-container bg-slate-200/75 my-2.5">
+            <h3 className="home-subtitle text-4xl!">Create Your Own</h3>
+            <p className="my-2.5">
+                You can quickly create your own bracket below using the function below - you just need to enter their names and rankings below:
+            </p>
+            <GenerateMatchesForm />
+        </div>
+    )
+}

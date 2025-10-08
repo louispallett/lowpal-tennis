@@ -5,10 +5,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 const PostValidation = z.object({
-    players: z.array(z.string().max(200))
-}).transform(data => ({
-    players: data.players.map(p => p.trim())
-}));
+    players: z.array(
+        z.object({
+        name: z.string().trim().min(1, "Name is required").max(200),
+        rank: z.number().int().positive("Rank must be a positive number"),
+        })
+    ),
+    }).transform((data) => {
+    const sortedPlayers = [...data.players].sort((a, b) => a.rank - b.rank);
+    const playerNames = sortedPlayers.map((p) => p.name.trim());
+    return { players: playerNames };
+});
 
 
 
@@ -28,7 +35,7 @@ export async function POST(req:NextRequest) {
 
         const { players } = parsed.data;
         const numOfPlayers = players.length;
-        
+        console.log(players);
         const matches = generateMatches(players);
 
         // The total number of matches must equal the number of players - 1. This is a fail-safe in case it doesn't.

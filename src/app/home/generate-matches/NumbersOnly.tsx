@@ -20,10 +20,13 @@ export default function NumbersOnly() {
         setIsPending(true);
         setMatches(null);
         setQualMatches(null);
-        const players = ((n:number):string[] => {
-            const result:string[] = [];
+        const players = ((n:number) => {
+            const result = [];
             for (let i = 1; i <= n; i++) {
-                result.push("Player " + i.toString());
+                result.push({
+                    name: "Player " + i.toString(),
+                    rank: i
+                });
             }
             return result;
         })(data.numOfPlayers);
@@ -39,7 +42,7 @@ export default function NumbersOnly() {
                     qualifyingMatch: match.qualifyingMatch,
                     tournamentRoundText: match.tournamentRoundText,
                     state: "SCHEDULED",
-                        participants: match.participants.map((participant: any, idx: number) => ({
+                        participants: match.participants.map((participant:any, idx:number) => ({
                             name: typeof participant === "string" ? participant : participant.name,
                             resultText: "",
                         })),
@@ -76,11 +79,18 @@ export default function NumbersOnly() {
                             min: {
                                 value: 2,
                                 message: "Must be a positive integer greater than 1"
+                            },
+                            max: {
+                                value: 1024,
+                                message: "Cannot be greater than 1024"
                             }
                         })}
                     />
                     <button className="submit">Create</button>
                 </form>
+                <span>
+                    <p className="text-red-600 font-bold mt-1.5 text-xs">{errors.numOfPlayers?.message}</p>
+                </span>
             </div>
             { isPending && (
                 <div className="flex justify-center m-5">
