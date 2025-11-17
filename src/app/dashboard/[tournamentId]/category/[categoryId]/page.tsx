@@ -8,6 +8,7 @@ import Link from "next/link";
 import GenerateMatches from "./GenerateMatches";
 import RemovePlayers from "./RemovePlayers";
 import CreateTeams from "./CreateTeams";
+import StagePlay from "./StagePlay.tsx";
 import { notFound } from "next/navigation";
 
 type CategoryPageProps = {
@@ -45,7 +46,7 @@ export default async function CategoryPage({ params }:CategoryPageProps) {
                 <h3>{category.name}</h3>
             </div>
             <CategoryInfo category={category} players={players} matches={matches} teams={teams} />
-            <Actions tournament={tournament} category={category} teams={teams} players={players} />
+            <Actions tournament={tournament} category={category} teams={teams} players={players} matches={matches} />
             {/* <DangerZone /> */}
             <Link href={`/dashboard/${tournamentId}`}>
                 <button className="submit">
@@ -143,11 +144,18 @@ type ActionProps = {
     tournament:TournamentType,
     category:CategoryType,
     teams:TeamType[],
-    players:PlayerType[]
+    players:PlayerType[],
+    matches:MatchType[]
 }
 
-function Actions({ tournament, category, teams, players }:ActionProps) {
+function Actions({ tournament, category, teams, players, matches }:ActionProps) {
     const stage:string = tournament.stage;
+  
+    // Filter out matches array to just include those matches which are ready to play:
+    const matchesFiltered:MatchType[] = matches.filter((match:MatchType) => (
+        match.participants.length > 1 && match.state === "SCHEDULED"
+    ));
+    const matchesClient:MatchType[] = JSON.parse(JSON.stringify(matchesFiltered));
 
     return (
         <div className="standard-container-no-shadow bg-slate-100 flex flex-col gap-2.5">
@@ -159,7 +167,7 @@ function Actions({ tournament, category, teams, players }:ActionProps) {
                 <StageDraw tournament={tournament} category={category} teams={teams} players={players} />
             )}
             { stage === "play" && (
-                <StagePlay />
+                <StagePlay matches={matchesClient} />
             )}
             { stage === "finished" && (
                 <StageFinished />
@@ -223,12 +231,6 @@ function StageDraw({ tournament, category, teams, players }:ActionProps) {
                 <p>Looks like you've created matches for this category! Once you have created matches for each category, return to the tournament page and move to the PLAY stage.</p>
             )}
         </>
-    )
-}
-
-function StagePlay() {
-    return (
-        <></>
     )
 }
 
