@@ -1,5 +1,6 @@
 Dockerfile
 fly.toml
+*.swp
 
 # Connections
 public/javascripts/connections
