@@ -14,11 +14,11 @@ export async function PUT(
 ) {
     try {
         const body = await req.json();
+        const { categoryIdParam } = await params;
 
-        const parsed = PutValidation.safeParse({ categoryId: params.categoryId, players: body.deletedPlayers });
+        const parsed = PutValidation.safeParse({ categoryId: categoryIdParam, players: body.deletedPlayers });
         if (!parsed.success) throw new HttpError(parsed.error.message, 400);
 
-        // const { categoryId, players } = parsed.data;
         const categoryId = parsed.data.categoryId.toString().trim();
         const players = parsed.data.players;
         const promises = [];
