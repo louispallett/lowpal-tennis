@@ -7,7 +7,8 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"test": "jest"
+		"test": "jest",
+        "type-check": "tsc --noEmit"
 	},
 	"dependencies": {
 		"@g-loot/react-tournament-brackets": "^1.0.31-rc",
